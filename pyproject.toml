@@ -7,7 +7,16 @@ authors = [
     { name = "RudraMoharana", email = "rudra.madhab31@gmail.com" }
 ]
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "anthropic>=1.2.0",
+    "fastapi>=0.141.1",
+    "langgraph>=1.2.11",
+    "openai>=3.6.0",
+    "pydantic>=2.13.5",
+    "pydantic-settings>=2.15.0",
+    "python-dotenv>=1.2.3",
+    "uvicorn>=0.52.4",
+]
 
 [project.scripts]
 rca-copilot = "rca_copilot:main"
@@ -15,3 +24,20 @@ rca-copilot = "rca_copilot:main"
 [build-system]
 requires = ["uv_build>=0.12.4,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.16.5",
+]
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "ASYNC"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
