@@ -31,8 +31,8 @@ session 13 would cost a session for no benefit.
 **Date:** 2026-08-30
 **Chose:** package at `src/rca_copilot/`.
 **Considered:** package at repo root.
-**Why:** <yours — you hit the concrete reason today when the import failed>
-**Would reverse if:** <yours>
+**Why:** simplifies your import paths, local development, and configurations.
+**Would reverse if:** May very likely need to reverse this decision in the future if your project evolves from a local application into a reusable tool
 
 ---
 
@@ -42,8 +42,8 @@ session 13 would cost a session for no benefit.
 **Chose:** GPT-5.6 Luna ($0.20/$1.20) for the two investigators;
 Claude Sonnet 5 ($2/$10) for the adjudicator; Haiku 4.5 as fallback adjudicator.
 **Considered:** Haiku 4.5 as primary adjudicator, saving ~$1.50 per sweep.
-**Why:** <yours>
-**Would reverse if:** <yours — note you plan to measure this>
+**Why:** We can not use same model to evaluate its verdict hence the difference.
+**Would reverse if:** It will depends upon the evaluation.
 
 ---
 
@@ -52,7 +52,7 @@ Claude Sonnet 5 ($2/$10) for the adjudicator; Haiku 4.5 as fallback adjudicator.
 **Date:** 2026-08-30
 **Chose:** ap-south-1 (Mumbai) for all resources.
 **Considered:** other regions; App Runner availability unverified.
-**Why:** <yours>
+**Why:** For dev I am using this region.
 **Would reverse if:** <yours>
 
 ---
@@ -62,5 +62,5 @@ Claude Sonnet 5 ($2/$10) for the adjudicator; Haiku 4.5 as fallback adjudicator.
 **Date:** 2026-08-30
 **Chose:** Terraform.
 **Considered:** AWS CDK, which would keep everything in Python.
-**Why:** <yours>
+**Why:** Perfer terrsform as it works independently.
 **Would reverse if:** <yours>
