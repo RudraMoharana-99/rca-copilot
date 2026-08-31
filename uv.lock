@@ -613,6 +613,7 @@ source = { editable = "." }
 dependencies = [
     { name = "anthropic" },
     { name = "fastapi" },
+    { name = "httpx" },
     { name = "langgraph" },
     { name = "openai" },
     { name = "pydantic" },
@@ -632,6 +633,7 @@ dev = [
 requires-dist = [
     { name = "anthropic", specifier = ">=1.2.0" },
     { name = "fastapi", specifier = ">=0.141.1" },
+    { name = "httpx", specifier = ">=0.28.1" },
     { name = "langgraph", specifier = ">=1.2.11" },
     { name = "openai", specifier = ">=3.6.0" },
     { name = "pydantic", specifier = ">=2.13.5" },
