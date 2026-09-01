@@ -1,14 +1,15 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import httpx
 
 from .base import (
-    TracesSource,
-    TraceQueryResult,
-    Status,
-    TraceSummary,
-    TraceDetailResult,
     Span,
+    Status,
     Trace,
+    TraceDetailResult,
+    TraceQueryResult,
+    TracesSource,
+    TraceSummary,
 )
 
 
@@ -39,7 +40,7 @@ def flatten_attributes(attributes: list[dict]) -> dict[str, str | int | float | 
 def nano_to_datetime(value: str) -> datetime:
 
     seconds = int(value) / 1e9
-    return datetime.fromtimestamp(seconds, tz=timezone.utc)
+    return datetime.fromtimestamp(seconds, tz=UTC)
 
 
 def is_error_span(span: dict, attributes: dict) -> bool:
@@ -142,10 +143,10 @@ if __name__ == "__main__":
     # status code 1 = OK, not error
     print(is_error_span({"status": {"code": 1}}, {}))  # False
 
-    from datetime import datetime, timedelta, timezone
+    from datetime import datetime, timedelta
 
     s = JaegerTraceSource("http://localhost:63126/jaeger/ui/api/v3")
-    end = datetime.now(timezone.utc)
+    end = datetime.now(UTC)
     start = end - timedelta(hours=1)
     r = s.query_trace_summaries("frontend", start, end)
     print(r.status, len(r.summaries))

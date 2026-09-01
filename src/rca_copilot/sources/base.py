@@ -4,6 +4,10 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
+# ============================================================
+# ===================METRICS==================================
+# ============================================================
+
 
 class Status(str, Enum):
     SUCCESS = "SUCCESS"
@@ -35,6 +39,11 @@ class MetricsSource(ABC):
         end: datetime,
     ) -> MetricsQueryResult:
         pass
+
+
+# ============================================================
+# ===================JAEGER TRACES===============================
+# ============================================================
 
 
 class Span(BaseModel):
@@ -97,4 +106,41 @@ class TracesSource(ABC):
         self,
         trace_id: str,
     ) -> TraceDetailResult:
+        pass
+
+
+# ============================================================
+# ===================CHANGE LOG===============================
+# ============================================================
+
+
+class ChangeType(str, Enum):
+    DEPLOY = "DEPLOY"
+    CONFIG = "CONFIG"
+    FLAG = "FLAG"
+    SCALE = "SCALE"
+
+
+class ChangeRecord(BaseModel):
+    timestamp: datetime
+    service: str
+    change_type: ChangeType
+    summary: str
+    author: str | None = None
+    details: str | None = None
+
+
+class ChangeQueryResult(BaseModel):
+    status: Status
+    changes: list[ChangeRecord] = Field(default_factory=list)
+
+
+class ChangelogSource(ABC):
+    @abstractmethod
+    def query_changes(
+        self,
+        start: datetime,
+        end: datetime,
+        service: str | None = None,
+    ) -> ChangeQueryResult:
         pass

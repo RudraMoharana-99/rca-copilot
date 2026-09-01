@@ -38,6 +38,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "ASYNC"]
+ignore = ["UP042"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

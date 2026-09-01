@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2026-09-01T10:00:00Z",
+    "service": "frontend",
+    "change_type": "DEPLOY",
+    "summary": "Deployed frontend v1.4.2",
+    "details": "Updated product display logic",
+    "author": "deployment-pipeline"
+  },
+  {
+    "timestamp": "2026-09-01T10:05:00Z",
+    "service": "cart",
+    "change_type": "CONFIG",
+    "summary": "Updated cart timeout",
+    "details": "Changed timeout from 5s to 10s",
+    "author": "platform-team"
+  },
+  {
+    "timestamp": "2026-09-01T10:10:00Z",
+    "service": "checkout",
+    "change_type": "DEPLOY",
+    "summary": "Deployed checkout v2.1.0",
+    "details": "Updated payment handling",
+    "author": "deployment-pipeline"
+  }
+]
