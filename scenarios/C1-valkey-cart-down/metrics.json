@@ -1,0 +1,14 @@
+{
+  "call_rate_by_service": {
+    "status": "ERROR",
+    "series": []
+  },
+  "error_rate_by_service": {
+    "status": "ERROR",
+    "series": []
+  },
+  "latency_p95_by_service": {
+    "status": "ERROR",
+    "series": []
+  }
+}

@@ -103,15 +103,15 @@ class OpenSearchLogSource(LogsSource):
         for hit in hits:
             src = hit["_source"]
 
-            severity_number = src["severity"]["number"]
+            severity_number = src.get("severity", {}).get("number", 9)
 
             logs.append(
                 LogEntry(
                     timestamp=src["@timestamp"],
-                    service=src["resource"]["service.name"],
+                    service=src.get("resource", {}).get("service.name", "unknown"),
                     severity_number=severity_number,
                     severity=severity_from_number(severity_number),
-                    message=src["body"],
+                    message=src.get("body", ""),
                 )
             )
 

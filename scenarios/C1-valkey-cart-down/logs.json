@@ -1,0 +1,170 @@
+{
+  "frontend-proxy": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "frontend": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "cart": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "checkout": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "payment": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "currency": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "recommendation": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "ad": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "shipping": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "quote": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "email": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  },
+  "product-catalog": {
+    "errors": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    },
+    "sample": {
+      "status": "ERROR",
+      "logs": [],
+      "count": 0,
+      "truncated": false
+    }
+  }
+}
