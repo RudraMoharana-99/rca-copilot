@@ -1,0 +1,2786 @@
+{
+  "summaries": [
+    {
+      "trace_id": "9da2e9b58008d120e8f2e361faa99106",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.748606Z",
+      "end_time": "2026-09-02T17:49:49.779992Z",
+      "services": []
+    },
+    {
+      "trace_id": "2a5c281d37dfec9e6402352fa536fa68",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.768011Z",
+      "end_time": "2026-09-02T17:49:49.785803Z",
+      "services": []
+    },
+    {
+      "trace_id": "5f2335f99fea15ef0afaea341a02f12d",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.750854Z",
+      "end_time": "2026-09-02T17:49:49.773109Z",
+      "services": []
+    },
+    {
+      "trace_id": "527332b2cf680d364ea7edb0cd3649a1",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.618650Z",
+      "end_time": "2026-09-02T17:49:49.635971Z",
+      "services": []
+    },
+    {
+      "trace_id": "779713b3da6313418cedc7cba496809e",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.697924Z",
+      "end_time": "2026-09-02T17:49:49.715146Z",
+      "services": []
+    },
+    {
+      "trace_id": "06db97aa68f80e296ae89c2a8fdb2758",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.594792Z",
+      "end_time": "2026-09-02T17:49:49.607173Z",
+      "services": []
+    },
+    {
+      "trace_id": "6a3c89e3bfceea125de7b68a422d85f5",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.689711Z",
+      "end_time": "2026-09-02T17:49:49.709711Z",
+      "services": []
+    },
+    {
+      "trace_id": "5726bc35950093f5247f37e55872004d",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.593768Z",
+      "end_time": "2026-09-02T17:49:49.604471Z",
+      "services": []
+    },
+    {
+      "trace_id": "592ea7353addd4eb32bb30be203ae11d",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.442615Z",
+      "end_time": "2026-09-02T17:49:49.541542Z",
+      "services": []
+    },
+    {
+      "trace_id": "ab771e462736e9aed5485a5f97f91581",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.252388Z",
+      "end_time": "2026-09-02T17:49:49.366611Z",
+      "services": []
+    },
+    {
+      "trace_id": "d22c7cb81c176a528705628618e6e033",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.116133Z",
+      "end_time": "2026-09-02T17:49:49.337057Z",
+      "services": []
+    },
+    {
+      "trace_id": "0cfafca577e3a0844e3f02731fe3c6e4",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:48.922054Z",
+      "end_time": "2026-09-02T17:49:49.277286Z",
+      "services": []
+    },
+    {
+      "trace_id": "9b9c7fc0f206c1de2d8a3c61a9e1362d",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.441433Z",
+      "end_time": "2026-09-02T17:49:49.533722Z",
+      "services": []
+    },
+    {
+      "trace_id": "a66df6a4c1bed6a407b6df4b3a3d211c",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.469047Z",
+      "end_time": "2026-09-02T17:49:49.522416Z",
+      "services": []
+    },
+    {
+      "trace_id": "2146e450a9fc8e79b9c36a6f2b64c7ea",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.095392Z",
+      "end_time": "2026-09-02T17:49:49.332076Z",
+      "services": []
+    },
+    {
+      "trace_id": "0fdf6a5093bf2579189e42bf58ec3c5c",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:48.912777Z",
+      "end_time": "2026-09-02T17:49:49.255391Z",
+      "services": []
+    },
+    {
+      "trace_id": "116302983e4838227362b20d29a5aca9",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.084643Z",
+      "end_time": "2026-09-02T17:49:49.281249Z",
+      "services": []
+    },
+    {
+      "trace_id": "d3509165f614f13e1447ef2f22e6ebff",
+      "root_service": "frontend-proxy",
+      "span_count": 6,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:48.681379Z",
+      "end_time": "2026-09-02T17:49:48.736838Z",
+      "services": []
+    },
+    {
+      "trace_id": "2438832219031f6b63990f8d6521bc88",
+      "root_service": "load-generator",
+      "span_count": 4,
+      "error_count": 1,
+      "start_time": "2026-09-02T17:49:33.072438Z",
+      "end_time": "2026-09-02T17:49:48.081409Z",
+      "services": []
+    },
+    {
+      "trace_id": "8a835c0be83d717174d509037dd6cafe",
+      "root_service": "load-generator",
+      "span_count": 9,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:44.088254Z",
+      "end_time": "2026-09-02T17:49:45.923776Z",
+      "services": []
+    },
+    {
+      "trace_id": "249bcdea376321a2abb1aa72fd378780",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:48.921381Z",
+      "end_time": "2026-09-02T17:49:48.924846Z",
+      "services": []
+    },
+    {
+      "trace_id": "1f7d79f90a886bc0a4291eeb1b8638e2",
+      "root_service": "frontend-proxy",
+      "span_count": 3,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:49.083749Z",
+      "end_time": "2026-09-02T17:49:49.092077Z",
+      "services": []
+    },
+    {
+      "trace_id": "21f5ef836cd04fd044ca5ec47206a0a1",
+      "root_service": "load-generator",
+      "span_count": 132,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:15:31.469283Z",
+      "end_time": "2026-09-02T17:39:27.506102Z",
+      "services": []
+    },
+    {
+      "trace_id": "ae34bbde0d0ac04cf5ae96485bc00171",
+      "root_service": "load-generator",
+      "span_count": 114,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:15:30.836217Z",
+      "end_time": "2026-09-02T17:39:27.514192Z",
+      "services": []
+    },
+    {
+      "trace_id": "fa56375965bd321bc67118cc78510c1e",
+      "root_service": "load-generator",
+      "span_count": 88,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:15:22.375143Z",
+      "end_time": "2026-09-02T17:39:18.171109Z",
+      "services": []
+    },
+    {
+      "trace_id": "73febd56f54c619d175847e1ec4c1815",
+      "root_service": "load-generator",
+      "span_count": 88,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:14:55.882008Z",
+      "end_time": "2026-09-02T17:38:53.087650Z",
+      "services": []
+    },
+    {
+      "trace_id": "d3f65f5318c4936d6f80d22dc73306a9",
+      "root_service": "load-generator",
+      "span_count": 62,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:14:55.296603Z",
+      "end_time": "2026-09-02T17:38:53.065334Z",
+      "services": []
+    },
+    {
+      "trace_id": "625bde54c4ede94dd72dba5d2b372ad5",
+      "root_service": "load-generator",
+      "span_count": 106,
+      "error_count": 1,
+      "start_time": "2026-09-02T17:14:56.068518Z",
+      "end_time": "2026-09-02T17:38:53.160563Z",
+      "services": []
+    },
+    {
+      "trace_id": "810583ac429188b98eef40b88302bfad",
+      "root_service": "load-generator",
+      "span_count": 69,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:14:04.914629Z",
+      "end_time": "2026-09-02T17:38:02.767566Z",
+      "services": []
+    },
+    {
+      "trace_id": "b3f71a4824aaf38b9a62ccb6bda3a2cf",
+      "root_service": "load-generator",
+      "span_count": 69,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:14:04.621119Z",
+      "end_time": "2026-09-02T17:38:02.525448Z",
+      "services": []
+    },
+    {
+      "trace_id": "f99799dd5f2e9cdebf55946fa3d7bb1f",
+      "root_service": "load-generator",
+      "span_count": 69,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:13:41.501433Z",
+      "end_time": "2026-09-02T17:37:37.716543Z",
+      "services": []
+    },
+    {
+      "trace_id": "cb7246d11e7bc0d6b74162238510e634",
+      "root_service": "load-generator",
+      "span_count": 69,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:13:32.476998Z",
+      "end_time": "2026-09-02T17:37:27.942144Z",
+      "services": []
+    },
+    {
+      "trace_id": "d09f09ce9899837dbc43e10a68fa35a8",
+      "root_service": "load-generator",
+      "span_count": 69,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:13:24.249273Z",
+      "end_time": "2026-09-02T17:37:20.190543Z",
+      "services": []
+    },
+    {
+      "trace_id": "8e7a9db3a6504e6a481ba0efef2e3a03",
+      "root_service": "load-generator",
+      "span_count": 159,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:13:11.912732Z",
+      "end_time": "2026-09-02T17:37:07.336426Z",
+      "services": []
+    },
+    {
+      "trace_id": "b707b6e6461b61a90ca330d7db27dbb0",
+      "root_service": "load-generator",
+      "span_count": 129,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:13:11.265755Z",
+      "end_time": "2026-09-02T17:37:06.798100Z",
+      "services": []
+    },
+    {
+      "trace_id": "b51205e248cf10c986618d76e48ffe9e",
+      "root_service": "load-generator",
+      "span_count": 159,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:12:15.259614Z",
+      "end_time": "2026-09-02T17:36:11.212201Z",
+      "services": []
+    },
+    {
+      "trace_id": "f89ee7a30cb988dec9678953678cb2c0",
+      "root_service": "load-generator",
+      "span_count": 99,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:11:57.582780Z",
+      "end_time": "2026-09-02T17:35:53.280815Z",
+      "services": []
+    },
+    {
+      "trace_id": "3b8081f8fb1af0b1b02560d9e4ab5e9f",
+      "root_service": "load-generator",
+      "span_count": 69,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:11:25.638615Z",
+      "end_time": "2026-09-02T17:35:21.319032Z",
+      "services": []
+    },
+    {
+      "trace_id": "687e4e528551a227f675102bb73a099f",
+      "root_service": "load-generator",
+      "span_count": 99,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:11:01.436664Z",
+      "end_time": "2026-09-02T17:34:56.928868Z",
+      "services": []
+    },
+    {
+      "trace_id": "3e158e352945c309c5aee29f605e036a",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:49:28.214594Z",
+      "end_time": "2026-09-02T17:49:29.354663Z",
+      "services": []
+    },
+    {
+      "trace_id": "18b71ab6d02815b9db2890ab1da726f2",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:48:57.444547Z",
+      "end_time": "2026-09-02T17:48:57.468920Z",
+      "services": []
+    },
+    {
+      "trace_id": "4faf7b2ed6d2bbd35e19b228b4730dfc",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:48:27.441848Z",
+      "end_time": "2026-09-02T17:48:27.447434Z",
+      "services": []
+    },
+    {
+      "trace_id": "0725ff365f458509aba3ce357a73b612",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:47:59.251974Z",
+      "end_time": "2026-09-02T17:47:59.269814Z",
+      "services": []
+    },
+    {
+      "trace_id": "3effdd2867d8957b85575629ce56dd40",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:47:27.448098Z",
+      "end_time": "2026-09-02T17:47:27.466708Z",
+      "services": []
+    },
+    {
+      "trace_id": "980e54967326602fb2880998d0eb86be",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:46:57.450066Z",
+      "end_time": "2026-09-02T17:46:57.459192Z",
+      "services": []
+    },
+    {
+      "trace_id": "9163d3d0497641b710cc2c6b53836586",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:46:27.453003Z",
+      "end_time": "2026-09-02T17:46:27.455065Z",
+      "services": []
+    },
+    {
+      "trace_id": "03145676817ee20713477445fcb0c395",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:45:57.457260Z",
+      "end_time": "2026-09-02T17:45:57.460509Z",
+      "services": []
+    },
+    {
+      "trace_id": "2798387a486d6af5307a64ac3f1a80ea",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:45:27.475360Z",
+      "end_time": "2026-09-02T17:45:27.496722Z",
+      "services": []
+    },
+    {
+      "trace_id": "23570818701a5f683d621e19f5950c02",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:44:57.464453Z",
+      "end_time": "2026-09-02T17:44:57.494893Z",
+      "services": []
+    },
+    {
+      "trace_id": "ee49b6beb7716d24da5f3102f287ae72",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:44:27.465754Z",
+      "end_time": "2026-09-02T17:44:27.469824Z",
+      "services": []
+    },
+    {
+      "trace_id": "627143ec72ef0752958283a560060c30",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:43:57.471813Z",
+      "end_time": "2026-09-02T17:43:57.479846Z",
+      "services": []
+    },
+    {
+      "trace_id": "54e8ddcfdfe4fbc5504f93ffd6849eb8",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:43:27.474046Z",
+      "end_time": "2026-09-02T17:43:27.481653Z",
+      "services": []
+    },
+    {
+      "trace_id": "231d31d32e73272ef931e1a9c923118f",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:42:57.480468Z",
+      "end_time": "2026-09-02T17:42:57.486059Z",
+      "services": []
+    },
+    {
+      "trace_id": "ef9d5820cac6fb0fdbafe38c12768dfd",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:42:27.480054Z",
+      "end_time": "2026-09-02T17:42:27.482222Z",
+      "services": []
+    },
+    {
+      "trace_id": "f4ddd2f1eacabcd4c68bd55337ad4d31",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:41:57.486228Z",
+      "end_time": "2026-09-02T17:41:57.488620Z",
+      "services": []
+    },
+    {
+      "trace_id": "a5e218bda3c97bba5fffbdd0222e342f",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:41:27.490842Z",
+      "end_time": "2026-09-02T17:41:27.495721Z",
+      "services": []
+    },
+    {
+      "trace_id": "6d1f3c3252823fae542f2c1959826c89",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:40:58.013200Z",
+      "end_time": "2026-09-02T17:40:58.018365Z",
+      "services": []
+    },
+    {
+      "trace_id": "0baa3824974cb98a60a95b42499b811f",
+      "root_service": "cart",
+      "span_count": 5,
+      "error_count": 0,
+      "start_time": "2026-09-02T17:40:27.494002Z",
+      "end_time": "2026-09-02T17:40:27.497910Z",
+      "services": []
+    },
+    {
+      "trace_id": "db41703d0e38ebfdf83bb6cbf0801e93",
+      "root_service": "load-generator",
+      "span_count": 8,
+      "error_count": 5,
+      "start_time": "2026-09-02T17:39:56.499599Z",
+      "end_time": "2026-09-02T17:49:14.469321Z",
+      "services": []
+    }
+  ],
+  "full_traces": [
+    {
+      "trace_id": "2438832219031f6b63990f8d6521bc88",
+      "spans": [
+        {
+          "span_id": "9b84c96405909481",
+          "parent_span_id": null,
+          "service_name": "load-generator",
+          "operation_name": "user_view_cart",
+          "start_time": "2026-09-02T17:49:33.072438Z",
+          "end_time": "2026-09-02T17:49:48.081409Z",
+          "is_error": false,
+          "attributes": {}
+        },
+        {
+          "span_id": "2ed1be5d5aa7e948",
+          "parent_span_id": "449f0ffbdb66253d",
+          "service_name": "frontend-proxy",
+          "operation_name": "router frontend egress",
+          "start_time": "2026-09-02T17:49:33.074284Z",
+          "end_time": "2026-09-02T17:49:48.073376Z",
+          "is_error": true,
+          "attributes": {
+            "canceled": "true",
+            "component": "proxy",
+            "error": "true",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "0",
+            "peer.address": "172.18.0.24:8080",
+            "response_flags": "-",
+            "upstream_address": "172.18.0.24:8080",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend"
+          }
+        },
+        {
+          "span_id": "449f0ffbdb66253d",
+          "parent_span_id": "9b84c96405909481",
+          "service_name": "frontend-proxy",
+          "operation_name": "GET",
+          "start_time": "2026-09-02T17:49:33.073974Z",
+          "end_time": "2026-09-02T17:49:48.073542Z",
+          "is_error": true,
+          "attributes": {
+            "component": "proxy",
+            "downstream_cluster": "-",
+            "error": "true",
+            "guid:x-request-id": "853b1faa-6199-9ac1-ad48-2a701457c210",
+            "http.method": "GET",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "504",
+            "http.url": "http://frontend-proxy:8080/api/cart",
+            "node_id": "",
+            "original_span_name": "ingress",
+            "peer.address": "172.18.0.26",
+            "request_size": "0",
+            "response_flags": "UT",
+            "response_size": "24",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend",
+            "user_agent": "Grafana k6/2.2.0",
+            "zone": ""
+          }
+        },
+        {
+          "span_id": "ee11e9cffb15d99c",
+          "parent_span_id": "2ed1be5d5aa7e948",
+          "service_name": "frontend",
+          "operation_name": "GET",
+          "start_time": "2026-09-02T17:49:33.075000Z",
+          "end_time": "2026-09-02T17:49:48.078633Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.25",
+            "http.request.method": "GET",
+            "http.response.status_code": 200,
+            "network.peer.address": "172.18.0.25",
+            "network.peer.port": 47006,
+            "network.protocol.version": "1.1",
+            "server.address": "frontend-proxy",
+            "server.port": 8080,
+            "url.path": "/api/cart",
+            "url.scheme": "http",
+            "user_agent.original": "Grafana k6/2.2.0"
+          }
+        }
+      ]
+    },
+    {
+      "trace_id": "625bde54c4ede94dd72dba5d2b372ad5",
+      "spans": [
+        {
+          "span_id": "444aef9ee8a825b6",
+          "parent_span_id": "b51004d32b694dc9",
+          "service_name": "frontend-proxy",
+          "operation_name": "router frontend egress",
+          "start_time": "2026-09-02T17:38:25.908099Z",
+          "end_time": "2026-09-02T17:38:27.827433Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "peer.address": "172.18.0.24:8080",
+            "response_flags": "-",
+            "upstream_address": "172.18.0.24:8080",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend"
+          }
+        },
+        {
+          "span_id": "b51004d32b694dc9",
+          "parent_span_id": "5889349b7ebf30b8",
+          "service_name": "frontend-proxy",
+          "operation_name": "GET",
+          "start_time": "2026-09-02T17:38:25.907753Z",
+          "end_time": "2026-09-02T17:38:27.827959Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "downstream_cluster": "-",
+            "guid:x-request-id": "5059b07b-92cf-9154-89b4-f498813d9552",
+            "http.method": "GET",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "http.url": "http://frontend-proxy:8080/api/products/66VCHSJNUP",
+            "node_id": "",
+            "original_span_name": "ingress",
+            "peer.address": "172.18.0.26",
+            "request_size": "0",
+            "response_flags": "-",
+            "response_size": "494",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend",
+            "user_agent": "Grafana k6/2.2.0",
+            "zone": ""
+          }
+        },
+        {
+          "span_id": "a6f9583b7bee213a",
+          "parent_span_id": "858476b0594b6708",
+          "service_name": "product-catalog",
+          "operation_name": "astronomy-db",
+          "start_time": "2026-09-02T17:38:27.802446Z",
+          "end_time": "2026-09-02T17:38:27.816700Z",
+          "is_error": false,
+          "attributes": {
+            "db.query.text": "\n\t\tSELECT p.id, p.name, p.description, p.picture, \n\t\t       p.price_currency_code, p.price_units, p.price_nanos, p.categories\n\t\tFROM catalog.products p\n\t\tWHERE p.id = $1\n\t",
+            "db.system.name": "postgresql",
+            "original_span_name": "sql.conn.query",
+            "server.address": "astronomy-db"
+          }
+        },
+        {
+          "span_id": "858476b0594b6708",
+          "parent_span_id": "16bd061b9c90a4ec",
+          "service_name": "product-catalog",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:27.301335Z",
+          "end_time": "2026-09-02T17:38:27.823596Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "66VCHSJNUP",
+            "demo.product.name": "Starsense Explorer Refractor Telescope",
+            "rpc.method": "oteldemo.ProductCatalogService/GetProduct",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.21",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "16bd061b9c90a4ec",
+          "parent_span_id": "e71f432afc5c0405",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:26.182000Z",
+          "end_time": "2026-09-02T17:38:27.825317Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.ProductCatalogService/GetProduct",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "GetProduct",
+            "rpc.service": "oteldemo.ProductCatalogService",
+            "rpc.system": "grpc",
+            "server.address": "product-catalog",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "e71f432afc5c0405",
+          "parent_span_id": "6bd2221d19ef1d6c",
+          "service_name": "frontend",
+          "operation_name": "executing api route (pages) /api/products/[productId]/index",
+          "start_time": "2026-09-02T17:38:26.181000Z",
+          "end_time": "2026-09-02T17:38:27.825720Z",
+          "is_error": false,
+          "attributes": {
+            "http.status_code": 200,
+            "next.span_category": "nextjs",
+            "next.span_name": "executing api route (pages) /api/products/[productId]/index",
+            "next.span_type": "Node.runHandler"
+          }
+        },
+        {
+          "span_id": "6bd2221d19ef1d6c",
+          "parent_span_id": "a1250489c463615c",
+          "service_name": "frontend",
+          "operation_name": "GET /api/products/[productId]/index",
+          "start_time": "2026-09-02T17:38:26.148000Z",
+          "end_time": "2026-09-02T17:38:27.825664Z",
+          "is_error": false,
+          "attributes": {
+            "http.method": "GET",
+            "http.route": "/api/products/[productId]/index",
+            "http.status_code": 200,
+            "http.target": "/api/products/66VCHSJNUP",
+            "next.route": "/api/products/[productId]/index",
+            "next.rsc": false,
+            "next.span_category": "nextjs",
+            "next.span_name": "GET /api/products/[productId]/index",
+            "next.span_type": "BaseServer.handleRequest"
+          }
+        },
+        {
+          "span_id": "a1250489c463615c",
+          "parent_span_id": "444aef9ee8a825b6",
+          "service_name": "frontend",
+          "operation_name": "GET /api/products/[productId]/index",
+          "start_time": "2026-09-02T17:38:25.987000Z",
+          "end_time": "2026-09-02T17:38:27.826298Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.25",
+            "http.request.method": "GET",
+            "http.response.status_code": 200,
+            "http.route": "/api/products/[productId]/index",
+            "network.peer.address": "172.18.0.25",
+            "network.peer.port": 35774,
+            "network.protocol.version": "1.1",
+            "original_span_name": "GET",
+            "server.address": "frontend-proxy",
+            "server.port": 8080,
+            "url.path": "/api/products/66VCHSJNUP",
+            "url.scheme": "http",
+            "user_agent.original": "Grafana k6/2.2.0"
+          }
+        },
+        {
+          "span_id": "04761c8bd63799ed",
+          "parent_span_id": "cb9ba363076a827e",
+          "service_name": "frontend-proxy",
+          "operation_name": "router frontend egress",
+          "start_time": "2026-09-02T17:38:27.831221Z",
+          "end_time": "2026-09-02T17:38:42.850556Z",
+          "is_error": true,
+          "attributes": {
+            "canceled": "true",
+            "component": "proxy",
+            "error": "true",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "0",
+            "peer.address": "172.18.0.24:8080",
+            "response_flags": "-",
+            "upstream_address": "172.18.0.24:8080",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend"
+          }
+        },
+        {
+          "span_id": "cb9ba363076a827e",
+          "parent_span_id": "5889349b7ebf30b8",
+          "service_name": "frontend-proxy",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:27.830953Z",
+          "end_time": "2026-09-02T17:38:42.850714Z",
+          "is_error": true,
+          "attributes": {
+            "component": "proxy",
+            "downstream_cluster": "-",
+            "error": "true",
+            "guid:x-request-id": "ad329cc5-f426-91d2-b45e-3b3b0f1d0b28",
+            "http.method": "POST",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "504",
+            "http.url": "http://frontend-proxy:8080/api/cart",
+            "node_id": "",
+            "original_span_name": "ingress",
+            "peer.address": "172.18.0.26",
+            "request_size": "96",
+            "response_flags": "UT",
+            "response_size": "24",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend",
+            "user_agent": "Grafana k6/2.2.0",
+            "zone": ""
+          }
+        },
+        {
+          "span_id": "143424992278c8d5",
+          "parent_span_id": "bb85e69d90dd0344",
+          "service_name": "frontend-proxy",
+          "operation_name": "router frontend egress",
+          "start_time": "2026-09-02T17:38:42.859335Z",
+          "end_time": "2026-09-02T17:38:42.960618Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "peer.address": "172.18.0.24:8080",
+            "response_flags": "-",
+            "upstream_address": "172.18.0.24:8080",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend"
+          }
+        },
+        {
+          "span_id": "e9df874330b60608",
+          "parent_span_id": "9524c269dd0c412b",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:42.873000Z",
+          "end_time": "2026-09-02T17:38:42.947061Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.ProductCatalogService/GetProduct",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "GetProduct",
+            "rpc.service": "oteldemo.ProductCatalogService",
+            "rpc.system": "grpc",
+            "server.address": "product-catalog",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "9524c269dd0c412b",
+          "parent_span_id": "7c6245eeddd42305",
+          "service_name": "frontend",
+          "operation_name": "executing api route (pages) /api/products/[productId]/index",
+          "start_time": "2026-09-02T17:38:42.871000Z",
+          "end_time": "2026-09-02T17:38:42.962293Z",
+          "is_error": false,
+          "attributes": {
+            "http.status_code": 200,
+            "next.span_category": "nextjs",
+            "next.span_name": "executing api route (pages) /api/products/[productId]/index",
+            "next.span_type": "Node.runHandler"
+          }
+        },
+        {
+          "span_id": "7c6245eeddd42305",
+          "parent_span_id": "a80cf8dc23162d24",
+          "service_name": "frontend",
+          "operation_name": "GET /api/products/[productId]/index",
+          "start_time": "2026-09-02T17:38:42.867000Z",
+          "end_time": "2026-09-02T17:38:42.961614Z",
+          "is_error": false,
+          "attributes": {
+            "http.method": "GET",
+            "http.route": "/api/products/[productId]/index",
+            "http.status_code": 200,
+            "http.target": "/api/products/66VCHSJNUP",
+            "next.route": "/api/products/[productId]/index",
+            "next.rsc": false,
+            "next.span_category": "nextjs",
+            "next.span_name": "GET /api/products/[productId]/index",
+            "next.span_type": "BaseServer.handleRequest"
+          }
+        },
+        {
+          "span_id": "03c58fd8b4df4f70",
+          "parent_span_id": "04761c8bd63799ed",
+          "service_name": "frontend",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:27.833000Z",
+          "end_time": "2026-09-02T17:38:42.852015Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.25",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "network.peer.address": "172.18.0.25",
+            "network.peer.port": 35774,
+            "network.protocol.version": "1.1",
+            "server.address": "frontend-proxy",
+            "server.port": 8080,
+            "url.path": "/api/cart",
+            "url.scheme": "http",
+            "user_agent.original": "Grafana k6/2.2.0"
+          }
+        },
+        {
+          "span_id": "a80cf8dc23162d24",
+          "parent_span_id": "143424992278c8d5",
+          "service_name": "frontend",
+          "operation_name": "GET /api/products/[productId]/index",
+          "start_time": "2026-09-02T17:38:42.866000Z",
+          "end_time": "2026-09-02T17:38:42.961932Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.25",
+            "http.request.method": "GET",
+            "http.response.status_code": 200,
+            "http.route": "/api/products/[productId]/index",
+            "network.peer.address": "172.18.0.25",
+            "network.peer.port": 33622,
+            "network.protocol.version": "1.1",
+            "original_span_name": "GET",
+            "server.address": "frontend-proxy",
+            "server.port": 8080,
+            "url.path": "/api/products/66VCHSJNUP",
+            "url.scheme": "http",
+            "user_agent.original": "Grafana k6/2.2.0"
+          }
+        },
+        {
+          "span_id": "bb85e69d90dd0344",
+          "parent_span_id": "1b01b8ceb8e96543",
+          "service_name": "frontend-proxy",
+          "operation_name": "GET",
+          "start_time": "2026-09-02T17:38:42.856373Z",
+          "end_time": "2026-09-02T17:38:42.961450Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "downstream_cluster": "-",
+            "guid:x-request-id": "47be9443-ca75-9cd5-97f7-70a686fb2167",
+            "http.method": "GET",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "http.url": "http://frontend-proxy:8080/api/products/66VCHSJNUP",
+            "node_id": "",
+            "original_span_name": "ingress",
+            "peer.address": "172.18.0.26",
+            "request_size": "0",
+            "response_flags": "-",
+            "response_size": "494",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend",
+            "user_agent": "Grafana k6/2.2.0",
+            "zone": ""
+          }
+        },
+        {
+          "span_id": "f4504c573688206f",
+          "parent_span_id": "5b281bed2b13c89d",
+          "service_name": "frontend-proxy",
+          "operation_name": "router frontend egress",
+          "start_time": "2026-09-02T17:38:42.988401Z",
+          "end_time": "2026-09-02T17:38:43.523887Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "peer.address": "172.18.0.24:8080",
+            "response_flags": "-",
+            "upstream_address": "172.18.0.24:8080",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend"
+          }
+        },
+        {
+          "span_id": "5b281bed2b13c89d",
+          "parent_span_id": "1b01b8ceb8e96543",
+          "service_name": "frontend-proxy",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:42.988015Z",
+          "end_time": "2026-09-02T17:38:43.523989Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "downstream_cluster": "-",
+            "guid:x-request-id": "e65a3155-832e-9be9-b619-388ad59b1cf3",
+            "http.method": "POST",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "http.url": "http://frontend-proxy:8080/api/cart",
+            "node_id": "",
+            "original_span_name": "ingress",
+            "peer.address": "172.18.0.26",
+            "request_size": "96",
+            "response_flags": "-",
+            "response_size": "99",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend",
+            "user_agent": "Grafana k6/2.2.0",
+            "zone": ""
+          }
+        },
+        {
+          "span_id": "0b3025d82ff0ad56",
+          "parent_span_id": "16463cf0092f2612",
+          "service_name": "cart",
+          "operation_name": "POST /oteldemo.CartService/AddItem",
+          "start_time": "2026-09-02T17:38:28.142259Z",
+          "end_time": "2026-09-02T17:38:43.370817Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "66VCHSJNUP",
+            "demo.product.quantity": 5,
+            "grpc.method": "/oteldemo.CartService/AddItem",
+            "grpc.status_code": "0",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/oteldemo.CartService/AddItem",
+            "network.protocol.version": "2",
+            "server.address": "cart",
+            "server.port": 7070,
+            "url.path": "/oteldemo.CartService/AddItem",
+            "url.scheme": "http",
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1",
+            "user_agent.original": "grpc-node-js/1.14.4"
+          }
+        },
+        {
+          "span_id": "b724ffc521293fe0",
+          "parent_span_id": "e2d89b984545248c",
+          "service_name": "cart",
+          "operation_name": "POST /oteldemo.CartService/AddItem",
+          "start_time": "2026-09-02T17:38:43.132682Z",
+          "end_time": "2026-09-02T17:38:43.371270Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "66VCHSJNUP",
+            "demo.product.quantity": 5,
+            "grpc.method": "/oteldemo.CartService/AddItem",
+            "grpc.status_code": "0",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/oteldemo.CartService/AddItem",
+            "network.protocol.version": "2",
+            "server.address": "cart",
+            "server.port": 7070,
+            "url.path": "/oteldemo.CartService/AddItem",
+            "url.scheme": "http",
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1",
+            "user_agent.original": "grpc-node-js/1.14.4"
+          }
+        },
+        {
+          "span_id": "fdf7eadcee37ba5d",
+          "parent_span_id": "eb1d3c2d0020e460",
+          "service_name": "cart",
+          "operation_name": "POST /oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:38:43.493128Z",
+          "end_time": "2026-09-02T17:38:43.510332Z",
+          "is_error": false,
+          "attributes": {
+            "demo.cart.items.count": 5,
+            "grpc.method": "/oteldemo.CartService/GetCart",
+            "grpc.status_code": "0",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/oteldemo.CartService/GetCart",
+            "network.protocol.version": "2",
+            "server.address": "cart",
+            "server.port": 7070,
+            "url.path": "/oteldemo.CartService/GetCart",
+            "url.scheme": "http",
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1",
+            "user_agent.original": "grpc-node-js/1.14.4"
+          }
+        },
+        {
+          "span_id": "80f66da2ffbe1ff6",
+          "parent_span_id": "ffb2cab024c85f3c",
+          "service_name": "cart",
+          "operation_name": "POST /oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:38:43.471597Z",
+          "end_time": "2026-09-02T17:38:43.512397Z",
+          "is_error": false,
+          "attributes": {
+            "demo.cart.items.count": 5,
+            "grpc.method": "/oteldemo.CartService/GetCart",
+            "grpc.status_code": "0",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/oteldemo.CartService/GetCart",
+            "network.protocol.version": "2",
+            "server.address": "cart",
+            "server.port": 7070,
+            "url.path": "/oteldemo.CartService/GetCart",
+            "url.scheme": "http",
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1",
+            "user_agent.original": "grpc-node-js/1.14.4"
+          }
+        },
+        {
+          "span_id": "5889349b7ebf30b8",
+          "parent_span_id": "25175bef605d6bfe",
+          "service_name": "load-generator",
+          "operation_name": "user_add_to_cart",
+          "start_time": "2026-09-02T17:38:25.907003Z",
+          "end_time": "2026-09-02T17:38:42.854395Z",
+          "is_error": false,
+          "attributes": {
+            "product.id": "66VCHSJNUP",
+            "quantity": 5,
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1"
+          }
+        },
+        {
+          "span_id": "1b01b8ceb8e96543",
+          "parent_span_id": "25175bef605d6bfe",
+          "service_name": "load-generator",
+          "operation_name": "user_add_to_cart",
+          "start_time": "2026-09-02T17:38:42.854579Z",
+          "end_time": "2026-09-02T17:38:43.525008Z",
+          "is_error": false,
+          "attributes": {
+            "product.id": "66VCHSJNUP",
+            "quantity": 5,
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1"
+          }
+        },
+        {
+          "span_id": "16463cf0092f2612",
+          "parent_span_id": "786e4ff31669cb62",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.CartService/AddItem",
+          "start_time": "2026-09-02T17:38:27.835000Z",
+          "end_time": "2026-09-02T17:38:43.376185Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.CartService/AddItem",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "AddItem",
+            "rpc.service": "oteldemo.CartService",
+            "rpc.system": "grpc",
+            "server.address": "cart",
+            "server.port": 7070
+          }
+        },
+        {
+          "span_id": "e2d89b984545248c",
+          "parent_span_id": "cf0a0241e1a073fd",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.CartService/AddItem",
+          "start_time": "2026-09-02T17:38:42.998000Z",
+          "end_time": "2026-09-02T17:38:43.399183Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.CartService/AddItem",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "AddItem",
+            "rpc.service": "oteldemo.CartService",
+            "rpc.system": "grpc",
+            "server.address": "cart",
+            "server.port": 7070
+          }
+        },
+        {
+          "span_id": "eb1d3c2d0020e460",
+          "parent_span_id": "cf0a0241e1a073fd",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:38:43.400000Z",
+          "end_time": "2026-09-02T17:38:43.521802Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.CartService/GetCart",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "GetCart",
+            "rpc.service": "oteldemo.CartService",
+            "rpc.system": "grpc",
+            "server.address": "cart",
+            "server.port": 7070
+          }
+        },
+        {
+          "span_id": "ffb2cab024c85f3c",
+          "parent_span_id": "786e4ff31669cb62",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:38:43.377000Z",
+          "end_time": "2026-09-02T17:38:43.579978Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.CartService/GetCart",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "GetCart",
+            "rpc.service": "oteldemo.CartService",
+            "rpc.system": "grpc",
+            "server.address": "cart",
+            "server.port": 7070
+          }
+        },
+        {
+          "span_id": "cf0a0241e1a073fd",
+          "parent_span_id": "3fb80ccfd01ee501",
+          "service_name": "frontend",
+          "operation_name": "executing api route (pages) /api/cart",
+          "start_time": "2026-09-02T17:38:42.993000Z",
+          "end_time": "2026-09-02T17:38:43.532302Z",
+          "is_error": false,
+          "attributes": {
+            "http.status_code": 200,
+            "next.span_category": "nextjs",
+            "next.span_name": "executing api route (pages) /api/cart",
+            "next.span_type": "Node.runHandler"
+          }
+        },
+        {
+          "span_id": "3fb80ccfd01ee501",
+          "parent_span_id": "37782bdc6f7538d1",
+          "service_name": "frontend",
+          "operation_name": "POST /api/cart",
+          "start_time": "2026-09-02T17:38:42.990000Z",
+          "end_time": "2026-09-02T17:38:43.531980Z",
+          "is_error": false,
+          "attributes": {
+            "http.method": "POST",
+            "http.route": "/api/cart",
+            "http.status_code": 200,
+            "http.target": "/api/cart",
+            "next.route": "/api/cart",
+            "next.rsc": false,
+            "next.span_category": "nextjs",
+            "next.span_name": "POST /api/cart",
+            "next.span_type": "BaseServer.handleRequest"
+          }
+        },
+        {
+          "span_id": "786e4ff31669cb62",
+          "parent_span_id": "5e91cbd3df4fee6a",
+          "service_name": "frontend",
+          "operation_name": "executing api route (pages) /api/cart",
+          "start_time": "2026-09-02T17:38:27.835000Z",
+          "end_time": "2026-09-02T17:38:43.580263Z",
+          "is_error": false,
+          "attributes": {
+            "http.status_code": 200,
+            "next.span_category": "nextjs",
+            "next.span_name": "executing api route (pages) /api/cart",
+            "next.span_type": "Node.runHandler"
+          }
+        },
+        {
+          "span_id": "5e91cbd3df4fee6a",
+          "parent_span_id": "03c58fd8b4df4f70",
+          "service_name": "frontend",
+          "operation_name": "POST /api/cart",
+          "start_time": "2026-09-02T17:38:27.834000Z",
+          "end_time": "2026-09-02T17:38:43.580646Z",
+          "is_error": false,
+          "attributes": {
+            "http.method": "POST",
+            "http.route": "/api/cart",
+            "http.status_code": 200,
+            "http.target": "/api/cart",
+            "next.route": "/api/cart",
+            "next.rsc": false,
+            "next.span_category": "nextjs",
+            "next.span_name": "POST /api/cart",
+            "next.span_type": "BaseServer.handleRequest"
+          }
+        },
+        {
+          "span_id": "37782bdc6f7538d1",
+          "parent_span_id": "f4504c573688206f",
+          "service_name": "frontend",
+          "operation_name": "POST /api/cart",
+          "start_time": "2026-09-02T17:38:42.989000Z",
+          "end_time": "2026-09-02T17:38:43.532034Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.25",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/api/cart",
+            "network.peer.address": "172.18.0.25",
+            "network.peer.port": 33622,
+            "network.protocol.version": "1.1",
+            "original_span_name": "POST",
+            "server.address": "frontend-proxy",
+            "server.port": 8080,
+            "url.path": "/api/cart",
+            "url.scheme": "http",
+            "user_agent.original": "Grafana k6/2.2.0"
+          }
+        },
+        {
+          "span_id": "c0520f771712be6d",
+          "parent_span_id": "80141410d99f979b",
+          "service_name": "product-catalog",
+          "operation_name": "astronomy-db",
+          "start_time": "2026-09-02T17:38:42.933104Z",
+          "end_time": "2026-09-02T17:38:42.935366Z",
+          "is_error": false,
+          "attributes": {
+            "db.query.text": "\n\t\tSELECT p.id, p.name, p.description, p.picture, \n\t\t       p.price_currency_code, p.price_units, p.price_nanos, p.categories\n\t\tFROM catalog.products p\n\t\tWHERE p.id = $1\n\t",
+            "db.system.name": "postgresql",
+            "original_span_name": "sql.conn.query",
+            "server.address": "astronomy-db"
+          }
+        },
+        {
+          "span_id": "d07863aad47ca450",
+          "parent_span_id": "4958e24fb1568ffd",
+          "service_name": "product-catalog",
+          "operation_name": "astronomy-db",
+          "start_time": "2026-09-02T17:38:44.873374Z",
+          "end_time": "2026-09-02T17:38:45.995919Z",
+          "is_error": false,
+          "attributes": {
+            "db.query.text": "\n\t\tSELECT p.id, p.name, p.description, p.picture, \n\t\t       p.price_currency_code, p.price_units, p.price_nanos, p.categories\n\t\tFROM catalog.products p\n\t\tWHERE p.id = $1\n\t",
+            "db.system.name": "postgresql",
+            "original_span_name": "sql.conn.query",
+            "server.address": "astronomy-db"
+          }
+        },
+        {
+          "span_id": "80141410d99f979b",
+          "parent_span_id": "e9df874330b60608",
+          "service_name": "product-catalog",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:42.909422Z",
+          "end_time": "2026-09-02T17:38:42.945373Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "66VCHSJNUP",
+            "demo.product.name": "Starsense Explorer Refractor Telescope",
+            "rpc.method": "oteldemo.ProductCatalogService/GetProduct",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.21",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "792a83266012dd3e",
+          "parent_span_id": "0f619774cd2110a0",
+          "service_name": "frontend-proxy",
+          "operation_name": "router frontend egress",
+          "start_time": "2026-09-02T17:38:43.526411Z",
+          "end_time": "2026-09-02T17:38:48.392183Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "peer.address": "172.18.0.24:8080",
+            "response_flags": "-",
+            "upstream_address": "172.18.0.24:8080",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend"
+          }
+        },
+        {
+          "span_id": "0f619774cd2110a0",
+          "parent_span_id": "12d2f6f0808a5983",
+          "service_name": "frontend-proxy",
+          "operation_name": "GET",
+          "start_time": "2026-09-02T17:38:43.526122Z",
+          "end_time": "2026-09-02T17:38:48.392317Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "downstream_cluster": "-",
+            "guid:x-request-id": "2655dba1-9bac-9594-9f24-df1ddeb2b7e9",
+            "http.method": "GET",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "http.url": "http://frontend-proxy:8080/api/products/2ZYFJ3GM2N",
+            "node_id": "",
+            "original_span_name": "ingress",
+            "peer.address": "172.18.0.26",
+            "request_size": "0",
+            "response_flags": "-",
+            "response_size": "556",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend",
+            "user_agent": "Grafana k6/2.2.0",
+            "zone": ""
+          }
+        },
+        {
+          "span_id": "bc9a3e61378cbdbc",
+          "parent_span_id": "ec856ac93c26aec9",
+          "service_name": "frontend-proxy",
+          "operation_name": "router frontend egress",
+          "start_time": "2026-09-02T17:38:48.405089Z",
+          "end_time": "2026-09-02T17:38:48.655253Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "peer.address": "172.18.0.24:8080",
+            "response_flags": "-",
+            "upstream_address": "172.18.0.24:8080",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend"
+          }
+        },
+        {
+          "span_id": "ec856ac93c26aec9",
+          "parent_span_id": "12d2f6f0808a5983",
+          "service_name": "frontend-proxy",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:48.403795Z",
+          "end_time": "2026-09-02T17:38:48.655305Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "downstream_cluster": "-",
+            "guid:x-request-id": "6487d7a2-2f04-96d7-97c1-4b63c467b231",
+            "http.method": "POST",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "http.url": "http://frontend-proxy:8080/api/cart",
+            "node_id": "",
+            "original_span_name": "ingress",
+            "peer.address": "172.18.0.26",
+            "request_size": "96",
+            "response_flags": "-",
+            "response_size": "139",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend",
+            "user_agent": "Grafana k6/2.2.0",
+            "zone": ""
+          }
+        },
+        {
+          "span_id": "5f10f77628f6568b",
+          "parent_span_id": "a964de2fa1c1d783",
+          "service_name": "product-catalog",
+          "operation_name": "astronomy-db",
+          "start_time": "2026-09-02T17:38:50.098116Z",
+          "end_time": "2026-09-02T17:38:50.114636Z",
+          "is_error": false,
+          "attributes": {
+            "db.query.text": "\n\t\tSELECT p.id, p.name, p.description, p.picture, \n\t\t       p.price_currency_code, p.price_units, p.price_nanos, p.categories\n\t\tFROM catalog.products p\n\t\tWHERE p.id = $1\n\t",
+            "db.system.name": "postgresql",
+            "original_span_name": "sql.conn.query",
+            "server.address": "astronomy-db"
+          }
+        },
+        {
+          "span_id": "216a812dd0866586",
+          "parent_span_id": "36e52b21e1691364",
+          "service_name": "product-catalog",
+          "operation_name": "astronomy-db",
+          "start_time": "2026-09-02T17:38:50.784256Z",
+          "end_time": "2026-09-02T17:38:50.785619Z",
+          "is_error": false,
+          "attributes": {
+            "db.query.text": "\n\t\tSELECT p.id, p.name, p.description, p.picture, \n\t\t       p.price_currency_code, p.price_units, p.price_nanos, p.categories\n\t\tFROM catalog.products p\n\t\tWHERE p.id = $1\n\t",
+            "db.system.name": "postgresql",
+            "original_span_name": "sql.conn.query",
+            "server.address": "astronomy-db"
+          }
+        },
+        {
+          "span_id": "4958e24fb1568ffd",
+          "parent_span_id": "7a09552dd3ca3822",
+          "service_name": "product-catalog",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:44.074252Z",
+          "end_time": "2026-09-02T17:38:48.346347Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "2ZYFJ3GM2N",
+            "demo.product.name": "Roof Binoculars",
+            "rpc.method": "oteldemo.ProductCatalogService/GetProduct",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.21",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "a964de2fa1c1d783",
+          "parent_span_id": "c0f3ab81a11eda96",
+          "service_name": "product-catalog",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:50.083613Z",
+          "end_time": "2026-09-02T17:38:50.116162Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "66VCHSJNUP",
+            "demo.product.name": "Starsense Explorer Refractor Telescope",
+            "rpc.method": "oteldemo.ProductCatalogService/GetProduct",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.21",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "36e52b21e1691364",
+          "parent_span_id": "ddd7d85d5cdcabdf",
+          "service_name": "product-catalog",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:50.766607Z",
+          "end_time": "2026-09-02T17:38:50.785901Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "2ZYFJ3GM2N",
+            "demo.product.name": "Roof Binoculars",
+            "rpc.method": "oteldemo.ProductCatalogService/GetProduct",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.21",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "2d9ceba4b5d8e4c7",
+          "parent_span_id": "ffb3fe0635192c8d",
+          "service_name": "shipping",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:51.414219Z",
+          "end_time": "2026-09-02T17:38:51.428808Z",
+          "is_error": false,
+          "attributes": {
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "original_span_name": "POST quote",
+            "server.address": "quote",
+            "server.port": 8090,
+            "url.full": "http://quote:8090/getquote"
+          }
+        },
+        {
+          "span_id": "ffb3fe0635192c8d",
+          "parent_span_id": "2dd03a842767cc9e",
+          "service_name": "shipping",
+          "operation_name": "POST /get-quote",
+          "start_time": "2026-09-02T17:38:51.411988Z",
+          "end_time": "2026-09-02T17:38:51.429085Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.23",
+            "demo.shipping.cost.total": "80.91",
+            "http.request.body.size": 231,
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/get-quote",
+            "network.protocol.version": "1.1",
+            "server.address": "shipping",
+            "server.port": 50050,
+            "url.path": "/get-quote",
+            "url.scheme": "http",
+            "user_agent.original": "Go-http-client/1.1"
+          }
+        },
+        {
+          "span_id": "c949fafdbe9109d2",
+          "parent_span_id": "d0db7d9697e30a1f",
+          "service_name": "cart",
+          "operation_name": "POST /oteldemo.CartService/AddItem",
+          "start_time": "2026-09-02T17:38:48.467232Z",
+          "end_time": "2026-09-02T17:38:48.483373Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "2ZYFJ3GM2N",
+            "demo.product.quantity": 4,
+            "grpc.method": "/oteldemo.CartService/AddItem",
+            "grpc.status_code": "0",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/oteldemo.CartService/AddItem",
+            "network.protocol.version": "2",
+            "server.address": "cart",
+            "server.port": 7070,
+            "url.path": "/oteldemo.CartService/AddItem",
+            "url.scheme": "http",
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1",
+            "user_agent.original": "grpc-node-js/1.14.4"
+          }
+        },
+        {
+          "span_id": "b289d0bbe543efe7",
+          "parent_span_id": "f77303b4f21cb741",
+          "service_name": "cart",
+          "operation_name": "POST /oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:38:48.618958Z",
+          "end_time": "2026-09-02T17:38:48.649882Z",
+          "is_error": false,
+          "attributes": {
+            "demo.cart.items.count": 9,
+            "grpc.method": "/oteldemo.CartService/GetCart",
+            "grpc.status_code": "0",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/oteldemo.CartService/GetCart",
+            "network.protocol.version": "2",
+            "server.address": "cart",
+            "server.port": 7070,
+            "url.path": "/oteldemo.CartService/GetCart",
+            "url.scheme": "http",
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1",
+            "user_agent.original": "grpc-node-js/1.14.4"
+          }
+        },
+        {
+          "span_id": "9950ef1acf449615",
+          "parent_span_id": "3234fac48bc14e1b",
+          "service_name": "cart",
+          "operation_name": "POST /oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:38:49.918725Z",
+          "end_time": "2026-09-02T17:38:49.928942Z",
+          "is_error": false,
+          "attributes": {
+            "demo.cart.items.count": 9,
+            "grpc.method": "/oteldemo.CartService/GetCart",
+            "grpc.status_code": "0",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/oteldemo.CartService/GetCart",
+            "network.protocol.version": "2",
+            "server.address": "cart",
+            "server.port": 7070,
+            "url.path": "/oteldemo.CartService/GetCart",
+            "url.scheme": "http",
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1",
+            "user_agent.original": "grpc-go/1.83.2"
+          }
+        },
+        {
+          "span_id": "fe7545ff5e91265b",
+          "parent_span_id": "8a5e1a0bc720de72",
+          "service_name": "currency",
+          "operation_name": "oteldemo.CurrencyService/Convert",
+          "start_time": "2026-09-02T17:38:50.604805Z",
+          "end_time": "2026-09-02T17:38:50.605782Z",
+          "is_error": false,
+          "attributes": {
+            "demo.exchange.from": "USD",
+            "demo.exchange.to": "USD",
+            "original_span_name": "Currency/Convert",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "Convert",
+            "rpc.service": "oteldemo.CurrencyService",
+            "rpc.system": "grpc"
+          }
+        },
+        {
+          "span_id": "ea6704b05c5746e9",
+          "parent_span_id": "e8f78a056698d41b",
+          "service_name": "currency",
+          "operation_name": "oteldemo.CurrencyService/Convert",
+          "start_time": "2026-09-02T17:38:51.043975Z",
+          "end_time": "2026-09-02T17:38:51.044106Z",
+          "is_error": false,
+          "attributes": {
+            "demo.exchange.from": "USD",
+            "demo.exchange.to": "USD",
+            "original_span_name": "Currency/Convert",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "Convert",
+            "rpc.service": "oteldemo.CurrencyService",
+            "rpc.system": "grpc"
+          }
+        },
+        {
+          "span_id": "a41b49031076afc4",
+          "parent_span_id": "22a7d2961bb0add7",
+          "service_name": "currency",
+          "operation_name": "oteldemo.CurrencyService/Convert",
+          "start_time": "2026-09-02T17:38:51.477823Z",
+          "end_time": "2026-09-02T17:38:51.477947Z",
+          "is_error": false,
+          "attributes": {
+            "demo.exchange.from": "USD",
+            "demo.exchange.to": "USD",
+            "original_span_name": "Currency/Convert",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "Convert",
+            "rpc.service": "oteldemo.CurrencyService",
+            "rpc.system": "grpc"
+          }
+        },
+        {
+          "span_id": "12d2f6f0808a5983",
+          "parent_span_id": "25175bef605d6bfe",
+          "service_name": "load-generator",
+          "operation_name": "user_add_to_cart",
+          "start_time": "2026-09-02T17:38:43.525268Z",
+          "end_time": "2026-09-02T17:38:48.661064Z",
+          "is_error": false,
+          "attributes": {
+            "product.id": "2ZYFJ3GM2N",
+            "quantity": 4,
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1"
+          }
+        },
+        {
+          "span_id": "3234fac48bc14e1b",
+          "parent_span_id": "79efda59ccdca316",
+          "service_name": "checkout",
+          "operation_name": "oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:38:49.863733Z",
+          "end_time": "2026-09-02T17:38:49.962195Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.method": "oteldemo.CartService/GetCart",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.20",
+            "server.port": 7070
+          }
+        },
+        {
+          "span_id": "c0f3ab81a11eda96",
+          "parent_span_id": "79efda59ccdca316",
+          "service_name": "checkout",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:50.003512Z",
+          "end_time": "2026-09-02T17:38:50.529961Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.method": "oteldemo.ProductCatalogService/GetProduct",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.21",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "8a5e1a0bc720de72",
+          "parent_span_id": "79efda59ccdca316",
+          "service_name": "checkout",
+          "operation_name": "oteldemo.CurrencyService/Convert",
+          "start_time": "2026-09-02T17:38:50.562835Z",
+          "end_time": "2026-09-02T17:38:50.649638Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.method": "oteldemo.CurrencyService/Convert",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.18",
+            "server.port": 7001
+          }
+        },
+        {
+          "span_id": "ddd7d85d5cdcabdf",
+          "parent_span_id": "79efda59ccdca316",
+          "service_name": "checkout",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:50.726502Z",
+          "end_time": "2026-09-02T17:38:50.882872Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.method": "oteldemo.ProductCatalogService/GetProduct",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.21",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "e8f78a056698d41b",
+          "parent_span_id": "79efda59ccdca316",
+          "service_name": "checkout",
+          "operation_name": "oteldemo.CurrencyService/Convert",
+          "start_time": "2026-09-02T17:38:50.885699Z",
+          "end_time": "2026-09-02T17:38:51.059261Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.method": "oteldemo.CurrencyService/Convert",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.18",
+            "server.port": 7001
+          }
+        },
+        {
+          "span_id": "22a7d2961bb0add7",
+          "parent_span_id": "79efda59ccdca316",
+          "service_name": "checkout",
+          "operation_name": "oteldemo.CurrencyService/Convert",
+          "start_time": "2026-09-02T17:38:51.473737Z",
+          "end_time": "2026-09-02T17:38:51.481754Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.method": "oteldemo.CurrencyService/Convert",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.18",
+            "server.port": 7001
+          }
+        },
+        {
+          "span_id": "316a503134a5b33c",
+          "parent_span_id": "913179ec8baa2834",
+          "service_name": "checkout",
+          "operation_name": "oteldemo.PaymentService/Charge",
+          "start_time": "2026-09-02T17:38:51.483385Z",
+          "end_time": "2026-09-02T17:38:51.628927Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.method": "oteldemo.PaymentService/Charge",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.16",
+            "server.port": 50051
+          }
+        },
+        {
+          "span_id": "2dd03a842767cc9e",
+          "parent_span_id": "79efda59ccdca316",
+          "service_name": "checkout",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:51.143012Z",
+          "end_time": "2026-09-02T17:38:51.457537Z",
+          "is_error": false,
+          "attributes": {
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "network.protocol.version": "1.1",
+            "original_span_name": "HTTP POST",
+            "server.address": "shipping",
+            "server.port": 50050,
+            "url.full": "http://shipping:50050/get-quote"
+          }
+        },
+        {
+          "span_id": "79efda59ccdca316",
+          "parent_span_id": "913179ec8baa2834",
+          "service_name": "checkout",
+          "operation_name": "prepareOrderItemsAndShippingQuoteFromCart",
+          "start_time": "2026-09-02T17:38:49.853270Z",
+          "end_time": "2026-09-02T17:38:51.483252Z",
+          "is_error": false,
+          "attributes": {
+            "demo.cart.items.count": 9,
+            "demo.order.items.count": 2,
+            "demo.shipping.amount": 80.9
+          }
+        },
+        {
+          "span_id": "7a09552dd3ca3822",
+          "parent_span_id": "5430ba3db89de469",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:43.590000Z",
+          "end_time": "2026-09-02T17:38:48.390665Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.ProductCatalogService/GetProduct",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "GetProduct",
+            "rpc.service": "oteldemo.ProductCatalogService",
+            "rpc.system": "grpc",
+            "server.address": "product-catalog",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "d0db7d9697e30a1f",
+          "parent_span_id": "5354133d48d3321a",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.CartService/AddItem",
+          "start_time": "2026-09-02T17:38:48.463000Z",
+          "end_time": "2026-09-02T17:38:48.565553Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.CartService/AddItem",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "AddItem",
+            "rpc.service": "oteldemo.CartService",
+            "rpc.system": "grpc",
+            "server.address": "cart",
+            "server.port": 7070
+          }
+        },
+        {
+          "span_id": "f77303b4f21cb741",
+          "parent_span_id": "5354133d48d3321a",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:38:48.566000Z",
+          "end_time": "2026-09-02T17:38:48.650734Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.CartService/GetCart",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "GetCart",
+            "rpc.service": "oteldemo.CartService",
+            "rpc.system": "grpc",
+            "server.address": "cart",
+            "server.port": 7070
+          }
+        },
+        {
+          "span_id": "baa5bf31ce716b8c",
+          "parent_span_id": "90b4add6b2ca1d4f",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.CheckoutService/PlaceOrder",
+          "start_time": "2026-09-02T17:38:48.697000Z",
+          "end_time": "2026-09-02T17:38:53.029583Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.CheckoutService/PlaceOrder",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "PlaceOrder",
+            "rpc.service": "oteldemo.CheckoutService",
+            "rpc.system": "grpc",
+            "server.address": "checkout",
+            "server.port": 5050
+          }
+        },
+        {
+          "span_id": "b4a1e07e9fe10cc9",
+          "parent_span_id": "90b4add6b2ca1d4f",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:53.029000Z",
+          "end_time": "2026-09-02T17:38:53.112615Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.ProductCatalogService/GetProduct",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "GetProduct",
+            "rpc.service": "oteldemo.ProductCatalogService",
+            "rpc.system": "grpc",
+            "server.address": "product-catalog",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "9bb2eb61dfab09b7",
+          "parent_span_id": "90b4add6b2ca1d4f",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:53.030000Z",
+          "end_time": "2026-09-02T17:38:53.135498Z",
+          "is_error": false,
+          "attributes": {
+            "original_span_name": "grpc.oteldemo.ProductCatalogService/GetProduct",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "GetProduct",
+            "rpc.service": "oteldemo.ProductCatalogService",
+            "rpc.system": "grpc",
+            "server.address": "product-catalog",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "5430ba3db89de469",
+          "parent_span_id": "92bfcdbcd84ba3f1",
+          "service_name": "frontend",
+          "operation_name": "executing api route (pages) /api/products/[productId]/index",
+          "start_time": "2026-09-02T17:38:43.590000Z",
+          "end_time": "2026-09-02T17:38:48.392280Z",
+          "is_error": false,
+          "attributes": {
+            "http.status_code": 200,
+            "next.span_category": "nextjs",
+            "next.span_name": "executing api route (pages) /api/products/[productId]/index",
+            "next.span_type": "Node.runHandler"
+          }
+        },
+        {
+          "span_id": "92bfcdbcd84ba3f1",
+          "parent_span_id": "feb0d0ccb21fdaf0",
+          "service_name": "frontend",
+          "operation_name": "GET /api/products/[productId]/index",
+          "start_time": "2026-09-02T17:38:43.587000Z",
+          "end_time": "2026-09-02T17:38:48.393415Z",
+          "is_error": false,
+          "attributes": {
+            "http.method": "GET",
+            "http.route": "/api/products/[productId]/index",
+            "http.status_code": 200,
+            "http.target": "/api/products/2ZYFJ3GM2N",
+            "next.route": "/api/products/[productId]/index",
+            "next.rsc": false,
+            "next.span_category": "nextjs",
+            "next.span_name": "GET /api/products/[productId]/index",
+            "next.span_type": "BaseServer.handleRequest"
+          }
+        },
+        {
+          "span_id": "5354133d48d3321a",
+          "parent_span_id": "db60bc8316cf9b88",
+          "service_name": "frontend",
+          "operation_name": "executing api route (pages) /api/cart",
+          "start_time": "2026-09-02T17:38:48.462000Z",
+          "end_time": "2026-09-02T17:38:48.653176Z",
+          "is_error": false,
+          "attributes": {
+            "http.status_code": 200,
+            "next.span_category": "nextjs",
+            "next.span_name": "executing api route (pages) /api/cart",
+            "next.span_type": "Node.runHandler"
+          }
+        },
+        {
+          "span_id": "db60bc8316cf9b88",
+          "parent_span_id": "936da87a09ffdd92",
+          "service_name": "frontend",
+          "operation_name": "POST /api/cart",
+          "start_time": "2026-09-02T17:38:48.454000Z",
+          "end_time": "2026-09-02T17:38:48.654109Z",
+          "is_error": false,
+          "attributes": {
+            "http.method": "POST",
+            "http.route": "/api/cart",
+            "http.status_code": 200,
+            "http.target": "/api/cart",
+            "next.route": "/api/cart",
+            "next.rsc": false,
+            "next.span_category": "nextjs",
+            "next.span_name": "POST /api/cart",
+            "next.span_type": "BaseServer.handleRequest"
+          }
+        },
+        {
+          "span_id": "90b4add6b2ca1d4f",
+          "parent_span_id": "fe19d59f85ac475d",
+          "service_name": "frontend",
+          "operation_name": "executing api route (pages) /api/checkout",
+          "start_time": "2026-09-02T17:38:48.692000Z",
+          "end_time": "2026-09-02T17:38:53.136046Z",
+          "is_error": false,
+          "attributes": {
+            "http.status_code": 200,
+            "next.span_category": "nextjs",
+            "next.span_name": "executing api route (pages) /api/checkout",
+            "next.span_type": "Node.runHandler"
+          }
+        },
+        {
+          "span_id": "fe19d59f85ac475d",
+          "parent_span_id": "e4bcce66d5332585",
+          "service_name": "frontend",
+          "operation_name": "POST /api/checkout",
+          "start_time": "2026-09-02T17:38:48.669000Z",
+          "end_time": "2026-09-02T17:38:53.136364Z",
+          "is_error": false,
+          "attributes": {
+            "http.method": "POST",
+            "http.route": "/api/checkout",
+            "http.status_code": 200,
+            "http.target": "/api/checkout",
+            "next.route": "/api/checkout",
+            "next.rsc": false,
+            "next.span_category": "nextjs",
+            "next.span_name": "POST /api/checkout",
+            "next.span_type": "BaseServer.handleRequest"
+          }
+        },
+        {
+          "span_id": "feb0d0ccb21fdaf0",
+          "parent_span_id": "792a83266012dd3e",
+          "service_name": "frontend",
+          "operation_name": "GET /api/products/[productId]/index",
+          "start_time": "2026-09-02T17:38:43.581000Z",
+          "end_time": "2026-09-02T17:38:48.393609Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.25",
+            "http.request.method": "GET",
+            "http.response.status_code": 200,
+            "http.route": "/api/products/[productId]/index",
+            "network.peer.address": "172.18.0.25",
+            "network.peer.port": 33622,
+            "network.protocol.version": "1.1",
+            "original_span_name": "GET",
+            "server.address": "frontend-proxy",
+            "server.port": 8080,
+            "url.path": "/api/products/2ZYFJ3GM2N",
+            "url.scheme": "http",
+            "user_agent.original": "Grafana k6/2.2.0"
+          }
+        },
+        {
+          "span_id": "936da87a09ffdd92",
+          "parent_span_id": "bc9a3e61378cbdbc",
+          "service_name": "frontend",
+          "operation_name": "POST /api/cart",
+          "start_time": "2026-09-02T17:38:48.448000Z",
+          "end_time": "2026-09-02T17:38:48.653656Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.25",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/api/cart",
+            "network.peer.address": "172.18.0.25",
+            "network.peer.port": 33622,
+            "network.protocol.version": "1.1",
+            "original_span_name": "POST",
+            "server.address": "frontend-proxy",
+            "server.port": 8080,
+            "url.path": "/api/cart",
+            "url.scheme": "http",
+            "user_agent.original": "Grafana k6/2.2.0"
+          }
+        },
+        {
+          "span_id": "e4bcce66d5332585",
+          "parent_span_id": "a650baf613c8728d",
+          "service_name": "frontend",
+          "operation_name": "POST /api/checkout",
+          "start_time": "2026-09-02T17:38:48.668000Z",
+          "end_time": "2026-09-02T17:38:53.136528Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.25",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/api/checkout",
+            "network.peer.address": "172.18.0.25",
+            "network.peer.port": 33622,
+            "network.protocol.version": "1.1",
+            "original_span_name": "POST",
+            "server.address": "frontend-proxy",
+            "server.port": 8080,
+            "url.path": "/api/checkout",
+            "url.scheme": "http",
+            "user_agent.original": "Grafana k6/2.2.0"
+          }
+        },
+        {
+          "span_id": "ff6187109d57c1a1",
+          "parent_span_id": "a550d65aed1e8563",
+          "service_name": "email",
+          "operation_name": "sinatra.render_template",
+          "start_time": "2026-09-02T17:38:52.991875Z",
+          "end_time": "2026-09-02T17:38:52.992495Z",
+          "is_error": false,
+          "attributes": {
+            "sinatra.template_name": "layout"
+          }
+        },
+        {
+          "span_id": "a550d65aed1e8563",
+          "parent_span_id": "ef06ae8473791c5d",
+          "service_name": "email",
+          "operation_name": "sinatra.render_template",
+          "start_time": "2026-09-02T17:38:52.991232Z",
+          "end_time": "2026-09-02T17:38:52.992522Z",
+          "is_error": false,
+          "attributes": {
+            "sinatra.template_name": "confirmation"
+          }
+        },
+        {
+          "span_id": "ef06ae8473791c5d",
+          "parent_span_id": "9db8176670ee0574",
+          "service_name": "email",
+          "operation_name": "send_email",
+          "start_time": "2026-09-02T17:38:52.980607Z",
+          "end_time": "2026-09-02T17:38:53.002149Z",
+          "is_error": false,
+          "attributes": {
+            "demo.order.id": "284d0d2d-a6f5-11f1-ac6c-7686bd5d6959"
+          }
+        },
+        {
+          "span_id": "9db8176670ee0574",
+          "parent_span_id": "a3460b767a3850ef",
+          "service_name": "email",
+          "operation_name": "POST /send_order_confirmation",
+          "start_time": "2026-09-02T17:38:52.972064Z",
+          "end_time": "2026-09-02T17:38:53.002886Z",
+          "is_error": false,
+          "attributes": {
+            "demo.order.id": "284d0d2d-a6f5-11f1-ac6c-7686bd5d6959",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/send_order_confirmation",
+            "server.address": "email:6060",
+            "url.path": "/send_order_confirmation",
+            "url.scheme": "http",
+            "user_agent.original": "Go-http-client/1.1"
+          }
+        },
+        {
+          "span_id": "c1a01c79f72ddd28",
+          "parent_span_id": "2af1e5577b75f551",
+          "service_name": "flagd",
+          "operation_name": "resolveFloat",
+          "start_time": "2026-09-02T17:38:52.756111Z",
+          "end_time": "2026-09-02T17:38:52.756187Z",
+          "is_error": false,
+          "attributes": {}
+        },
+        {
+          "span_id": "2af1e5577b75f551",
+          "parent_span_id": "35f00885bc12df05",
+          "service_name": "flagd",
+          "operation_name": "resolveFloat",
+          "start_time": "2026-09-02T17:38:52.756098Z",
+          "end_time": "2026-09-02T17:38:52.756208Z",
+          "is_error": false,
+          "attributes": {
+            "feature_flag.key": "cartFailure",
+            "feature_flag.provider.name": "flagd",
+            "feature_flag.result.variant": "off"
+          }
+        },
+        {
+          "span_id": "35f00885bc12df05",
+          "parent_span_id": "1c9c35b658a3d854",
+          "service_name": "flagd",
+          "operation_name": "flagd.evaluation.v2.Service/ResolveFloat",
+          "start_time": "2026-09-02T17:38:52.756084Z",
+          "end_time": "2026-09-02T17:38:52.756236Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "ResolveFloat",
+            "rpc.service": "flagd.evaluation.v2.Service",
+            "rpc.system": "grpc"
+          }
+        },
+        {
+          "span_id": "a650baf613c8728d",
+          "parent_span_id": "678d74ce90f33d97",
+          "service_name": "frontend-proxy",
+          "operation_name": "router frontend egress",
+          "start_time": "2026-09-02T17:38:48.666283Z",
+          "end_time": "2026-09-02T17:38:53.142352Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "peer.address": "172.18.0.24:8080",
+            "response_flags": "-",
+            "upstream_address": "172.18.0.24:8080",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend"
+          }
+        },
+        {
+          "span_id": "678d74ce90f33d97",
+          "parent_span_id": "25175bef605d6bfe",
+          "service_name": "frontend-proxy",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:48.665552Z",
+          "end_time": "2026-09-02T17:38:53.142705Z",
+          "is_error": false,
+          "attributes": {
+            "component": "proxy",
+            "downstream_cluster": "-",
+            "guid:x-request-id": "8c0473ce-eed4-9ec3-bcd7-2703966ba806",
+            "http.method": "POST",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "200",
+            "http.url": "http://frontend-proxy:8080/api/checkout",
+            "node_id": "",
+            "original_span_name": "ingress",
+            "peer.address": "172.18.0.26",
+            "request_size": "379",
+            "response_flags": "-",
+            "response_size": "1621",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend",
+            "user_agent": "Grafana k6/2.2.0",
+            "zone": ""
+          }
+        },
+        {
+          "span_id": "4c542a13ad84a257",
+          "parent_span_id": "ba54f0023022bfee",
+          "service_name": "quote",
+          "operation_name": "calculate-quote",
+          "start_time": "2026-09-02T17:14:56.069181Z",
+          "end_time": "2026-09-02T17:14:56.069338Z",
+          "is_error": false,
+          "attributes": {
+            "demo.shipping.quote.cost.total": 80.91,
+            "demo.shipping.quote.items_count": 9
+          }
+        },
+        {
+          "span_id": "ba54f0023022bfee",
+          "parent_span_id": "4603338d8f01adc1",
+          "service_name": "quote",
+          "operation_name": "{closure}",
+          "start_time": "2026-09-02T17:14:56.068952Z",
+          "end_time": "2026-09-02T17:14:56.069801Z",
+          "is_error": false,
+          "attributes": {
+            "code.file.path": "/var/www/vendor/php-di/slim-bridge/src/ControllerInvoker.php",
+            "code.function.name": "DI\\Bridge\\Slim\\ControllerInvoker::__invoke",
+            "code.line.number": 29
+          }
+        },
+        {
+          "span_id": "4603338d8f01adc1",
+          "parent_span_id": "2d9ceba4b5d8e4c7",
+          "service_name": "quote",
+          "operation_name": "POST /getquote",
+          "start_time": "2026-09-02T17:14:56.068518Z",
+          "end_time": "2026-09-02T17:14:56.069883Z",
+          "is_error": false,
+          "attributes": {
+            "code.file.path": "/var/www/vendor/slim/slim/Slim/App.php",
+            "code.function.name": "Slim\\App::handle",
+            "code.line.number": 207,
+            "http.request.body.size": "19",
+            "http.request.method": "POST",
+            "http.response.body.size": "",
+            "http.response.status_code": 200,
+            "http.route": "/getquote",
+            "network.protocol.version": "1.1",
+            "server.address": "quote",
+            "server.port": 8090,
+            "url.full": "http://quote:8090/getquote",
+            "url.path": "/getquote",
+            "url.scheme": "http",
+            "user_agent.original": ""
+          }
+        },
+        {
+          "span_id": "13c61acb094f8318",
+          "parent_span_id": "e096798396d18746",
+          "service_name": "payment",
+          "operation_name": "charge",
+          "start_time": "2026-09-02T17:38:51.602000Z",
+          "end_time": "2026-09-02T17:38:51.617142Z",
+          "is_error": false,
+          "attributes": {
+            "demo.payment.card_number": "****-****-****-0454",
+            "demo.payment.card_type": "visa",
+            "demo.payment.card_valid": true,
+            "demo.payment.charged": false,
+            "demo.user_context.loyalty_level": "gold",
+            "user_agent.synthetic.type": "test"
+          }
+        },
+        {
+          "span_id": "e096798396d18746",
+          "parent_span_id": "316a503134a5b33c",
+          "service_name": "payment",
+          "operation_name": "oteldemo.PaymentService/Charge",
+          "start_time": "2026-09-02T17:38:51.600000Z",
+          "end_time": "2026-09-02T17:38:51.617262Z",
+          "is_error": false,
+          "attributes": {
+            "demo.payment.amount": "2670.46",
+            "original_span_name": "grpc.oteldemo.PaymentService/Charge",
+            "rpc.grpc.status_code": 0,
+            "rpc.method": "Charge",
+            "rpc.service": "oteldemo.PaymentService",
+            "rpc.system": "grpc"
+          }
+        },
+        {
+          "span_id": "1f85c2b554586e6d",
+          "parent_span_id": "3b231476ca1c4ea7",
+          "service_name": "shipping",
+          "operation_name": "POST /ship-order",
+          "start_time": "2026-09-02T17:38:52.099738Z",
+          "end_time": "2026-09-02T17:38:52.116341Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.23",
+            "http.request.body.size": 231,
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/ship-order",
+            "network.protocol.version": "1.1",
+            "server.address": "shipping",
+            "server.port": 50050,
+            "url.path": "/ship-order",
+            "url.scheme": "http",
+            "user_agent.original": "Go-http-client/1.1"
+          }
+        },
+        {
+          "span_id": "1c9c35b658a3d854",
+          "parent_span_id": "2bccb53b4fae8cd2",
+          "service_name": "cart",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:52.754644Z",
+          "end_time": "2026-09-02T17:38:52.758357Z",
+          "is_error": false,
+          "attributes": {
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "network.protocol.version": "2",
+            "server.address": "flagd",
+            "server.port": 8013,
+            "url.full": "http://flagd:8013/flagd.evaluation.v2.Service/ResolveFloat"
+          }
+        },
+        {
+          "span_id": "2bccb53b4fae8cd2",
+          "parent_span_id": "24ffd2e4ec8dc55c",
+          "service_name": "cart",
+          "operation_name": "flagd.evaluation.v2.Service/ResolveFloat",
+          "start_time": "2026-09-02T17:38:52.754597Z",
+          "end_time": "2026-09-02T17:38:52.760294Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.method": "flagd.evaluation.v2.Service/ResolveFloat",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "flagd",
+            "server.port": 8013
+          }
+        },
+        {
+          "span_id": "24ffd2e4ec8dc55c",
+          "parent_span_id": "b393647140c7350c",
+          "service_name": "cart",
+          "operation_name": "POST /oteldemo.CartService/EmptyCart",
+          "start_time": "2026-09-02T17:38:52.742946Z",
+          "end_time": "2026-09-02T17:38:52.762515Z",
+          "is_error": false,
+          "attributes": {
+            "grpc.method": "/oteldemo.CartService/EmptyCart",
+            "grpc.status_code": "0",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/oteldemo.CartService/EmptyCart",
+            "network.protocol.version": "2",
+            "server.address": "cart",
+            "server.port": 7070,
+            "url.path": "/oteldemo.CartService/EmptyCart",
+            "url.scheme": "http",
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1",
+            "user_agent.original": "grpc-go/1.83.2"
+          }
+        },
+        {
+          "span_id": "3b231476ca1c4ea7",
+          "parent_span_id": "913179ec8baa2834",
+          "service_name": "checkout",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:51.713636Z",
+          "end_time": "2026-09-02T17:38:52.477113Z",
+          "is_error": false,
+          "attributes": {
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "network.protocol.version": "1.1",
+            "original_span_name": "HTTP POST",
+            "server.address": "shipping",
+            "server.port": 50050,
+            "url.full": "http://shipping:50050/ship-order"
+          }
+        },
+        {
+          "span_id": "a3460b767a3850ef",
+          "parent_span_id": "913179ec8baa2834",
+          "service_name": "checkout",
+          "operation_name": "POST",
+          "start_time": "2026-09-02T17:38:52.818877Z",
+          "end_time": "2026-09-02T17:38:53.010378Z",
+          "is_error": false,
+          "attributes": {
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "network.protocol.version": "1.1",
+            "original_span_name": "HTTP POST",
+            "server.address": "email",
+            "server.port": 6060,
+            "url.full": "http://email:6060/send_order_confirmation"
+          }
+        },
+        {
+          "span_id": "b393647140c7350c",
+          "parent_span_id": "913179ec8baa2834",
+          "service_name": "checkout",
+          "operation_name": "oteldemo.CartService/EmptyCart",
+          "start_time": "2026-09-02T17:38:52.639508Z",
+          "end_time": "2026-09-02T17:38:52.772601Z",
+          "is_error": false,
+          "attributes": {
+            "rpc.method": "oteldemo.CartService/EmptyCart",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.20",
+            "server.port": 7070
+          }
+        },
+        {
+          "span_id": "913179ec8baa2834",
+          "parent_span_id": "baa5bf31ce716b8c",
+          "service_name": "checkout",
+          "operation_name": "oteldemo.CheckoutService/PlaceOrder",
+          "start_time": "2026-09-02T17:38:49.696142Z",
+          "end_time": "2026-09-02T17:38:53.015834Z",
+          "is_error": false,
+          "attributes": {
+            "demo.order.amount": 2670.45,
+            "demo.order.id": "284d0d2d-a6f5-11f1-ac6c-7686bd5d6959",
+            "demo.order.items.count": 2,
+            "demo.payment.card_number": "****-****-****-0454",
+            "demo.shipping.amount": 80.9,
+            "demo.shipping.tracking.id": "6e29cf94-d541-4c98-a569-5aa00305caf0",
+            "demo.user_context.selected_currency": "USD",
+            "rpc.method": "oteldemo.CheckoutService/PlaceOrder",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.23",
+            "server.port": 5050,
+            "user.hash": "166f5ede3825c3b08bd97c356da17b13099d59503f40b0468efc7bbb01ca9ff4",
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1",
+            "user_agent.synthetic.type": "test"
+          }
+        },
+        {
+          "span_id": "d7886f35e5b1a0cd",
+          "parent_span_id": "bca5ec55a66a9006",
+          "service_name": "product-catalog",
+          "operation_name": "astronomy-db",
+          "start_time": "2026-09-02T17:38:53.101062Z",
+          "end_time": "2026-09-02T17:38:53.104518Z",
+          "is_error": false,
+          "attributes": {
+            "db.query.text": "\n\t\tSELECT p.id, p.name, p.description, p.picture, \n\t\t       p.price_currency_code, p.price_units, p.price_nanos, p.categories\n\t\tFROM catalog.products p\n\t\tWHERE p.id = $1\n\t",
+            "db.system.name": "postgresql",
+            "original_span_name": "sql.conn.query",
+            "server.address": "astronomy-db"
+          }
+        },
+        {
+          "span_id": "c76dab71554d22af",
+          "parent_span_id": "e8e643286de909df",
+          "service_name": "product-catalog",
+          "operation_name": "astronomy-db",
+          "start_time": "2026-09-02T17:38:53.120893Z",
+          "end_time": "2026-09-02T17:38:53.127835Z",
+          "is_error": false,
+          "attributes": {
+            "db.query.text": "\n\t\tSELECT p.id, p.name, p.description, p.picture, \n\t\t       p.price_currency_code, p.price_units, p.price_nanos, p.categories\n\t\tFROM catalog.products p\n\t\tWHERE p.id = $1\n\t",
+            "db.system.name": "postgresql",
+            "original_span_name": "sql.conn.query",
+            "server.address": "astronomy-db"
+          }
+        },
+        {
+          "span_id": "bca5ec55a66a9006",
+          "parent_span_id": "b4a1e07e9fe10cc9",
+          "service_name": "product-catalog",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:53.047112Z",
+          "end_time": "2026-09-02T17:38:53.105199Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "66VCHSJNUP",
+            "demo.product.name": "Starsense Explorer Refractor Telescope",
+            "rpc.method": "oteldemo.ProductCatalogService/GetProduct",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.21",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "e8e643286de909df",
+          "parent_span_id": "9bb2eb61dfab09b7",
+          "service_name": "product-catalog",
+          "operation_name": "oteldemo.ProductCatalogService/GetProduct",
+          "start_time": "2026-09-02T17:38:53.047718Z",
+          "end_time": "2026-09-02T17:38:53.132611Z",
+          "is_error": false,
+          "attributes": {
+            "demo.product.id": "2ZYFJ3GM2N",
+            "demo.product.name": "Roof Binoculars",
+            "rpc.method": "oteldemo.ProductCatalogService/GetProduct",
+            "rpc.response.status_code": "OK",
+            "rpc.system.name": "grpc",
+            "server.address": "172.18.0.21",
+            "server.port": 3550
+          }
+        },
+        {
+          "span_id": "25175bef605d6bfe",
+          "parent_span_id": null,
+          "service_name": "load-generator",
+          "operation_name": "user_checkout_multi",
+          "start_time": "2026-09-02T17:38:25.906852Z",
+          "end_time": "2026-09-02T17:38:53.160563Z",
+          "is_error": false,
+          "attributes": {
+            "item.count": 3,
+            "user.id": "e98e5139-c18a-4c43-ae7f-44864c5aedb1"
+          }
+        }
+      ]
+    },
+    {
+      "trace_id": "db41703d0e38ebfdf83bb6cbf0801e93",
+      "spans": [
+        {
+          "span_id": "792aa160ff2fbc8e",
+          "parent_span_id": "9d224ae822c3b0f0",
+          "service_name": "frontend-proxy",
+          "operation_name": "router frontend egress",
+          "start_time": "2026-09-02T17:39:56.502944Z",
+          "end_time": "2026-09-02T17:40:11.504958Z",
+          "is_error": true,
+          "attributes": {
+            "canceled": "true",
+            "component": "proxy",
+            "error": "true",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "0",
+            "peer.address": "172.18.0.24:8080",
+            "response_flags": "-",
+            "upstream_address": "172.18.0.24:8080",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend"
+          }
+        },
+        {
+          "span_id": "9d224ae822c3b0f0",
+          "parent_span_id": "cf41086f0b137c7f",
+          "service_name": "frontend-proxy",
+          "operation_name": "GET",
+          "start_time": "2026-09-02T17:39:56.502488Z",
+          "end_time": "2026-09-02T17:40:11.505185Z",
+          "is_error": true,
+          "attributes": {
+            "component": "proxy",
+            "downstream_cluster": "-",
+            "error": "true",
+            "guid:x-request-id": "f702d1dc-307d-91f5-a647-dd37b2829e42",
+            "http.method": "GET",
+            "http.protocol": "HTTP/1.1",
+            "http.status_code": "504",
+            "http.url": "http://frontend-proxy:8080/api/cart",
+            "node_id": "",
+            "original_span_name": "ingress",
+            "peer.address": "172.18.0.26",
+            "request_size": "0",
+            "response_flags": "UT",
+            "response_size": "24",
+            "upstream_cluster": "frontend",
+            "upstream_cluster.name": "frontend",
+            "user_agent": "Grafana k6/2.2.0",
+            "zone": ""
+          }
+        },
+        {
+          "span_id": "cf41086f0b137c7f",
+          "parent_span_id": null,
+          "service_name": "load-generator",
+          "operation_name": "user_view_cart",
+          "start_time": "2026-09-02T17:39:56.499599Z",
+          "end_time": "2026-09-02T17:40:11.508535Z",
+          "is_error": false,
+          "attributes": {}
+        },
+        {
+          "span_id": "28146b033afb6866",
+          "parent_span_id": "792aa160ff2fbc8e",
+          "service_name": "frontend",
+          "operation_name": "GET",
+          "start_time": "2026-09-02T17:39:56.504000Z",
+          "end_time": "2026-09-02T17:40:11.509137Z",
+          "is_error": false,
+          "attributes": {
+            "client.address": "172.18.0.25",
+            "http.request.method": "GET",
+            "http.response.status_code": 200,
+            "network.peer.address": "172.18.0.25",
+            "network.peer.port": 36984,
+            "network.protocol.version": "1.1",
+            "server.address": "frontend-proxy",
+            "server.port": 8080,
+            "url.path": "/api/cart",
+            "url.scheme": "http",
+            "user_agent.original": "Grafana k6/2.2.0"
+          }
+        },
+        {
+          "span_id": "2bac1247193f0e34",
+          "parent_span_id": "20da8b9128be6924",
+          "service_name": "frontend",
+          "operation_name": "oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:39:56.506000Z",
+          "end_time": "2026-09-02T17:49:14.466056Z",
+          "is_error": true,
+          "attributes": {
+            "grpc.error_message": "9 FAILED_PRECONDITION: Can't access cart storage. System.ApplicationException: Wasn't able to connect to redis\n   at cart.cartstore.ValkeyCartStore.EnsureRedisConnected() in /usr/src/app/src/cartstore/ValkeyCartStore.cs:line 99\n   at cart.cartstore.ValkeyCartStore.GetCartAsync(String userId) in /usr/src/app/src/cartstore/ValkeyCartStore.cs:line 204",
+            "grpc.error_name": "Error",
+            "original_span_name": "grpc.oteldemo.CartService/GetCart",
+            "rpc.grpc.status_code": 9,
+            "rpc.method": "GetCart",
+            "rpc.service": "oteldemo.CartService",
+            "rpc.system": "grpc",
+            "server.address": "cart",
+            "server.port": 7070
+          }
+        },
+        {
+          "span_id": "20da8b9128be6924",
+          "parent_span_id": "727c5ac19a6785a5",
+          "service_name": "frontend",
+          "operation_name": "executing api route (pages) /api/cart",
+          "start_time": "2026-09-02T17:39:56.506000Z",
+          "end_time": "2026-09-02T17:49:14.469291Z",
+          "is_error": true,
+          "attributes": {
+            "http.status_code": 500,
+            "next.span_category": "nextjs",
+            "next.span_name": "executing api route (pages) /api/cart",
+            "next.span_type": "Node.runHandler"
+          }
+        },
+        {
+          "span_id": "727c5ac19a6785a5",
+          "parent_span_id": "28146b033afb6866",
+          "service_name": "frontend",
+          "operation_name": "GET /api/cart",
+          "start_time": "2026-09-02T17:39:56.505000Z",
+          "end_time": "2026-09-02T17:49:14.469321Z",
+          "is_error": true,
+          "attributes": {
+            "error.type": "500",
+            "http.method": "GET",
+            "http.route": "/api/cart",
+            "http.status_code": 500,
+            "http.target": "/api/cart",
+            "next.route": "/api/cart",
+            "next.rsc": false,
+            "next.span_category": "nextjs",
+            "next.span_name": "GET /api/cart",
+            "next.span_type": "BaseServer.handleRequest"
+          }
+        },
+        {
+          "span_id": "3ca47232b1d30121",
+          "parent_span_id": "2bac1247193f0e34",
+          "service_name": "cart",
+          "operation_name": "POST /oteldemo.CartService/GetCart",
+          "start_time": "2026-09-02T17:39:56.512895Z",
+          "end_time": "2026-09-02T17:49:14.396986Z",
+          "is_error": true,
+          "attributes": {
+            "grpc.method": "/oteldemo.CartService/GetCart",
+            "grpc.status_code": "9",
+            "http.request.method": "POST",
+            "http.response.status_code": 200,
+            "http.route": "/oteldemo.CartService/GetCart",
+            "network.protocol.version": "2",
+            "server.address": "cart",
+            "server.port": 7070,
+            "url.path": "/oteldemo.CartService/GetCart",
+            "url.scheme": "http",
+            "user.id": "",
+            "user_agent.original": "grpc-node-js/1.14.4"
+          }
+        }
+      ]
+    }
+  ]
+}

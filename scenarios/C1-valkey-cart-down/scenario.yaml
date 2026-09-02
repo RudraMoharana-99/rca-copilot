@@ -1,0 +1,27 @@
+id: C1
+name: Valkey Cart Dependency Failure
+
+break:
+  command: docker compose stop valkey-cart
+  timestamp: 2026-09-02T17:39:50Z
+
+window:
+  start: 2026-09-02T17:34:50Z
+  end: 2026-09-02T17:49:50Z
+
+correct_answer: >
+  valkey-cart was stopped, causing cart to lose access to its
+  Redis-compatible datastore.
+
+difficulty: clean
+failure_class: dependency-unavailable
+
+notes: >
+  This scenario matters because the cart ERROR logs refer to "redis"
+  rather than "valkey-cart" and do not identify the datastore host.
+  The logs therefore show that cart cannot reach its datastore, while
+  trace evidence is needed to confirm the dependency as valkey-cart:6379.
+  Other faults were also active during capture, so future analysis must
+  distinguish the causal failure from unrelated concurrent faults.
+  For scoring, the answer must identify valkey-cart; "cart's datastore"
+  alone is not specific enough.
