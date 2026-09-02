@@ -211,3 +211,29 @@ since I know in advance which series to capture.
 **Would reverse if:** the fixed set proved too restrictive for a
 scenario I care about, in which case I would add named queries rather
 than open it up.
+
+## 13. Defensive parsing for heterogeneous telemetry
+
+**Date:** 2026-09-02
+
+**Chose:** using defensive field access such as `.get()` and safe defaults when parsing telemetry documents where fields may be missing or inconsistently shaped.
+
+**Considered:** assuming all telemetry documents have the same schema and directly accessing every field with `[]`.
+
+**Why:** the system collects telemetry from thirteen services implemented across eight languages, and the emitted telemetry is not uniformly shaped. A single malformed document previously caused a `KeyError` and terminated the entire query. In an RCA system, one bad telemetry record should not cause the loss of all other evidence. Defensive parsing allows the source to continue processing valid records while handling missing fields safely.
+
+**Would reverse if:** a field is proven to be mandatory by the source contract and missing it would make the record unsafe or misleading to use. In that case, the parser should explicitly reject or flag the record rather than silently defaulting it.
+
+---
+
+## 14. Distinguish ERROR from NO_DATA
+
+**Date:** 2026-09-02
+
+**Chose:** every observability source explicitly distinguishes `NO_DATA` from `ERROR` through the result `status` field.
+
+**Considered:** returning an empty result for both cases.
+
+**Why:** a wrong port or unavailable backend can produce zero results that look identical to a successful query where no matching evidence exists. During testing, a wrong port produced an apparent "no warnings" result until the status field exposed the connection failure. `NO_DATA` means the source was queried successfully but found no matching evidence. `ERROR` means the source could not be queried successfully or its response could not be trusted. This distinction prevents the RCA agent from treating unavailable evidence as negative evidence.
+
+**Would reverse if:** the underlying source provided a reliable mechanism that made backend failure and genuine empty results unambiguously distinguishable without an explicit status field. Otherwise, the distinction remains part of the source contract.
