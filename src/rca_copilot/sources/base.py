@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 # ============================================================
 
 
-class Status(str, Enum):
+class Status(StrEnum):
     SUCCESS = "SUCCESS"
     NO_DATA = "NO_DATA"
     ERROR = "ERROR"
@@ -114,7 +114,7 @@ class TracesSource(ABC):
 # ============================================================
 
 
-class ChangeType(str, Enum):
+class ChangeType(StrEnum):
     DEPLOY = "DEPLOY"
     CONFIG = "CONFIG"
     FLAG = "FLAG"
@@ -143,4 +143,47 @@ class ChangelogSource(ABC):
         end: datetime,
         service: str | None = None,
     ) -> ChangeQueryResult:
+        pass
+
+
+# ==================================================================
+# ============================LoGS==================================
+# ==================================================================
+
+
+class Severity(StrEnum):
+    TRACE = "TRACE"
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    WARN = "WARN"
+    ERROR = "ERROR"
+    FATAL = "FATAL"
+
+
+class LogEntry(BaseModel):
+    timestamp: datetime
+    service: str
+    severity: Severity
+    severity_number: int
+    message: str
+    trace_id: str | None = None
+
+
+class LogQueryResult(BaseModel):
+    status: Status
+    logs: list[LogEntry] = Field(default_factory=list)
+    count: int = 0
+    truncated: bool = False
+
+
+class LogsSource(ABC):
+    @abstractmethod
+    def query_logs(
+        self,
+        start: datetime,
+        end: datetime,
+        service: str | None = None,
+        min_severity: Severity | None = None,
+        limit: int = 100,
+    ) -> LogQueryResult:
         pass
