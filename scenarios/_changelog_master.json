@@ -22,5 +22,23 @@
     "summary": "Deployed checkout v2.1.0",
     "details": "Updated payment handling",
     "author": "deployment-pipeline"
-  }
+  },
+
+  {
+  "timestamp": "2026-09-03T05:51:32Z",
+  "service": "cart",
+  "change_type": "CONFIG",
+  "summary": "Changed VALKEY_ADDR port from 6379 to 6380",
+  "details": "Applied via compose override and container recreate",
+  "author": "rudra"
+ },
+
+ {
+  "timestamp": "2026-09-03T06:19:13Z",
+  "service": "product-catalog",
+  "change_type": "CONFIG",
+  "summary": "Reduced memory limit from 20M to 10M",
+  "details": "Applied via compose override and container recreate",
+  "author": "rudra"
+}
 ]

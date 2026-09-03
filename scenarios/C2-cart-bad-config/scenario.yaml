@@ -1,0 +1,49 @@
+
+id: C2
+name: Cart Bad Valkey Configuration
+
+break:
+  command: >
+    Edit the cart configuration to change VALKEY_ADDR from
+    valkey-cart:6379 to valkey-cart:6380, then run
+    docker compose up -d --force-recreate cart.
+  timestamp: 2026-09-03T05:51:32Z
+
+window:
+  start: 2026-09-03T05:46:32Z
+  end: 2026-09-03T06:01:32Z
+
+correct_answer: >
+  The cart service crashed on startup because its VALKEY_ADDR configuration
+  was changed from valkey-cart:6379 to valkey-cart:6380.
+
+difficulty: ambiguous
+failure_class: misconfiguration
+
+notes: >
+  This scenario is intentionally ambiguous because the failing service,
+  cart, is silent in the log store. Cart produced zero ERROR logs during
+  the incident because the container crash-looped with exit code 139 before
+  it could send telemetry to the collector. Meanwhile, the recommendation
+  service, which is healthy, produced 3 ERROR logs because it depends on
+  cart. A naive "find the service with errors" approach therefore points
+  at the wrong service.
+
+  The changelog is the decisive evidence: it contains one CONFIG entry
+  against cart at the break time, identifying the VALKEY_ADDR configuration
+  change. Without the changelog, this scenario is close to unsolvable from
+  telemetry alone. This makes C2 a test of whether the adjudicator uses
+  all four evidence sources — logs, metrics, traces, and changelog —
+  rather than relying on logs and traces only.
+
+  There were 36 error traces during the incident, but only 20 full traces
+  were captured because MAX_FULL_TRACES is set to 20. The trace evidence
+  is therefore intentionally partial and must not be treated as a complete
+  representation of all failing traces.
+
+  For scoring, the answer must identify both the affected service, cart,
+  and the configuration change to VALKEY_ADDR from valkey-cart:6379 to
+  valkey-cart:6380. "Cart is down" or "cart cannot reach Valkey" alone is
+  not specific enough because it does not identify the configuration change
+  that caused the failure.
+

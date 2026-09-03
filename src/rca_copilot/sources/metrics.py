@@ -22,8 +22,9 @@ QUERY_PROMQL = {
         "sum by (service_name, le) "
         "(rate(traces_span_metrics_duration_milliseconds_bucket[5m])))"
     ),
+    "container_memory_ratio": "container_memory_percent_ratio",
+    "container_cpu": "container_cpu_utilization_ratio",
 }
-
 
 class PrometheusMetricsSource(MetricsSource):
     def __init__(self, base_url: str = "http://localhost:9090"):
