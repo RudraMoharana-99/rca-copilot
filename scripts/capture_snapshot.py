@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -67,6 +68,7 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument("name")
     parser.add_argument("break_time")
+    parser.add_argument("--force", action="store_true")
 
     return parser.parse_args()
 
@@ -250,6 +252,10 @@ def main() -> None:
 
     output_dir = Path("scenarios") / args.name
     output_dir.mkdir(parents=True, exist_ok=True)
+    existing_files = list(output_dir.glob("*.json"))
+    if existing_files and not args.force:
+        print(f"Capture already exists in {output_dir}. Pass --force to overwrite.")
+        sys.exit(1)
 
     metrics_source = PrometheusMetricsSource(base_url=config.prometheus_url)
     capture_metrics(metrics_source, start, end, output_dir)

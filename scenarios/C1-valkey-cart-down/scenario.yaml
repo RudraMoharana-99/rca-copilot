@@ -3,11 +3,11 @@ name: Valkey Cart Dependency Failure
 
 break:
   command: docker compose stop valkey-cart
-  timestamp: 2026-09-02T17:39:50Z
+  timestamp: 2026-09-03T07:04:19Z
 
 window:
-  start: 2026-09-02T17:34:50Z
-  end: 2026-09-02T17:49:50Z
+  start: 2026-09-03T06:59:19Z
+  end: 2026-09-03T07:14:19Z
 
 correct_answer: >
   valkey-cart was stopped, causing cart to lose access to its

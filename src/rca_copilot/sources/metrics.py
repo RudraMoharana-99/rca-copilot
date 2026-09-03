@@ -26,6 +26,7 @@ QUERY_PROMQL = {
     "container_cpu": "container_cpu_utilization_ratio",
 }
 
+
 class PrometheusMetricsSource(MetricsSource):
     def __init__(self, base_url: str = "http://localhost:9090"):
         self.base_url = base_url.rstrip("/")
