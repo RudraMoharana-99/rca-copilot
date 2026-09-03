@@ -1,0 +1,54 @@
+id: C3
+name: Product Catalog Memory Exhaustion
+
+break:
+  command: >
+    Add a memory limit of 10M to product-catalog in compose.override.yaml
+    (reduced from 20M), then run
+    docker compose up -d --force-recreate product-catalog.
+  timestamp: 2026-09-03T06:19:13Z
+
+window:
+  start: 2026-09-03T06:14:13Z
+  end: 2026-09-03T06:29:13Z
+
+correct_answer: >
+  Product-catalog was resource-starved after its container memory limit was 
+  reduced from 20M to 10M, causing memory exhaustion and container instability.
+
+difficulty: ambiguous
+failure_class: resource-exhaustion
+
+notes: >
+  product-catalog produced zero ERROR logs during the incident. It remained
+  running and continued emitting sample-level logs, but nothing at WARN or
+  above. The recommendation service, which is healthy, produced 57 ERROR
+  logs because it depends on product-catalog. As in C2, a naive
+  "find the service with errors" approach points at the wrong service.
+
+  The resource signature is the distinguishing evidence. Measured directly
+  at the time of capture, product-catalog showed CPU at 107 percent and
+  209 GB of block I/O reads within seven minutes, and its container health
+  check moved to unhealthy. Memory usage alone is not a reliable signal
+  here: product-catalog sat at roughly 68 percent of its limit while
+  several healthy containers were higher, including opensearch at 97
+  percent, ad at 94 percent and frontend at 90 percent. An agent that
+  looks only for the highest memory ratio will not find this fault.
+
+  Memory usage also fell over the course of the incident, from 84 percent
+  shortly after the break to 41 percent seven minutes later, as the
+  container had memory reclaimed and began thrashing. Falling memory with
+  rising CPU and large block I/O is the signature to recognise.
+
+  The changelog contains one CONFIG entry against product-catalog at the
+  break time recording the memory limit reduction.
+
+  19 error traces were present and all 19 were captured, so trace evidence
+  is complete for this scenario.
+
+  For scoring, the answer must identify product-catalog as the affected service
+  and identify the memory-limit configuration change from 20M to 10M as the root 
+  cause. "Product-catalog is unhealthy," "product-catalog has resource exhaustion,"
+  or "product-catalog is running out of memory" alone is not specific enough because
+  those statements describe the observed failure rather than the configuration change
+  that caused it.
