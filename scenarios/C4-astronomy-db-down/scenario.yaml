@@ -1,0 +1,54 @@
+id: C4
+name: Astronomy Database Down
+
+break:
+  command: >
+    Stop the astronomy-db dependency using docker compose.
+  timestamp: 2026-09-03T07:41:34Z
+
+window:
+  start: 2026-09-03T07:36:34Z
+  end: 2026-09-03T07:51:34Z
+
+correct_answer: >
+  astronomy-db became unavailable, causing product-catalog, its direct
+  dependent, to fail and producing downstream errors in recommendation.
+
+difficulty: ambiguous
+failure_class: dependency-unavailable
+
+notes: >
+  This scenario is intentionally ambiguous because the failing dependency
+  does not identify itself through a corresponding ERROR-log stream.
+  product-catalog produced zero ERROR logs during the incident, while the
+  recommendation service produced the loudest downstream signal with
+  95 ERROR logs. The service topology is recommendation -> product-catalog
+  -> astronomy-db, so recommendation is two hops away from the failed
+  dependency rather than a direct dependent.
+
+  The recommendation ERROR messages nevertheless contain the key evidence:
+  they explicitly report "failed to load products", followed by
+  "failed to query products" and "dial tcp: lookup astronomy-db on
+  127.0.0.11:53: no such host". This means the loudest service's error
+  text directly names the correct root dependency even though that service
+  is not adjacent to the fault. This makes C4 easier to diagnose than C2
+  once the agent examines the actual error message rather than treating
+  the service producing the most errors as the root cause.
+
+  Metrics were successfully captured for all five named queries. Trace
+  capture produced 23 error traces, of which only 20 full traces were
+  captured because MAX_FULL_TRACES is 20. Trace evidence is therefore
+  intentionally partial.
+
+  The changelog is empty by design because this scenario represents a
+  dependency becoming unavailable rather than a deployment or configuration
+  change.
+
+  Checkout was reported unhealthy before the break and its state at capture
+  time was not verified.
+
+  For scoring, the answer must identify astronomy-db as the unavailable
+  dependency and identify product-catalog as its direct dependent. The
+  downstream impact on recommendation may be mentioned, but "recommendation
+  is failing" alone is not specific enough, and describing recommendation
+  as the direct dependent is incorrect.
