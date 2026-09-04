@@ -60,8 +60,13 @@ def run_baseline(
             "content": "Diagnose this incident.",
         }
     ]
+    turns = 0
+    input_tokens = 0
+    output_tokens = 0
 
     for _ in range(MAX_TURNS):
+        turns += 1
+
         response = client.messages.create(
             model=MODEL,
             max_tokens=2000,
@@ -70,6 +75,13 @@ def run_baseline(
             messages=messages,
         )
 
+        input_tokens += response.usage.input_tokens
+        output_tokens += response.usage.output_tokens
+
+        state.run_meta["turns"] = turns
+        state.run_meta["input_tokens"] = input_tokens
+        state.run_meta["output_tokens"] = output_tokens
+        
         messages.append(
             {
                 "role": "assistant",
@@ -107,7 +119,8 @@ def run_baseline(
                 name=block.name,
                 arguments=block.input,
                 sources=sources,
-                state=state,
+                window_start=window_start,
+                window_end=window_end,
                 agent="baseline",
             )
             state.evidence.append(evidence)

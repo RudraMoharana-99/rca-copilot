@@ -2,7 +2,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from rca_copilot.agents.tools import (
-    IncidentState,
     SourceBundle,
     evidence_to_tool_result,
     execute_tool,
@@ -23,18 +22,15 @@ sources = SourceBundle(
     changelog=SnapshotChangesSource("scenarios/_changelog_master.json"),
 )
 
-state = IncidentState(
-    incident_id="test-1",
-    alert={"service": "cart", "message": "cart errors elevated"},
-    window_start=datetime(2026, 9, 3, 6, 59, 19, tzinfo=UTC),
-    window_end=datetime(2026, 9, 3, 7, 14, 19, tzinfo=UTC),
-)
+WINDOW_START = datetime(2026, 9, 3, 6, 59, 19, tzinfo=UTC)
+WINDOW_END = datetime(2026, 9, 3, 7, 14, 19, tzinfo=UTC)
 
 ev = execute_tool(
     "search_logs",
     {"service": "cart", "min_severity": "ERROR"},
     sources,
-    state,
+    window_start=WINDOW_START,
+    window_end=WINDOW_END,
 )
 
 print(ev.summary)
@@ -46,7 +42,7 @@ for name, args in [
     ("get_recent_changes", {"service": "cart"}),
     ("nonsense_tool", {}),
 ]:
-    ev = execute_tool(name, args, sources, state)
+    ev = execute_tool(name, args, sources, window_start=WINDOW_START, window_end=WINDOW_END)
     print(ev.summary)
-ev = execute_tool("find_traces", {"service": "frontend"}, sources, state)
+ev = execute_tool("find_traces", {"service": "frontend"}, sources, window_start=WINDOW_START, window_end=WINDOW_END)
 print("_truncated_for_model" in evidence_to_tool_result(ev))

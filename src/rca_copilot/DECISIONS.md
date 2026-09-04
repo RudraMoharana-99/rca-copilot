@@ -237,3 +237,91 @@ than open it up.
 **Why:** a wrong port or unavailable backend can produce zero results that look identical to a successful query where no matching evidence exists. During testing, a wrong port produced an apparent "no warnings" result until the status field exposed the connection failure. `NO_DATA` means the source was queried successfully but found no matching evidence. `ERROR` means the source could not be queried successfully or its response could not be trusted. This distinction prevents the RCA agent from treating unavailable evidence as negative evidence.
 
 **Would reverse if:** the underlying source provided a reliable mechanism that made backend failure and genuine empty results unambiguously distinguishable without an explicit status field. Otherwise, the distinction remains part of the source contract.
+
+## 15. Traces and Changelog
+
+**Date:** 2026-09-04
+
+**Chose:**
+Traces → log analyst. Changelog → adjudicator.
+
+**Considered:**
+
+* Traces → log analyst
+* Changelog → adjudicator
+* Alternative: separate traces investigator, with logs, metrics, and traces each owned by a dedicated investigator
+
+**Why:**
+
+### Why traces go to the log analyst
+
+Both logs and traces answer the same qualitative question: **what happened to this specific request, and what did it say?**
+
+A trace span's `otel.status_description` is an error message, making it qualitative evidence similar to a log line.
+
+More practically, in C1 and C4, the log analyst finds an error naming a component, while the trace confirms the call chain to that component. Keeping both with the same agent allows one investigator to correlate the evidence without an unnecessary handoff.
+
+Metrics remain purely quantitative — numbers over time such as error rate, latency, CPU, and memory. This preserves a clean separation between qualitative and quantitative evidence.
+
+### Why the changelog goes to the adjudicator
+
+The changelog is not telemetry. It records what humans deliberately changed and therefore serves as **resolving evidence rather than an independent source of hypotheses**.
+
+C2 illustrates this clearly. The log analyst may identify recommendation as problematic, while the metrics analyst identifies a cart process failure. The adjudicator then has conflicting hypotheses to resolve. A CONFIG change against cart at the exact incident time provides the evidence needed to determine which explanation is causal.
+
+Giving the changelog to the adjudicator therefore prevents it from becoming a fourth opinion. Instead, it acts as a tiebreaker between investigator hypotheses.
+
+### Consequence
+
+The agents are not balanced by tool count. The log analyst has three tools, while the metrics analyst has one.
+
+This is intentional. Balance is not the goal: the metrics tool exposes five named queries covering error rates, latency, and resource pressure, which provides sufficient quantitative evidence without requiring another agent.
+
+### Alternative considered
+
+A stricter architecture would use three investigators:
+
+* Logs → log analyst
+* Metrics → metrics analyst
+* Traces → trace analyst
+
+This better follows the single-owner rule from Session 3 and would provide an additional source of disagreement.
+
+The cost is another agent, another prompt, another parallel branch, and roughly another share of the token budget. For four scenarios, the additional disagreement signal does not justify that complexity.
+
+**Decision:** Keep traces with the log analyst and give the changelog exclusively to the adjudicator.
+
+## 16. Tool Allocation
+
+**Date:** 2026-09-04
+
+**Chose:**
+
+| Agent           | Tools                                            |
+| --------------- | ------------------------------------------------ |
+| Log analyst     | `search_logs`, `find_traces`, `get_trace_detail` |
+| Metrics analyst | `get_metrics`                                    |
+| Adjudicator     | `get_recent_changes`                             |
+
+**Why:**
+
+Traces are assigned to the log analyst because traces and logs provide complementary qualitative evidence about what happened to a specific request. Logs may identify the failing component through an error message, while traces can confirm the cross-service call chain and pinpoint where the failure occurred. Keeping both with the same investigator avoids an unnecessary handoff.
+
+Metrics remain with a dedicated metrics analyst because they provide quantitative evidence: error rates, latency, CPU, memory, and other measurements over time.
+
+The changelog is assigned exclusively to the adjudicator because it represents deliberate human changes rather than telemetry. It is therefore more useful as **resolving evidence** than as another independent source of hypotheses.
+
+For example, in C2, investigators can produce conflicting explanations for the failure. The adjudicator can use a configuration change recorded at the incident time to determine which hypothesis is causally supported. If the changelog were given to an investigator, that investigator could incorporate the change into its own hypothesis, reducing its value as an independent resolving signal.
+
+**Trade-off:**
+
+This creates an intentionally unbalanced tool allocation. The log analyst has three tools, while the metrics analyst has one. This is acceptable because the metrics tool exposes multiple predefined queries covering error rate, latency, CPU, and memory.
+
+**Alternative considered:**
+
+A three-investigator architecture would assign logs, metrics, and traces to separate agents. This would provide cleaner single-source ownership and an additional disagreement signal.
+
+However, it would also require another agent, another prompt, another execution branch, and additional token consumption. For the current four-scenario evaluation set, that additional complexity is not justified.
+
+**Decision:** Use the two-investigator architecture with the adjudicator owning the changelog as resolving evidence.
+

@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
-from rca_copilot.models import Evidence, IncidentState
+from rca_copilot.models import Evidence
 from rca_copilot.sources.base import (
     ChangelogSource,
     LogsSource,
@@ -217,12 +217,13 @@ def execute_tool(
     name: str,
     arguments: dict,
     sources: SourceBundle,
-    state: IncidentState,
+    window_start: datetime,
+    window_end: datetime,
     agent: str = "baseline",
 ) -> Evidence:
 
-    start = state.window_start
-    end = state.window_end
+    start = window_start
+    end = window_end
 
     if name == "search_logs":
         service = arguments["service"]
