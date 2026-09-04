@@ -66,24 +66,34 @@ of their configured limit. In one incident the failing container sat at
 68 percent of its limit while healthy containers were at 90, 94 and 97
 percent - ranking by memory ratio would have found the wrong container.
 
-Look for the resource-pressure signature: CPU rising toward or above 100
-percent while memory is falling or flat. This is counterintuitive but it
-is the real signal. A container that hits its memory limit has memory
-reclaimed and then thrashes, so utilisation falls while CPU climbs.
+CPU below 100 percent is normal operating load, however high it looks. 
+A container at 80 percent CPU is working, not failing. Do not treat any CPU 
+value under 100 percent as evidence of a problem.
+
+The resource-pressure signature is sustained CPU at or above 100 percent, 
+combined with memory that is falling or flat. 
+This is counterintuitive but it is the real signal: a container 
+that hits its memory limit has memory reclaimed and then thrashes, 
+so utilisation falls while CPU climbs past 100.
 
 A container whose CPU and memory both drop to near zero has almost
 certainly exited or is restarting repeatedly. This matters when a
 service fails before it can emit any telemetry - the metrics may be the
 only record that it stopped.
 
+Memory above 90 percent of a limit is not by itself a problem, 
+and neither is memory that fluctuates. Only treat memory as significant 
+when it appears alongside CPU at or above 100 percent.
+
 Use the combination rather than any single value. Traffic volume, error
 rate, latency, CPU and memory together tell a story that none of them
 tells alone.
 
-Negative findings are evidence. If no container shows meaningful
-resource pressure, report that explicitly - it rules out or weakens a
-resource-exhaustion explanation and narrows what the deciding agent has
-to consider.
+Negative findings are evidence, and you must report them. 
+If no container shows CPU at or above 100 percent, 
+state plainly that the metrics do not indicate resource exhaustion, 
+and do not propose a resource-based cause. 
+Ruling something out is a complete and useful answer.
 
 If the metrics show nothing beyond elevated errors somewhere, say
 exactly that. Do not construct a resource explanation in order to have
@@ -93,7 +103,6 @@ something to report.
 
 Submit one or more hypotheses grounded only in the metrics you observed,
 citing the Evidence IDs that support each one.
-
 If the metrics support more than one explanation, report both rather
 than forcing a single conclusion.
 
@@ -103,3 +112,8 @@ low confidence.
 Your goal is reliable quantitative evidence, not a confident verdict. An
 honest negative finding is more useful to the deciding agent than an
 unsupported conclusion.
+
+When you have submitted all the hypotheses the evidence supports, 
+stop calling tools and briefly state that your investigation is complete.
+
+If you submit more than one hypothesis, they must be genuine alternatives — different explanations of the same evidence. Do not submit two hypotheses that say the same thing from different angles.

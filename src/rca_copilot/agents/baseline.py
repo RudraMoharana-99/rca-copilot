@@ -81,7 +81,7 @@ def run_baseline(
         state.run_meta["turns"] = turns
         state.run_meta["input_tokens"] = input_tokens
         state.run_meta["output_tokens"] = output_tokens
-        
+
         messages.append(
             {
                 "role": "assistant",

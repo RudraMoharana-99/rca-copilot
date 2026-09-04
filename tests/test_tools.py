@@ -44,5 +44,11 @@ for name, args in [
 ]:
     ev = execute_tool(name, args, sources, window_start=WINDOW_START, window_end=WINDOW_END)
     print(ev.summary)
-ev = execute_tool("find_traces", {"service": "frontend"}, sources, window_start=WINDOW_START, window_end=WINDOW_END)
+ev = execute_tool(
+    "find_traces",
+    {"service": "frontend"},
+    sources,
+    window_start=WINDOW_START,
+    window_end=WINDOW_END,
+)
 print("_truncated_for_model" in evidence_to_tool_result(ev))

@@ -375,14 +375,43 @@ def evidence_to_tool_result(
     elif evidence.source == "metrics":
         series = raw.get("series", [])
 
+        summarised = []
+        for s in series[:max_items]:
+            points = s.get("points", [])
+            values = [p["value"] for p in points]
+
+            if values:
+                summarised.append(
+                    {
+                        "labels": s.get("labels", {}),
+                        "first": round(values[0], 4),
+                        "last": round(values[-1], 4),
+                        "min": round(min(values), 4),
+                        "max": round(max(values), 4),
+                        "point_count": len(values),
+                    }
+                )
+            else:
+                summarised.append(
+                    {
+                        "labels": s.get("labels", {}),
+                        "point_count": 0,
+                    }
+                )
+
+        raw = {
+            **raw,
+            "series": summarised,
+            "_note_for_model": (
+                "Each series is summarised as first, last, min and max "
+                "rather than the full time series."
+            ),
+        }
+
         if len(series) > max_items:
-            raw = {
-                **raw,
-                "series": series[:max_items],
-                "_truncated_for_model": (
-                    f"Only the first {max_items} of {len(series)} metric series are shown."
-                ),
-            }
+            raw["_truncated_for_model"] = (
+                f"Only the first {max_items} of {len(series)} series shown."
+            )
 
     elif evidence.source == "traces":
         summaries = raw.get("summaries", [])
