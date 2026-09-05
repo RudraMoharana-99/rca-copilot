@@ -325,3 +325,12 @@ However, it would also require another agent, another prompt, another execution 
 
 **Decision:** Use the two-investigator architecture with the adjudicator owning the changelog as resolving evidence.
 
+## 17. Log and Metrics Investigators
+
+**Date:** 2026-09-04
+
+**Metric series are summarised**, not sent raw. First, last, min, max instead of 41 points per series. Cut a metrics run from 241k tokens to 17k. The model reasoning about whether something rose needs the shape, not the samples.
+
+**The CPU threshold is stated as an absolute.** "Below 100 percent is normal" rather than "rising toward 100." The model twice read 80% as pressure and built a wrong hypothesis on it. Vague thresholds get interpreted generously.
+
+**Negative findings are required, not permitted**. Changing "report them" to "you must report them, and do not propose a resource cause" was what produced the honest ruling-out.

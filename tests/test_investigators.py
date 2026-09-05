@@ -23,26 +23,18 @@ if __name__ == "__main__":
         logs=SnapshotLogsSource(scenario),
         metrics=SnapshotMetricsSource(scenario),
         traces=SnapshotTracesSource(scenario),
-        changelog=SnapshotChangesSource(
-            "scenarios/_changelog_master.json"
-        ),
+        changelog=SnapshotChangesSource("scenarios/_changelog_master.json"),
     )
 
-    client = Anthropic(
-        api_key=os.environ["ANTHROPIC_API_KEY"]
-    )
+    client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
     evidence, hypotheses, run_meta = run_metrics_analyst(
         alert={
             "service": "cart",
             "message": "elevated error rate on cart",
         },
-        window_start=datetime(
-            2026, 9, 3, 6, 59, 19, tzinfo=UTC
-        ),
-        window_end=datetime(
-            2026, 9, 3, 7, 14, 19, tzinfo=UTC
-        ),
+        window_start=datetime(2026, 9, 3, 6, 59, 19, tzinfo=UTC),
+        window_end=datetime(2026, 9, 3, 7, 14, 19, tzinfo=UTC),
         sources=sources,
         client=client,
     )
@@ -50,10 +42,7 @@ if __name__ == "__main__":
     print(f"Evidence gathered: {len(evidence)}")
 
     for item in evidence:
-        print(
-            f"  {item.evidence_id} "
-            f"{item.source}: {item.summary}"
-        )
+        print(f"  {item.evidence_id} {item.source}: {item.summary}")
 
     print()
 

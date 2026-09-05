@@ -229,4 +229,3 @@ def run_metrics_analyst(alert, window_start, window_end, sources, client):
         max_turns=15,
         alert=alert,
     )
-
