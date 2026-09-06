@@ -1,7 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 
-from anthropic import Anthropic
+from anthropic import AsyncAnthropic
 from pydantic import ValidationError
 
 from rca_copilot.models import Evidence, Hypothesis
@@ -41,7 +41,7 @@ MODEL = "claude-haiku-4-5-20251001"
 MAX_TURNS = 15
 
 
-def run_investigator(
+async def run_investigator(
     agent_name: str,
     prompt_file: str,
     tools: list[dict],
@@ -49,7 +49,7 @@ def run_investigator(
     window_start: datetime,
     window_end: datetime,
     sources: SourceBundle,
-    client: Anthropic,
+    client: AsyncAnthropic,
     max_turns: int = 15,
 ) -> tuple[list[Evidence], list[Hypothesis], dict]:
 
@@ -61,6 +61,8 @@ def run_investigator(
         "turns": 0,
         "input_tokens": 0,
         "output_tokens": 0,
+        "cache_creation_tokens": 0,
+        "cache_read_tokens": 0,
     }
 
     prompt_path = Path(__file__).parent / "prompts" / prompt_file
@@ -82,16 +84,40 @@ def run_investigator(
     for _ in range(max_turns):
         run_meta["turns"] += 1
 
-        response = client.messages.create(
+        response = await client.messages.create(
             model=MODEL,
             max_tokens=2000,
-            system=system_prompt,
+            system=[
+                {
+                    "type": "text",
+                    "text": system_prompt,
+                    "cache_control": {"type": "ephemeral", "ttl": "5m"},
+                }
+            ],
             tools=tools + [submit_hypothesis],
             messages=messages,
         )
 
         run_meta["input_tokens"] += response.usage.input_tokens
         run_meta["output_tokens"] += response.usage.output_tokens
+
+        run_meta["cache_creation_tokens"] += (
+            getattr(
+                response.usage,
+                "cache_creation_input_tokens",
+                0,
+            )
+            or 0
+        )
+
+        run_meta["cache_read_tokens"] += (
+            getattr(
+                response.usage,
+                "cache_read_input_tokens",
+                0,
+            )
+            or 0
+        )
 
         messages.append(
             {
@@ -203,8 +229,8 @@ def run_investigator(
     return evidence, hypotheses, run_meta
 
 
-def run_log_analyst(alert, window_start, window_end, sources, client):
-    return run_investigator(
+async def run_log_analyst(alert, window_start, window_end, sources, client):
+    return await run_investigator(
         agent_name="log_analyst",
         prompt_file="log_analyst.md",
         tools=[search_logs, find_traces, get_trace_detail],
@@ -217,8 +243,8 @@ def run_log_analyst(alert, window_start, window_end, sources, client):
     )
 
 
-def run_metrics_analyst(alert, window_start, window_end, sources, client):
-    return run_investigator(
+async def run_metrics_analyst(alert, window_start, window_end, sources, client):
+    return await run_investigator(
         agent_name="metrics_analyst",
         prompt_file="metrics_analyst.md",
         tools=[get_metrics],

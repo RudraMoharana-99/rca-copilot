@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 import yaml
-from anthropic import Anthropic
+from anthropic import AsyncAnthropic
 from pydantic import ValidationError
 
 from rca_copilot.agents.tools import (
@@ -86,14 +86,14 @@ def load_scenario(
     )
 
 
-def run_adjudicator(
+async def run_adjudicator(
     alert: dict,
     window_start: datetime,
     window_end: datetime,
     reports: list[str],
     investigator_evidence: list[Evidence],
     sources: SourceBundle,
-    client: Anthropic,
+    client: AsyncAnthropic,
     max_turns: int = 6,
 ) -> tuple[list[Evidence], Verdict | None, dict]:
 
@@ -104,6 +104,8 @@ def run_adjudicator(
         "turns": 0,
         "input_tokens": 0,
         "output_tokens": 0,
+        "cache_creation_tokens": 0,
+        "cache_read_tokens": 0,
     }
     rejection_count = 0
     prompt_path = Path(__file__).parent / "prompts" / "adjudicator.md"
@@ -126,10 +128,16 @@ def run_adjudicator(
     for _ in range(max_turns):
         run_meta["turns"] += 1
 
-        response = client.messages.create(
+        response = await client.messages.create(
             model=MODEL,
             max_tokens=8000,
-            system=system_prompt,
+            system=[
+                {
+                    "type": "text",
+                    "text": system_prompt,
+                    "cache_control": {"type": "ephemeral", "ttl": "5m"},
+                }
+            ],
             tools=[
                 get_recent_changes,
                 submit_verdict,
@@ -139,6 +147,24 @@ def run_adjudicator(
 
         run_meta["input_tokens"] += response.usage.input_tokens
         run_meta["output_tokens"] += response.usage.output_tokens
+
+        run_meta["cache_creation_tokens"] += (
+            getattr(
+                response.usage,
+                "cache_creation_input_tokens",
+                0,
+            )
+            or 0
+        )
+
+        run_meta["cache_read_tokens"] += (
+            getattr(
+                response.usage,
+                "cache_read_input_tokens",
+                0,
+            )
+            or 0
+        )
 
         messages.append(
             {
@@ -295,31 +321,8 @@ def run_adjudicator(
     return evidence, None, run_meta
 
 
-# if __name__ == "__main__":
-#     import sys
-
-#     if len(sys.argv) != 2:
-#         raise SystemExit(
-#             "Usage: uv run python -m "
-#             "rca_copilot.agents.adjudicator <scenario>"
-#         )
-
-#     scenario_name = sys.argv[1]
-
-#     (
-#         scenario_dir,
-#         scenario,
-#         window_start,
-#         window_end,
-#     ) = load_scenario(scenario_name)
-
-#     print(f"Scenario directory: {scenario_dir}")
-#     print(f"Scenario ID: {scenario['id']}")
-#     print(f"Scenario name: {scenario['name']}")
-#     print(f"Window start: {window_start}")
-#     print(f"Window end: {window_end}")
-
 if __name__ == "__main__":
+    import asyncio
     import os
     import sys
 
@@ -336,94 +339,103 @@ if __name__ == "__main__":
         SnapshotTracesSource,
     )
 
-    if len(sys.argv) != 2:
-        raise SystemExit("Usage: uv run python -m rca_copilot.agents.adjudicator <scenario>")
+    async def main():
 
-    load_dotenv()
+        if len(sys.argv) != 2:
+            raise SystemExit("Usage: uv run python -m rca_copilot.agents.adjudicator <scenario>")
 
-    scenario_name = sys.argv[1]
+        load_dotenv()
 
-    (
-        scenario_dir,
-        scenario,
-        window_start,
-        window_end,
-    ) = load_scenario(scenario_name)
+        scenario_name = sys.argv[1]
 
-    print(f"Scenario: {scenario['id']} - {scenario['name']}")
-    print(f"Window: {window_start} to {window_end}\n")
+        (
+            scenario_dir,
+            scenario,
+            window_start,
+            window_end,
+        ) = load_scenario(scenario_name)
 
-    sources = SourceBundle(
-        logs=SnapshotLogsSource(scenario_dir),
-        metrics=SnapshotMetricsSource(scenario_dir),
-        traces=SnapshotTracesSource(scenario_dir),
-        changelog=SnapshotChangesSource("scenarios/_changelog_master.json"),
-    )
+        print(f"Scenario: {scenario['id']} - {scenario['name']}")
+        print(f"Window: {window_start} to {window_end}\n")
 
-    client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+        sources = SourceBundle(
+            logs=SnapshotLogsSource(scenario_dir),
+            metrics=SnapshotMetricsSource(scenario_dir),
+            traces=SnapshotTracesSource(scenario_dir),
+            changelog=SnapshotChangesSource("scenarios/_changelog_master.json"),
+        )
 
-    alert = {"message": "elevated error rate detected"}
+        client = AsyncAnthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-    print("Running log analyst...")
-    log_ev, log_hyp, log_meta = run_log_analyst(
-        alert=alert,
-        window_start=window_start,
-        window_end=window_end,
-        sources=sources,
-        client=client,
-    )
-    print(f"  evidence={len(log_ev)} hypotheses={len(log_hyp)}")
+        alert = {"message": "elevated error rate detected"}
 
-    print("Running metrics analyst...")
-    met_ev, met_hyp, met_meta = run_metrics_analyst(
-        alert=alert,
-        window_start=window_start,
-        window_end=window_end,
-        sources=sources,
-        client=client,
-    )
-    print(f"  evidence={len(met_ev)} hypotheses={len(met_hyp)}")
+        print("Running log analyst...")
+        log_ev, log_hyp, log_meta = await run_log_analyst(
+            alert=alert,
+            window_start=window_start,
+            window_end=window_end,
+            sources=sources,
+            client=client,
+        )
+        print(f"  evidence={len(log_ev)} hypotheses={len(log_hyp)}")
 
-    reports = [
-        format_investigator_report("log_analyst", log_ev, log_hyp),
-        format_investigator_report("metrics_analyst", met_ev, met_hyp),
-    ]
+        print("Running metrics analyst...")
+        met_ev, met_hyp, met_meta = await run_metrics_analyst(
+            alert=alert,
+            window_start=window_start,
+            window_end=window_end,
+            sources=sources,
+            client=client,
+        )
+        print(f"  evidence={len(met_ev)} hypotheses={len(met_hyp)}")
 
-    print("\n" + "=" * 60)
-    print("\n\n".join(reports))
-    print("=" * 60 + "\n")
+        reports = [
+            format_investigator_report("log_analyst", log_ev, log_hyp),
+            format_investigator_report("metrics_analyst", met_ev, met_hyp),
+        ]
 
-    print("Running adjudicator...")
-    adj_ev, verdict, adj_meta = run_adjudicator(
-        alert=alert,
-        window_start=window_start,
-        window_end=window_end,
-        reports=reports,
-        investigator_evidence=log_ev + met_ev,
-        sources=sources,
-        client=client,
-    )
+        print("\n" + "=" * 60)
+        print("\n\n".join(reports))
+        print("=" * 60 + "\n")
 
-    print(f"\nAdjudicator evidence: {len(adj_ev)}")
-    for item in adj_ev:
-        print(f"  {item.evidence_id}  {item.summary}")
+        print("Running adjudicator...")
+        adj_ev, verdict, adj_meta = await run_adjudicator(
+            alert=alert,
+            window_start=window_start,
+            window_end=window_end,
+            reports=reports,
+            investigator_evidence=log_ev + met_ev,
+            sources=sources,
+            client=client,
+        )
 
-    print()
-    if verdict is None:
-        print("No verdict submitted")
-        print(f"run_meta: {adj_meta}")
-    else:
-        for i, cause in enumerate(verdict.ranked_causes, 1):
-            print(f"{i}. [{cause.confidence:.2f}] {cause.cause}")
-            print(f"   Cites: {', '.join(cause.evidence_ids)}")
-        print(f"\nOverall confidence: {verdict.overall_confidence}")
-        print(f"Escalate: {verdict.escalate}")
-        if verdict.escalation_reason:
-            print(f"Reason: {verdict.escalation_reason}")
-        print(f"\nDissent: {verdict.dissent}")
+        print(f"\nAdjudicator evidence: {len(adj_ev)}")
+        for item in adj_ev:
+            print(f"  {item.evidence_id}  {item.summary}")
 
-    print(f"\nCorrect answer: {scenario['correct_answer'].strip()}")
+        print()
+        if verdict is None:
+            print("No verdict submitted")
+            print(f"run_meta: {adj_meta}")
+        else:
+            for i, cause in enumerate(verdict.ranked_causes, 1):
+                print(f"{i}. [{cause.confidence:.2f}] {cause.cause}")
+                print(f"   Cites: {', '.join(cause.evidence_ids)}")
+            print(f"\nOverall confidence: {verdict.overall_confidence}")
+            print(f"Escalate: {verdict.escalate}")
+            if verdict.escalation_reason:
+                print(f"Reason: {verdict.escalation_reason}")
+            print(f"\nDissent: {verdict.dissent}")
+        print(f"\nlog_analyst:     {log_meta}")
+        print(f"metrics_analyst: {met_meta}")
+        print(f"adjudicator:     {adj_meta}")
 
-    total_in = log_meta["input_tokens"] + met_meta["input_tokens"] + adj_meta["input_tokens"]
-    total_out = log_meta["output_tokens"] + met_meta["output_tokens"] + adj_meta["output_tokens"]
-    print(f"\nTotal tokens: {total_in} in, {total_out} out")
+        print(f"\nCorrect answer: {scenario['correct_answer'].strip()}")
+
+        total_in = log_meta["input_tokens"] + met_meta["input_tokens"] + adj_meta["input_tokens"]
+        total_out = (
+            log_meta["output_tokens"] + met_meta["output_tokens"] + adj_meta["output_tokens"]
+        )
+        print(f"\nTotal tokens: {total_in} in, {total_out} out")
+
+    asyncio.run(main())

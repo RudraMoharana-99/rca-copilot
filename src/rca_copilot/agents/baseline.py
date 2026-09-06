@@ -63,6 +63,8 @@ def run_baseline(
     turns = 0
     input_tokens = 0
     output_tokens = 0
+    cache_creation_tokens = 0
+    cache_read_tokens = 0
 
     for _ in range(MAX_TURNS):
         turns += 1
@@ -70,18 +72,38 @@ def run_baseline(
         response = client.messages.create(
             model=MODEL,
             max_tokens=2000,
-            system=system_prompt,
+            system=[
+                {"type": "text", "text": system_prompt, "cache_control": {"type": "ephemeral"}}
+            ],
             tools=ALL_TOOLS + [submit_hypothesis],
             messages=messages,
         )
 
         input_tokens += response.usage.input_tokens
         output_tokens += response.usage.output_tokens
+        cache_creation_tokens += (
+            getattr(
+                response.usage,
+                "cache_creation_input_tokens",
+                0,
+            )
+            or 0
+        )
+
+        cache_read_tokens += (
+            getattr(
+                response.usage,
+                "cache_read_input_tokens",
+                0,
+            )
+            or 0
+        )
 
         state.run_meta["turns"] = turns
         state.run_meta["input_tokens"] = input_tokens
         state.run_meta["output_tokens"] = output_tokens
-
+        state.run_meta["cache_creation_tokens"] = cache_creation_tokens
+        state.run_meta["cache_read_tokens"] = cache_read_tokens
         messages.append(
             {
                 "role": "assistant",
