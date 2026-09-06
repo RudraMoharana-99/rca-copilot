@@ -12,6 +12,11 @@ decision.
 
 Window: {window_start} to {window_end}
 
+The window includes a period of normal operation before the incident began.
+A change recorded partway through the window is not disqualified by its
+timing; it may well mark the moment the incident started. Do not rule out a
+change because it falls after the window's start.
+
 Alert: {alert}
 
 Available services: {services}

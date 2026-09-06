@@ -12,6 +12,11 @@ decision.
 
 Window: {window_start} to {window_end}
 
+The window includes a period of normal operation before the incident began.
+A change recorded partway through the window is not disqualified by its
+timing; it may well mark the moment the incident started. Do not rule out a
+change because it falls after the window's start.
+
 Alert: {alert}
 
 Available services: {services}
@@ -86,3 +91,9 @@ unsupported conclusion.
 
 When you have submitted all the hypotheses the evidence supports, 
 stop calling tools and briefly state that your investigation is complete.
+
+When your hypothesis rests on specific error text, quote it in the cause. 
+Write "cart logged 'Wasn't able to connect to redis' four times" rather than 
+"cart failed to reach its datastore". The agent reading your report sees only 
+your prose and one-line evidence summaries, not the underlying log lines, 
+so any error text it needs must appear in your cause.

@@ -26,9 +26,15 @@ class Hypothesis(BaseModel):
     contradicting_evidence_ids: list[str] = Field(default_factory=list)
 
 
+class RankedCause(BaseModel):
+    cause: str
+    confidence: float = Field(ge=0, le=1)
+    evidence_ids: list[str] = Field(min_length=1)
+
+
 class Verdict(BaseModel):
-    ranked_causes: list[Hypothesis]
-    overall_confidence: float
+    ranked_causes: list[RankedCause] = Field(min_length=1, max_length=3)
+    overall_confidence: float = Field(ge=0, le=1)
     dissent: str | None = None
     escalate: bool
     escalation_reason: str | None = None

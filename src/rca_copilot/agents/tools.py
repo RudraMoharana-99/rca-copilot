@@ -174,6 +174,9 @@ get_recent_changes = {
     "description": (
         "Find recent deployments, configuration changes, or other recorded "
         "changes for one service within the incident window. "
+        "Omit the service to retrieve all recorded changes in the window. "
+        "This is the better first query, because a change to a service that "
+        "no analyst nominated is exactly the evidence they missed. "
         "Use this to determine whether a deliberate change may have caused "
         "the incident. Changes can provide causal evidence that logs, "
         "metrics and traces do not reveal, particularly when the failing "
@@ -192,7 +195,97 @@ get_recent_changes = {
                 "description": ("The service whose recent changes should be searched."),
             },
         },
-        "required": ["service"],
+        "required": [],
+    },
+}
+
+submit_verdict = {
+    "name": "submit_verdict",
+    "description": (
+        "Submit the final adjudicated RCA verdict. "
+        "Rank causes from most likely to least likely, with the "
+        "most likely cause first. Submit at most three causes. "
+        "Every ranked cause must cite evidence IDs from the "
+        "investigator reports or evidence gathered by the adjudicator. "
+        "Any candidate explanation that was considered but was not "
+        "ranked first must be addressed in dissent."
+    ),
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "ranked_causes": {
+                "type": "array",
+                "maxItems": 3,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "cause": {
+                            "type": "string",
+                            "description": (
+                                "The proposed root cause."
+                            ),
+                        },
+                        "confidence": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "description": (
+                                "Confidence in this cause, from 0 to 1."
+                            ),
+                        },
+                        "evidence_ids": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                            },
+                            "minItems": 1,
+                            "description": (
+                                "Evidence IDs supporting this cause."
+                            ),
+                        },
+                    },
+                    "required": [
+                        "cause",
+                        "confidence",
+                        "evidence_ids",
+                    ],
+                },
+            },
+            "overall_confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": (
+                    "Overall confidence in the final diagnosis."
+                ),
+            },
+            "dissent": {
+                "type": "string",
+                "description": (
+                    "Address credible alternative explanations that "
+                    "were considered but not ranked first."
+                ),
+            },
+            "escalate": {
+                "type": "boolean",
+                "description": (
+                    "Whether the incident should be escalated because "
+                    "the evidence is insufficient or conflicting."
+                ),
+            },
+            "escalation_reason": {
+                "type": "string",
+                "description": (
+                    "Why escalation is required, if applicable."
+                ),
+            },
+        },
+        "required": [
+            "ranked_causes",
+            "overall_confidence",
+            "dissent",
+            "escalate",
+        ],
     },
 }
 
@@ -286,7 +379,7 @@ def execute_tool(
         source_name = "traces"
 
     elif name == "get_recent_changes":
-        service = arguments["service"]
+        service = arguments.get("service", None)
 
         result = sources.changelog.query_changes(
             start=start,
@@ -296,10 +389,12 @@ def execute_tool(
 
         change_count = len(result.changes)
 
+        label = service if service else "all services"
+
         if change_count == 0:
-            summary = f"{service}: no changes recorded"
+            summary = f"{label}: no changes recorded"
         else:
-            summary = f"{service}: {change_count} change(s)"
+            summary = f"{label}: {change_count} change(s)"
 
         source_name = "changelog"
 
