@@ -221,17 +221,13 @@ submit_verdict = {
                     "properties": {
                         "cause": {
                             "type": "string",
-                            "description": (
-                                "The proposed root cause."
-                            ),
+                            "description": ("The proposed root cause."),
                         },
                         "confidence": {
                             "type": "number",
                             "minimum": 0,
                             "maximum": 1,
-                            "description": (
-                                "Confidence in this cause, from 0 to 1."
-                            ),
+                            "description": ("Confidence in this cause, from 0 to 1."),
                         },
                         "evidence_ids": {
                             "type": "array",
@@ -239,9 +235,7 @@ submit_verdict = {
                                 "type": "string",
                             },
                             "minItems": 1,
-                            "description": (
-                                "Evidence IDs supporting this cause."
-                            ),
+                            "description": ("Evidence IDs supporting this cause."),
                         },
                     },
                     "required": [
@@ -255,9 +249,7 @@ submit_verdict = {
                 "type": "number",
                 "minimum": 0,
                 "maximum": 1,
-                "description": (
-                    "Overall confidence in the final diagnosis."
-                ),
+                "description": ("Overall confidence in the final diagnosis."),
             },
             "dissent": {
                 "type": "string",
@@ -275,9 +267,7 @@ submit_verdict = {
             },
             "escalation_reason": {
                 "type": "string",
-                "description": (
-                    "Why escalation is required, if applicable."
-                ),
+                "description": ("Why escalation is required, if applicable."),
             },
         },
         "required": [

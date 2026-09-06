@@ -1,6 +1,8 @@
+import sys
 from datetime import datetime
 from pathlib import Path
 
+import yaml
 from anthropic import Anthropic
 from pydantic import ValidationError
 
@@ -17,8 +19,6 @@ from rca_copilot.models import (
     RankedCause,
     Verdict,
 )
-import sys
-import yaml
 
 MODEL = "claude-haiku-4-5-20251001"
 
@@ -61,6 +61,7 @@ def format_investigator_report(
 
     return "\n".join(lines)
 
+
 def load_scenario(
     name: str,
 ) -> tuple[Path, dict, datetime, datetime]:
@@ -68,18 +69,14 @@ def load_scenario(
     scenario_file = scenario_dir / "scenario.yaml"
 
     if not scenario_file.exists():
-        raise FileNotFoundError(
-            f"Scenario not found: {scenario_file}"
-        )
+        raise FileNotFoundError(f"Scenario not found: {scenario_file}")
 
     with scenario_file.open("r", encoding="utf-8") as file:
         scenario = yaml.safe_load(file)
 
     window_start = scenario["window"]["start"]
-    
 
     window_end = scenario["window"]["end"]
-    
 
     return (
         scenario_dir,
@@ -340,9 +337,7 @@ if __name__ == "__main__":
     )
 
     if len(sys.argv) != 2:
-        raise SystemExit(
-            "Usage: uv run python -m rca_copilot.agents.adjudicator <scenario>"
-        )
+        raise SystemExit("Usage: uv run python -m rca_copilot.agents.adjudicator <scenario>")
 
     load_dotenv()
 
@@ -429,14 +424,6 @@ if __name__ == "__main__":
 
     print(f"\nCorrect answer: {scenario['correct_answer'].strip()}")
 
-    total_in = (
-        log_meta["input_tokens"]
-        + met_meta["input_tokens"]
-        + adj_meta["input_tokens"]
-    )
-    total_out = (
-        log_meta["output_tokens"]
-        + met_meta["output_tokens"]
-        + adj_meta["output_tokens"]
-    )
+    total_in = log_meta["input_tokens"] + met_meta["input_tokens"] + adj_meta["input_tokens"]
+    total_out = log_meta["output_tokens"] + met_meta["output_tokens"] + adj_meta["output_tokens"]
     print(f"\nTotal tokens: {total_in} in, {total_out} out")
