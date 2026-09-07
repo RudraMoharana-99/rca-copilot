@@ -12,6 +12,8 @@ window:
   start: 2026-09-03T06:14:13Z
   end: 2026-09-03T06:29:13Z
 
+expected_component: product-catalog
+
 correct_answer: >
   Product-catalog was resource-starved after its container memory limit was 
   reduced from 20M to 10M, causing memory exhaustion and container instability.

@@ -13,6 +13,8 @@ window:
   start: 2026-09-03T05:46:32Z
   end: 2026-09-03T06:01:32Z
 
+expected_component: cart
+
 correct_answer: >
   The cart service crashed on startup because its VALKEY_ADDR configuration
   was changed from valkey-cart:6379 to valkey-cart:6380.

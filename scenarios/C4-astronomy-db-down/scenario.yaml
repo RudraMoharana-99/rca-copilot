@@ -10,6 +10,8 @@ window:
   start: 2026-09-03T07:36:34Z
   end: 2026-09-03T07:51:34Z
 
+expected_component: astronomy-db
+
 correct_answer: >
   astronomy-db became unavailable, causing product-catalog, its direct
   dependent, to fail and producing downstream errors in recommendation.

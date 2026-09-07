@@ -334,3 +334,17 @@ However, it would also require another agent, another prompt, another execution 
 **The CPU threshold is stated as an absolute.** "Below 100 percent is normal" rather than "rising toward 100." The model twice read 80% as pressure and built a wrong hypothesis on it. Vague thresholds get interpreted generously.
 
 **Negative findings are required, not permitted**. Changing "report them" to "you must report them, and do not propose a resource cause" was what produced the honest ruling-out.
+
+## Component Matching in Evaluation
+
+**Date:** 2026-09-07
+
+Component matching is case-insensitive and normalizes hyphens and
+underscores to spaces before comparison.
+
+For example, `valkey-cart`, `Valkey cart`, and `valkey_cart` are
+treated as equivalent.
+
+The evaluator otherwise uses substring matching and does not perform
+semantic or fuzzy matching. This keeps scoring deterministic while
+avoiding failures caused only by formatting differences.

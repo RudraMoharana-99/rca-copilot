@@ -87,13 +87,10 @@ async def run_investigator(
         response = await client.messages.create(
             model=MODEL,
             max_tokens=2000,
-            system=[
-                {
-                    "type": "text",
-                    "text": system_prompt,
-                    "cache_control": {"type": "ephemeral", "ttl": "5m"},
-                }
-            ],
+            cache_control={
+                "type": "ephemeral",
+            },
+            system=system_prompt,
             tools=tools + [submit_hypothesis],
             messages=messages,
         )

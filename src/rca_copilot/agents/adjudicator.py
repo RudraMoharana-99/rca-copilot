@@ -131,13 +131,10 @@ async def run_adjudicator(
         response = await client.messages.create(
             model=MODEL,
             max_tokens=8000,
-            system=[
-                {
-                    "type": "text",
-                    "text": system_prompt,
-                    "cache_control": {"type": "ephemeral", "ttl": "5m"},
-                }
-            ],
+            cache_control={
+                "type": "ephemeral",
+            },
+            system=system_prompt,
             tools=[
                 get_recent_changes,
                 submit_verdict,

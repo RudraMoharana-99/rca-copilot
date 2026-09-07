@@ -72,9 +72,10 @@ def run_baseline(
         response = client.messages.create(
             model=MODEL,
             max_tokens=2000,
-            system=[
-                {"type": "text", "text": system_prompt, "cache_control": {"type": "ephemeral"}}
-            ],
+            cache_control={
+                "type": "ephemeral",
+            },
+            system=system_prompt,
             tools=ALL_TOOLS + [submit_hypothesis],
             messages=messages,
         )

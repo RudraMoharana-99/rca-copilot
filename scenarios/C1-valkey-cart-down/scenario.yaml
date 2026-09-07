@@ -9,6 +9,8 @@ window:
   start: 2026-09-03T06:59:19Z
   end: 2026-09-03T07:14:19Z
 
+expected_component: valkey-cart
+
 correct_answer: >
   valkey-cart was stopped, causing cart to lose access to its
   Redis-compatible datastore.
