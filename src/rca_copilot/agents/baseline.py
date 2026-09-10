@@ -1,3 +1,4 @@
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -8,6 +9,7 @@ from opentelemetry.trace import StatusCode
 from pydantic import ValidationError
 
 from rca_copilot.models import Hypothesis, IncidentState
+from rca_copilot.telemetry.metrics import record_agent_duration, record_tokens
 from rca_copilot.telemetry.tracing import tracer
 
 from .tools import ALL_TOOLS, SourceBundle, evidence_to_tool_result, execute_tool, submit_hypothesis
@@ -54,7 +56,7 @@ async def run_baseline(
         root.set_attribute("incident.id", state.incident_id)
         root.set_attribute("config", "baseline")
         root.set_attribute("model", MODEL)
-
+        started = time.perf_counter()
         try:
             prompt_path = Path(__file__).parent / "prompts" / "baseline.md"
 
@@ -184,6 +186,7 @@ async def run_baseline(
             return state
 
         finally:
+            record_agent_duration("baseline", time.perf_counter() - started)
             root.set_attribute("turns", state.run_meta.get("turns", 0))
             root.set_attribute("input_tokens", state.run_meta.get("input_tokens", 0))
             root.set_attribute("output_tokens", state.run_meta.get("output_tokens", 0))
@@ -194,6 +197,9 @@ async def run_baseline(
             root.set_attribute("cache_read_tokens", state.run_meta.get("cache_read_tokens", 0))
             root.set_attribute("evidence_count", len(state.evidence))
             root.set_attribute("hypothesis_submitted", len(state.hypotheses) > 0)
+
+            record_tokens("baseline", "input", state.run_meta.get("input_tokens", 0))
+            record_tokens("baseline", "output", state.run_meta.get("output_tokens", 0))
 
             if state.hypotheses:
                 root.set_attribute("hypothesis.confidence", state.hypotheses[0].confidence)

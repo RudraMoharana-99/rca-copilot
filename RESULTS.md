@@ -43,6 +43,7 @@ non-deterministic system compounds the problem being measured.
 
 ## Headline
 
+
 | Scenario | Fault | Baseline | Multi-agent |
 |---|---|---|---|
 | C1 | valkey-cart stopped | **80%** | 40% |
@@ -184,15 +185,23 @@ inconsistently, in both directions. It has correctly ruled out resource
 exhaustion in some runs and promoted an 80 percent CPU reading as
 evidence of it in others, on identical data.
 
-**Parallelism helps wall clock, not accuracy.** The graph completes in
-roughly the time of the slower investigator rather than the sum, saving
-about a third of elapsed time against running them in sequence. That
-saving is irrelevant given the accuracy cost.
+**Parallelism helps wall clock less than expected.** The trace confirms
+the two investigators do run concurrently, both starting at trace time
+zero. But because the branches are unbalanced, fan-out saves only about
+22 percent of elapsed time, and the run is still more than twice as slow
+as the baseline.
 
 **Prompt caching engaged inconsistently.** Cache reads were zero on the
 early multi-agent runs and on the C1 baseline sweep, then substantial on
 later sweeps, using identical code. Where it engaged, cost per
 multi-agent run fell from about $0.22 to $0.12.
+
+**Instrumentation found a bug on its first run.** Tool result summaries
+were built from the result count without checking status, so a source
+that failed reported "no changes recorded" - text that contradicts the
+ERROR status beside it and that the prompts explicitly treat as
+meaningful evidence of absence. The span attribute was correct while the
+text the model reads was not.
 
 ## Limitations
 
@@ -223,3 +232,43 @@ rather than a narrative conclusion.
 Neither is implemented here. The result as it stands is that the simpler
 architecture is better on this task, at this model size, with these
 prompts.
+
+## Operational overhead, from traces
+
+Both configurations are instrumented with OpenTelemetry: one trace per
+incident, a span per agent, a span per tool call. This gives a second,
+independent view of the multi-agent overhead alongside the accuracy
+numbers.
+
+A representative multi-agent run on C1:
+
+| Span | Duration | Turns | Evidence | Input tokens |
+|---|---|---|---|---|
+| log analyst | 27.4s | 12 | 24 | 9,130 |
+| metrics analyst | 20.6s | 3 | 5 | 2,098 |
+| adjudicator | 45.9s | 4 | - | - |
+| **Total** | **~73s** | | | |
+
+Three things are visible in the trace that the accuracy numbers alone do
+not show.
+
+**The branches are unbalanced.** The log analyst runs four times as many
+turns as the metrics analyst and gathers roughly five times the evidence.
+Fan-out therefore saves only the shorter branch: about 21 seconds of a 73
+second run, or 22 percent, rather than the 50 percent that two balanced
+branches would give.
+
+**The adjudicator is the dominant cost.** At 45.9 seconds it takes longer
+than both investigators ran for, and longer than an entire baseline run,
+which completes in around 28 seconds. The reconciliation step is where
+most of the wall clock goes.
+
+**The imbalance compounds the information bottleneck.** The log analyst
+compresses 24 pieces of evidence into a single prose report; the metrics
+analyst compresses 5. The adjudicator receives two reports of apparently
+equal weight, one of which summarises four times as much investigation.
+Anything the log analyst chose not to state in prose is unavailable
+downstream, and there was substantially more for it to omit.
+
+The result is that the reconciliation step is simultaneously the largest
+cost in the run and the point at which evidence is lost.

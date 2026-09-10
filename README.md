@@ -1,0 +1,1 @@
+![One multi-agent run: investigators concurrent from t=0, adjudicator at 45.9s dominating a 73s run.](docs/trace_1.png)

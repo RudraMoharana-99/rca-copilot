@@ -14,6 +14,7 @@ from rca_copilot.sources.base import (
     Status,
     TracesSource,
 )
+from rca_copilot.telemetry.metrics import record_tool_failure
 from rca_copilot.telemetry.tracing import tracer
 
 submit_hypothesis = {
@@ -448,6 +449,7 @@ def execute_tool(
                     evidence.summary,
                 )
             )
+            record_tool_failure(evidence.source, name)
         return evidence
 
 

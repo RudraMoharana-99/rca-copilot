@@ -10,7 +10,7 @@ from uuid import uuid4
 import yaml
 from anthropic import AsyncAnthropic
 from dotenv import load_dotenv
-from opentelemetry import trace
+from opentelemetry import metrics, trace
 
 from eval.scoring import score_verdict
 from rca_copilot.agents.adjudicator import MODEL as ADJUDICATOR_MODEL
@@ -25,6 +25,12 @@ from rca_copilot.sources.snapshot import (
     SnapshotLogsSource,
     SnapshotMetricsSource,
     SnapshotTracesSource,
+)
+from rca_copilot.telemetry.metrics import (
+    record_cost,
+    record_escalation,
+    record_incident,
+    setup_metrics,
 )
 from rca_copilot.telemetry.tracing import setup_tracing
 
@@ -155,6 +161,7 @@ async def main() -> None:
     load_dotenv()
 
     setup_tracing()
+    setup_metrics()
 
     args = parse_args()
 
@@ -237,6 +244,15 @@ async def main() -> None:
         elapsed_seconds = perf_counter() - started
         score = score_verdict(verdict=verdict, expected_component=expected_component)
         cost_usd = calculate_costs(usage=usage)
+        record_incident(
+            "correct" if score["correct"] else "incorrect",
+            args.config,
+        )
+
+        if score["escalated"]:
+            record_escalation(args.config)
+
+        record_cost(args.config, cost_usd)
 
         record = {
             "run_id": uuid4().hex[:8],
@@ -275,6 +291,7 @@ async def main() -> None:
             print(f"    error={error}")
 
         trace.get_tracer_provider().shutdown()
+        metrics.get_meter_provider().force_flush()
 
     print_summary(records)
 
