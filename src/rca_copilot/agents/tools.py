@@ -2,6 +2,9 @@ import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
+from opentelemetry.trace import Status as SpanStatus
+from opentelemetry.trace import StatusCode
+
 from rca_copilot.models import Evidence
 from rca_copilot.sources.base import (
     ChangelogSource,
@@ -11,6 +14,7 @@ from rca_copilot.sources.base import (
     Status,
     TracesSource,
 )
+from rca_copilot.telemetry.tracing import tracer
 
 submit_hypothesis = {
     "name": "submit_hypothesis",
@@ -304,119 +308,147 @@ def execute_tool(
     window_end: datetime,
     agent: str = "baseline",
 ) -> Evidence:
+    with tracer.start_as_current_span(f"tool.{name}") as span:
+        span.set_attribute("tool.name", name)
+        span.set_attribute("agent", agent)
 
-    start = window_start
-    end = window_end
+        start = window_start
+        end = window_end
 
-    if name == "search_logs":
-        service = arguments["service"]
+        if name == "search_logs":
+            service = arguments["service"]
 
-        min_severity = (
-            Severity(arguments["min_severity"]) if arguments.get("min_severity") else None
-        )
-        result = sources.logs.query_logs(
-            start=start,
-            end=end,
-            service=service,
-            min_severity=min_severity,
-        )
+            min_severity = (
+                Severity(arguments["min_severity"]) if arguments.get("min_severity") else None
+            )
+            result = sources.logs.query_logs(
+                start=start,
+                end=end,
+                service=service,
+                min_severity=min_severity,
+            )
 
-        summary = (
-            f"{service}: {result.count} log entries, "
-            f"status {result.status}, truncated {result.truncated}"
-        )
+            summary = (
+                f"{service}: {result.count} log entries, "
+                f"status {result.status}, truncated {result.truncated}"
+            )
 
-        source_name = "logs"
+            source_name = "logs"
 
-    elif name == "get_metrics":
-        query_name = arguments["query_name"]
+        elif name == "get_metrics":
+            query_name = arguments["query_name"]
 
-        result = sources.metrics.query_metrics(
-            query_name=query_name,
-            start=start,
-            end=end,
-        )
+            result = sources.metrics.query_metrics(
+                query_name=query_name,
+                start=start,
+                end=end,
+            )
 
-        summary = f"{query_name}: {len(result.series)} series, status {result.status}"
+            summary = f"{query_name}: {len(result.series)} series, status {result.status}"
 
-        source_name = "metrics"
+            source_name = "metrics"
 
-    elif name == "find_traces":
-        service = arguments["service"]
+        elif name == "find_traces":
+            service = arguments["service"]
 
-        result = sources.traces.query_trace_summaries(
-            service=service,
-            start=start,
-            end=end,
-        )
+            result = sources.traces.query_trace_summaries(
+                service=service,
+                start=start,
+                end=end,
+            )
 
-        error_count = sum(1 for trace_summary in result.summaries if trace_summary.error_count > 0)
+            error_count = sum(
+                1 for trace_summary in result.summaries if trace_summary.error_count > 0
+            )
 
-        summary = (
-            f"{service}: {len(result.summaries)} summaries, "
-            f"{error_count} with errors, status {result.status}"
-        )
+            summary = (
+                f"{service}: {len(result.summaries)} summaries, "
+                f"{error_count} with errors, status {result.status}"
+            )
 
-        source_name = "traces"
+            source_name = "traces"
 
-    elif name == "get_trace_detail":
-        trace_id = arguments["trace_id"]
+        elif name == "get_trace_detail":
+            trace_id = arguments["trace_id"]
 
-        result = sources.traces.get_trace(trace_id)
+            result = sources.traces.get_trace(trace_id)
 
-        summary = f"{trace_id}: trace detail status {result.status}"
+            summary = f"{trace_id}: trace detail status {result.status}"
 
-        source_name = "traces"
+            source_name = "traces"
 
-    elif name == "get_recent_changes":
-        service = arguments.get("service", None)
+        elif name == "get_recent_changes":
+            service = arguments.get("service", None)
 
-        result = sources.changelog.query_changes(
-            start=start,
-            end=end,
-            service=service,
-        )
+            result = sources.changelog.query_changes(
+                start=start,
+                end=end,
+                service=service,
+            )
 
-        change_count = len(result.changes)
+            change_count = len(result.changes)
 
-        label = service if service else "all services"
+            label = service if service else "all services"
 
-        if change_count == 0:
-            summary = f"{label}: no changes recorded"
+            if result.status == Status.ERROR:
+                summary = f"{label}: changelog source unavailable"
+            elif change_count == 0:
+                summary = f"{label}: no changes recorded"
+            else:
+                summary = f"{label}: {change_count} change(s)"
+
+            source_name = "changelog"
+
         else:
-            summary = f"{label}: {change_count} change(s)"
+            evidence = Evidence(
+                agent=agent,
+                source="tool_executor",
+                query={
+                    "name": name,
+                    "arguments": arguments,
+                },
+                status=Status.ERROR,
+                summary=f"Tool does not exist: {name}",
+                raw=None,
+                timestamp=datetime.now(UTC),
+            )
 
-        source_name = "changelog"
+            span.set_attribute("tool.source", evidence.source)
+            span.set_attribute("result.status", evidence.status.value)
+            span.set_attribute("result.summary", evidence.summary)
+            span.set_attribute("evidence.id", evidence.evidence_id)
+            span.set_status(SpanStatus(StatusCode.ERROR, evidence.summary))
 
-    else:
-        return Evidence(
+            return evidence
+
+        query = {
+            **arguments,
+            "start": start.isoformat(),
+            "end": end.isoformat(),
+        }
+
+        evidence = Evidence(
             agent=agent,
-            source="tool_executor",
-            query={
-                "name": name,
-                "arguments": arguments,
-            },
-            status=Status.ERROR,
-            summary=f"Tool does not exist: {name}",
-            raw=None,
+            source=source_name,
+            query=query,
+            status=result.status,
+            summary=summary,
+            raw=result.model_dump(mode="json"),
             timestamp=datetime.now(UTC),
         )
+        span.set_attribute("tool.source", evidence.source)
+        span.set_attribute("result.status", evidence.status.value)
+        span.set_attribute("result.summary", evidence.summary)
+        span.set_attribute("evidence.id", evidence.evidence_id)
 
-    query = {
-        **arguments,
-        "start": start.isoformat(),
-        "end": end.isoformat(),
-    }
-
-    return Evidence(
-        agent=agent,
-        source=source_name,
-        query=query,
-        status=result.status,
-        summary=summary,
-        raw=result.model_dump(mode="json"),
-        timestamp=datetime.now(UTC),
-    )
+        if evidence.status == StatusCode.ERROR:
+            span.set_status(
+                SpanStatus(
+                    StatusCode.ERROR,
+                    evidence.summary,
+                )
+            )
+        return evidence
 
 
 KEEP_SPAN_ATTRS = {

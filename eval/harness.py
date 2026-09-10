@@ -8,8 +8,9 @@ from time import perf_counter
 from uuid import uuid4
 
 import yaml
-from anthropic import Anthropic, AsyncAnthropic
+from anthropic import AsyncAnthropic
 from dotenv import load_dotenv
+from opentelemetry import trace
 
 from eval.scoring import score_verdict
 from rca_copilot.agents.adjudicator import MODEL as ADJUDICATOR_MODEL
@@ -25,6 +26,7 @@ from rca_copilot.sources.snapshot import (
     SnapshotMetricsSource,
     SnapshotTracesSource,
 )
+from rca_copilot.telemetry.tracing import setup_tracing
 
 # Claude Haiku 4.5 standard API pricing, USD per 1M tokens.
 INPUT_PRICE = 1.00
@@ -150,12 +152,14 @@ def append_record(
 
 
 async def main() -> None:
+    load_dotenv()
+
+    setup_tracing()
+
     args = parse_args()
 
     if args.n < 1:
         raise SystemExit("--n must be atleast 1")
-
-    load_dotenv()
 
     (scenario_dir, scenario, window_start, window_end) = load_scenario(args.scenario)
 
@@ -172,12 +176,13 @@ async def main() -> None:
         logs=SnapshotLogsSource(scenario_dir),
         metrics=SnapshotMetricsSource(scenario_dir),
         traces=SnapshotTracesSource(scenario_dir),
+        # changelog=SnapshotChangesSource("scenarios/_changelog_not.json"),
         changelog=SnapshotChangesSource("scenarios/_changelog_master.json"),
     )
     api_key = os.environ["ANTHROPIC_API_KEY"]
 
     if args.config == "baseline":
-        client = Anthropic(api_key=api_key)
+        client = AsyncAnthropic(api_key=api_key)
         model = BASELINE_MODEL
     else:
         client = AsyncAnthropic(api_key=api_key)
@@ -217,7 +222,7 @@ async def main() -> None:
                 usage = aggregate_usage(state["run_metas"])
 
             else:
-                state = run_baseline(
+                state = await run_baseline(
                     alert=alert,
                     window_start=window_start,
                     window_end=window_end,
@@ -268,6 +273,8 @@ async def main() -> None:
         )
         if error:
             print(f"    error={error}")
+
+        trace.get_tracer_provider().shutdown()
 
     print_summary(records)
 
