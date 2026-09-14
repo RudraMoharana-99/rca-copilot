@@ -22,43 +22,56 @@ def load_records(path: Path) -> list[dict]:
 def summarize(records: list[dict]) -> dict:
     total_runs = len(records)
 
+    error_records = [record for record in records if record.get("error") is not None]
+
+    valid_records = [record for record in records if record.get("error") is None]
+
+    valid_runs = len(valid_records)
+    errors = len(error_records)
+
     if total_runs == 0:
         return {
             "runs": 0,
+            "valid_runs": 0,
             "correct": 0,
-            "accuracy": 0.0,
+            "accuracy": None,
             "errors": 0,
             "mean_confidence": None,
-            "mean_elapsed": 0.0,
+            "mean_elapsed": None,
             "input_tokens": 0,
             "output_tokens": 0,
             "total_cost": 0.0,
-            "mean_cost": 0.0,
+            "mean_cost": None,
         }
 
-    correct = sum(1 for record in records if record["correct"])
-
-    errors = sum(1 for record in records if record["error"] is not None)
+    correct = sum(1 for record in valid_records if record.get("correct") is True)
 
     confidences = [
-        record["top_confidence"] for record in records if record["top_confidence"] is not None
+        record["top_confidence"]
+        for record in valid_records
+        if record.get("top_confidence") is not None
     ]
 
-    elapsed = [record["elapsed_seconds"] for record in records]
+    elapsed = [
+        record["elapsed_seconds"]
+        for record in valid_records
+        if record.get("elapsed_seconds") is not None
+    ]
 
-    total_cost = sum(record["cost_usd"] for record in records)
+    total_cost = sum(record.get("cost_usd", 0.0) for record in valid_records)
 
     return {
         "runs": total_runs,
+        "valid_runs": valid_runs,
         "correct": correct,
-        "accuracy": correct / total_runs,
+        "accuracy": (correct / valid_runs if valid_runs > 0 else None),
         "errors": errors,
         "mean_confidence": (fmean(confidences) if confidences else None),
-        "mean_elapsed": fmean(elapsed),
-        "input_tokens": sum(record["input_tokens"] for record in records),
-        "output_tokens": sum(record["output_tokens"] for record in records),
+        "mean_elapsed": (fmean(elapsed) if elapsed else None),
+        "input_tokens": sum(record.get("input_tokens", 0) for record in valid_records),
+        "output_tokens": sum(record.get("output_tokens", 0) for record in valid_records),
         "total_cost": total_cost,
-        "mean_cost": total_cost / total_runs,
+        "mean_cost": (total_cost / valid_runs if valid_runs > 0 else None),
     }
 
 
@@ -111,28 +124,37 @@ def print_comparison_table(
     print()
 
     print(
-        "| Scenario | Config | Runs | Correct | Accuracy | "
-        "Errors | Mean confidence | Mean latency | "
-        "Mean cost/run | Total cost |"
+        "| Scenario | Config | Runs | Valid | Correct | "
+        "Accuracy | Errors | Mean confidence | "
+        "Mean latency | Mean cost/run | Total cost |"
     )
 
-    print("|---|---|---:|---:|---:|---:|---:|---:|---:|---:|")
+    print("|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
 
     for item in summaries:
         confidence = (
             f"{item['mean_confidence']:.3f}" if item["mean_confidence"] is not None else "n/a"
         )
 
+        latency = f"{item['mean_elapsed']:.1f}s" if item["mean_elapsed"] is not None else "n/a"
+
+        mean_cost = f"${item['mean_cost']:.4f}" if item["mean_cost"] is not None else "n/a"
+
+        accuracy = f"{item['accuracy']:.1%}" if item["accuracy"] is not None else "n/a"
+
+        correct = f"{item['correct']}/{item['valid_runs']}" if item["valid_runs"] > 0 else "0/0"
+
         print(
             f"| {item['scenario']} "
             f"| {item['config']} "
             f"| {item['runs']} "
-            f"| {item['correct']}/{item['runs']} "
-            f"| {item['accuracy']:.1%} "
+            f"| {item['valid_runs']} "
+            f"| {correct} "
+            f"| {accuracy} "
             f"| {item['errors']} "
             f"| {confidence} "
-            f"| {item['mean_elapsed']:.1f}s "
-            f"| ${item['mean_cost']:.4f} "
+            f"| {latency} "
+            f"| {mean_cost} "
             f"| ${item['total_cost']:.4f} |"
         )
 
