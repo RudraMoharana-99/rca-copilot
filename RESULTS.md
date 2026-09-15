@@ -43,105 +43,92 @@ non-deterministic system compounds the problem being measured.
 
 ## Headline
 
+| Scenario | Config | Valid runs | Correct | Accuracy | Mean conf | Mean latency | Mean cost |
+|---|---|---:|---:|---:|---:|---:|---:|
+| C1 valkey-cart stopped | baseline | 13 | 8 | **61.5%** | 0.90 | 27.8s | $0.088 |
+| C1 valkey-cart stopped | multi-agent | 6 | 3 | 50.0% | 0.73 | 76.5s | $0.202 |
+| C2 cart misconfigured | baseline | 5 | 5 | **100%** | 0.94 | 26.1s | $0.036 |
+| C2 cart misconfigured | multi-agent | 5 | 3 | 60.0% | 0.81 | 89.6s | $0.120 |
+| C3 product-catalog OOM | baseline | 5 | 4 | **80.0%** | 0.79 | 48.4s | $0.068 |
+| C3 product-catalog OOM | multi-agent | 5 | 0 | 0.0% | 0.72 | 76.5s | $0.106 |
+| C4 astronomy-db stopped | baseline | 5 | 5 | **100%** | 0.92 | 27.0s | $0.042 |
+| C4 astronomy-db stopped | multi-agent | 5 | 4 | 80.0% | 0.65 | 85.9s | $0.117 |
 
-| Scenario | Fault | Baseline | Multi-agent |
-|---|---|---|---|
-| C1 | valkey-cart stopped | **80%** | 40% |
-| C2 | cart VALKEY_ADDR misconfigured | **100%** | 60% |
-| C3 | product-catalog memory limit reduced | **80%** | 0% |
-| C4 | astronomy-db stopped | **100%** | 80% |
-| | **Overall** | **90%** (18/20) | **45%** (9/20) |
+**Overall: baseline 22/28 (79%), multi-agent 10/21 (48%).**
 
-| | Baseline | Multi-agent |
-|---|---|---|
-| Top-1 accuracy | 90% | 45% |
-| Mean wall clock | ~32s | ~82s |
-| Mean cost per run | ~$0.06 | ~$0.15 |
-| Mean stated confidence | 0.89 | 0.73 |
+The baseline is more accurate on every scenario, at roughly a third of the
+latency and half the cost. The clearest within-scenario comparison is C2,
+where identical data produced 100 percent accuracy from the single agent
+and 60 percent from the multi-agent pipeline, at 3.3 times the cost and
+3.4 times the latency.
 
-**The multi-agent architecture was worse on every scenario.** It is half
-as accurate, two and a half times slower, twice as expensive, and less
-well calibrated than the single agent it was built to improve on.
+Runs that errored before reaching the API - eight on C1 baseline, from
+harness and instrumentation development - are excluded from these figures
+and counted separately. C1 has more valid runs than the other scenarios
+because it was used throughout development; all of them are completions of
+the same pipeline against the same snapshot. The other three scenarios
+were each run once at n = 5 per configuration.
 
-## Why the multi-agent system is worse
 
-Splitting evidence gathering across specialists creates an information
-bottleneck. The adjudicator never sees raw telemetry - only the
-investigators' prose reports and one-line evidence summaries. Anything an
-investigator fails to report is therefore invisible downstream, and a
-component that no investigator nominates cannot be ranked at all.
+## Failure taxonomy
 
-C3 demonstrates this cleanly. The fault was a memory limit reduction on
-product-catalog, which showed 107 percent CPU and 209 GB of block I/O
-during the incident. That data is present in `container_cpu` and
-`container_memory_ratio`, and the baseline reads it and names
-product-catalog in 4 of 5 runs. The metrics analyst reads the same
-metrics and reports checkout at 78-81 percent CPU instead, never
-mentioning product-catalog. Across all five multi-agent runs,
-product-catalog appears nowhere in any ranking - `rank_position` is null
-every time.
+Every stored run was classified from its record. A run is `correct` if the
+expected component was ranked first, `outranked` if it appeared lower in
+the ranking, `absent` if it appeared nowhere, `no_verdict` if nothing was
+submitted, and `error` if the run crashed before completing.
 
-The metrics analyst's prompt explicitly instructs it that CPU below 100
-percent is normal load and that only sustained CPU at or above 100
-percent indicates resource pressure. It does not follow this. The single
-agent, given the same metrics without a specialist framing, does.
+| Scenario | Config | Correct | Outranked | Absent | No verdict | Error |
+|---|---|---:|---:|---:|---:|---:|
+| C1 | baseline | 8 | 0 | 5 | 0 | 8 |
+| C1 | multi-agent | 3 | 2 | 1 | 0 | 0 |
+| C2 | baseline | 5 | 0 | 0 | 0 | 0 |
+| C2 | multi-agent | 3 | 0 | 1 | 1 | 0 |
+| C3 | baseline | 4 | 0 | 1 | 0 | 0 |
+| C3 | multi-agent | 0 | 0 | 4 | 1 | 0 |
+| C4 | baseline | 5 | 0 | 0 | 0 | 0 |
+| C4 | multi-agent | 4 | 0 | 1 | 0 | 0 |
 
-C1 shows the same bottleneck producing a different symptom. Three of the
-four multi-agent failures ranked checkout first, citing memory at 99.5
-percent and CPU at 78-81 percent - the same misreading. In two of those
-runs valkey-cart was ranked second, so the correct answer was present but
-outranked by the metrics analyst's story. The baseline, which has no
-metrics analyst, reads cart's logs and answers correctly in 4 of 5 runs.
+Two observations.
 
-## Per scenario
+**The baseline never fails halfway.** It has no `outranked` and no
+`no_verdict` results: it either names the right component first or names
+something else entirely. The multi-agent pipeline produces both
+intermediate states - twice ranking the correct component second, and twice
+failing to submit a verdict at all.
 
-### C1 - valkey-cart stopped
+**C3 is a total miss for the multi-agent pipeline.** product-catalog does
+not appear in any ranking across five runs, while the baseline names it
+first in four of five. This is the clearest evidence for the information
+bottleneck described above.
 
-Baseline 4/5. Multi-agent 2/5.
+### What gets blamed instead
 
-Cart logs "Wasn't able to connect to redis" four times, which is
-unambiguous. The multi-agent failures were mostly near misses: two ranked
-valkey-cart second behind a checkout resource-exhaustion story, and one
-did not mention it at all. Top-3 accuracy for multi-agent on this
-scenario is 80 percent against a top-1 of 40 percent, so the right
-component is usually found and wrongly ranked.
+For every failure where a component was named, the top-ranked cause was
+matched against the known service list.
 
-### C2 - cart configuration change
+| Blamed component | baseline | multi-agent | total |
+|---|---:|---:|---:|
+| checkout | 6 | 5 | **11** |
+| astronomy-db | 0 | 2 | 2 |
+| cart | 0 | 1 | 1 |
+| recommendation | 0 | 1 | 1 |
 
-Baseline 5/5. Multi-agent 3/5.
+**Eleven of fourteen attributable failures blame checkout**, and checkout is
+never the fault in any scenario. It is a bystander that showed 78-81
+percent CPU and memory peaking at 99.5 percent during the incident windows.
 
-Cart crash-looped and produced no logs, so the changelog entry recording
-the VALKEY_ADDR change is the only evidence naming the cause. Both
-multi-agent failures were `rank_position: null` - cart was not ranked at
-all. This is a binary failure rather than a near miss: either the
-adjudicator queries the changelog and finds the entry, or cart never
-enters the ranking.
+The bias appears in both configurations at similar rates - six baseline
+failures and five multi-agent. **It is therefore a property of how the model
+reads resource metrics, not of the architecture.** Both prompts state that
+CPU below 100 percent is normal operating load and that memory above 90
+percent is not by itself significant; the instruction is followed
+inconsistently.
 
-Reaching 3/5 required three fixes made after observing failures:
-permitting an unfiltered changelog query, telling the adjudicator that
-the window includes a lead-in period before the incident, and rejecting
-malformed `submit_verdict` calls with an explicit instruction to
-resubmit. Those changes are in the prompts used for all runs reported
-here, but they were developed against this scenario.
+The two astronomy-db attributions are a different mechanism: both occurred
+on C3, where the recommendation service logged DNS errors naming
+astronomy-db from an unrelated background fault, and the pipeline built a
+diagnosis on them.
 
-### C3 - product-catalog memory exhaustion
-
-Baseline 4/5. Multi-agent 0/5.
-
-The widest gap in the table, and the clearest evidence of the
-architectural problem. See "Why the multi-agent system is worse" above.
-
-### C4 - astronomy-db stopped
-
-Baseline 5/5. Multi-agent 4/5.
-
-The narrowest gap. The correct component is named directly in
-recommendation's error text - "lookup astronomy-db on 127.0.0.11:53: no
-such host" - which both configurations can find by reading logs. There is
-no competing resource-exhaustion story in the data for the metrics
-analyst to promote, which is consistent with the pattern that multi-agent
-fails when a plausible-but-wrong alternative is present rather than when
-the correct answer is hard to find.
 
 ## Calibration
 
@@ -202,6 +189,13 @@ that failed reported "no changes recorded" - text that contradicts the
 ERROR status beside it and that the prompts explicitly treat as
 meaningful evidence of absence. The span attribute was correct while the
 text the model reads was not.
+
+**The dominant failure is a misread resource metric, not the architecture.**
+checkout accounts for eleven of fourteen attributable failures across both
+configurations. Choosing a different agent topology does not address it;
+the model reads a busy-but-healthy container as a failing one regardless of
+how the evidence reaches it.
+
 
 ## Limitations
 
