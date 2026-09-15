@@ -69,7 +69,7 @@ class IncidentResponse(BaseModel):
 
 
 @asynccontextmanager
-async def lipespan(app: FastAPI):
+async def lifespan(app: FastAPI):
     load_dotenv()
 
     setup_tracing()
@@ -92,7 +92,7 @@ async def lipespan(app: FastAPI):
 
 app = FastAPI(
     title="RCA Copilot API",
-    lifespan=lipespan,
+    lifespan=lifespan,
 )
 
 
