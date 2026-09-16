@@ -20,8 +20,13 @@ from rca_copilot.sources.snapshot import (
     SnapshotMetricsSource,
     SnapshotTracesSource,
 )
+from rca_copilot.store.aws import (
+    get_incident,
+    put_incident,
+)
 from rca_copilot.telemetry.metrics import setup_metrics
 from rca_copilot.telemetry.tracing import setup_tracing
+from rca_copilot.models import ConfigName, DiagnoseRequest, IncidentResponse
 
 # =========================PATHS==============================
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -31,41 +36,9 @@ SCENARIOS_DIR = PROJECT_ROOT / "scenarios"
 CHANGELOG_PATH = SCENARIOS_DIR / "_changelog_master.json"
 
 
-INCIDENTS: dict[str, "IncidentResponse"] = {}
-
-# ==================Requests/response models===================
-ConfigName = Literal[
-    "baseline",
-    "multi_agent",
-]
+# INCIDENTS: dict[str, "IncidentResponse"] = {}
 
 
-class DiagnoseRequest(BaseModel):
-    scenario: str = Field(
-        min_length=1,
-        description="Snapshot scenario folder name.",
-    )
-    alert: dict = Field(
-        description="Alert information supplied to the RCA pipeline.",
-    )
-    window_start: datetime
-    window_end: datetime
-    config: ConfigName = "baseline"
-
-    @model_validator(mode="after")
-    def validate_window(self) -> "DiagnoseRequest":
-        if self.window_end <= self.window_start:
-            raise ValueError("window_end must be after window_start")
-        return self
-
-
-class IncidentResponse(BaseModel):
-    incident_id: str
-    scenario: str
-    config: ConfigName
-    verdict: Verdict | None
-    run_meta: dict[str, Any]
-    elapsed_seconds: float
 
 
 @asynccontextmanager
@@ -237,14 +210,26 @@ async def create_incident(
         elapsed_seconds=elapsed,
     )
 
-    INCIDENTS[incident_id] = response
+    put_incident(response)
 
     return response
 
 
-@app.get("/incidents/{incident_id}", response_model=IncidentResponse)
-async def get_incident(incident_id: str) -> IncidentResponse:
-    if incident_id not in INCIDENTS:
-        raise HTTPException(status_code=404, detail="Incident not found")
+@app.get(
+    "/incidents/{incident_id}",
+    response_model=IncidentResponse,
+)
+async def get_incident_endpoint(
+    incident_id: str,
+) -> IncidentResponse:
+    incident = get_incident(
+        incident_id
+    )
 
-    return INCIDENTS[incident_id]
+    if incident is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Incident not found",
+        )
+
+    return incident

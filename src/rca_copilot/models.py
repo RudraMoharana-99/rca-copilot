@@ -1,5 +1,6 @@
 from datetime import datetime
 from uuid import uuid4
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -66,3 +67,38 @@ class IncidentState(BaseModel):
                     )
 
         return self
+
+
+# ==================Requests/response models===================
+ConfigName = Literal[
+    "baseline",
+    "multi_agent",
+]
+
+
+class DiagnoseRequest(BaseModel):
+    scenario: str = Field(
+        min_length=1,
+        description="Snapshot scenario folder name.",
+    )
+    alert: dict = Field(
+        description="Alert information supplied to the RCA pipeline.",
+    )
+    window_start: datetime
+    window_end: datetime
+    config: ConfigName = "baseline"
+
+    @model_validator(mode="after")
+    def validate_window(self) -> "DiagnoseRequest":
+        if self.window_end <= self.window_start:
+            raise ValueError("window_end must be after window_start")
+        return self
+
+
+class IncidentResponse(BaseModel):
+    incident_id: str
+    scenario: str
+    config: ConfigName
+    verdict: Verdict | None
+    run_meta: dict[str, Any]
+    elapsed_seconds: float
