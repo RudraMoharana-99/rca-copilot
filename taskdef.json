@@ -1,0 +1,36 @@
+{
+  "family": "rca-copilot",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::846280826593:role/rca-copilot-execution-role",
+  "taskRoleArn": "arn:aws:iam::846280826593:role/rca-copilot-task-role",
+  "containerDefinitions": [
+    {
+      "name": "rca-copilot",
+      "image": "846280826593.dkr.ecr.ap-south-1.amazonaws.com/rca-copilot:4f23f0f",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "ANTHROPIC_API_KEY",
+          "valueFrom": "arn:aws:ssm:ap-south-1:846280826593:parameter/rca-copilot/anthropic-api-key"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/rca-copilot",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "essential": true
+    }
+  ]
+}
