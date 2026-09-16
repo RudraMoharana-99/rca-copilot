@@ -9,13 +9,21 @@
   "containerDefinitions": [
     {
       "name": "rca-copilot",
-      "image": "846280826593.dkr.ecr.ap-south-1.amazonaws.com/rca-copilot:4f23f0f",
+      "image": "846280826593.dkr.ecr.ap-south-1.amazonaws.com/rca-copilot:af638cb",
       "portMappings": [
         {
           "containerPort": 8000,
           "protocol": "tcp"
         }
       ],
+      "environment": [
+        {
+          "name": "INCIDENTS_TABLE",
+          "value": "rca-copilot-incidents"
+        },
+        { "name": "AWS_REGION", "value": "ap-south-1" }
+      ],
+
       "secrets": [
         {
           "name": "ANTHROPIC_API_KEY",
