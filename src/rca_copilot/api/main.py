@@ -1,19 +1,16 @@
 import os
 import time
 from contextlib import asynccontextmanager
-from datetime import datetime
 from pathlib import Path
-from typing import Any, Literal
 
 from anthropic import AsyncAnthropic
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
-from pydantic import BaseModel, Field, model_validator
 
 from rca_copilot.agents.baseline import run_baseline
 from rca_copilot.agents.graph import run_graph
 from rca_copilot.agents.tools import SourceBundle
-from rca_copilot.models import RankedCause, Verdict
+from rca_copilot.models import DiagnoseRequest, IncidentResponse, RankedCause, Verdict
 from rca_copilot.sources.changelog import SnapshotChangesSource
 from rca_copilot.sources.snapshot import (
     SnapshotLogsSource,
@@ -26,7 +23,6 @@ from rca_copilot.store.aws import (
 )
 from rca_copilot.telemetry.metrics import setup_metrics
 from rca_copilot.telemetry.tracing import setup_tracing
-from rca_copilot.models import ConfigName, DiagnoseRequest, IncidentResponse
 
 # =========================PATHS==============================
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
