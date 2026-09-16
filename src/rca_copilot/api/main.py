@@ -35,8 +35,6 @@ CHANGELOG_PATH = SCENARIOS_DIR / "_changelog_master.json"
 # INCIDENTS: dict[str, "IncidentResponse"] = {}
 
 
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     load_dotenv()
@@ -218,9 +216,7 @@ async def create_incident(
 async def get_incident_endpoint(
     incident_id: str,
 ) -> IncidentResponse:
-    incident = get_incident(
-        incident_id
-    )
+    incident = get_incident(incident_id)
 
     if incident is None:
         raise HTTPException(
