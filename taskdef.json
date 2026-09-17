@@ -9,7 +9,7 @@
   "containerDefinitions": [
     {
       "name": "rca-copilot",
-      "image": "846280826593.dkr.ecr.ap-south-1.amazonaws.com/rca-copilot:af638cb",
+      "image": "846280826593.dkr.ecr.ap-south-1.amazonaws.com/rca-copilot:683ce81",
       "portMappings": [
         {
           "containerPort": 8000,
@@ -71,3 +71,4 @@
     
   ]
 }
+
