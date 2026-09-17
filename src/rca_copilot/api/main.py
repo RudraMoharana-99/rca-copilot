@@ -21,7 +21,7 @@ from rca_copilot.store.aws import (
     get_incident,
     put_incident,
 )
-from rca_copilot.telemetry.metrics import setup_metrics
+from rca_copilot.telemetry.metrics import record_incident, setup_metrics
 from rca_copilot.telemetry.tracing import setup_tracing
 
 # =========================PATHS==============================
@@ -205,6 +205,11 @@ async def create_incident(
     )
 
     put_incident(response)
+
+    record_incident(
+        outcome="success",
+        config=body.config,
+    )
 
     return response
 

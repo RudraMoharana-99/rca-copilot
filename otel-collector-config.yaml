@@ -17,6 +17,7 @@ exporters:
     region: ap-south-1
     namespace: RCACopilot
     log_group_name: /ecs/rca-copilot-metrics
+    retain_initial_value_of_delta_metric: true
 
 service:
   pipelines:

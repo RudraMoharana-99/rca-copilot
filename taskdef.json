@@ -2,8 +2,8 @@
   "family": "rca-copilot",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
-  "cpu": "256",
-  "memory": "512",
+  "cpu": "512",
+  "memory": "1024",
   "executionRoleArn": "arn:aws:iam::846280826593:role/rca-copilot-execution-role",
   "taskRoleArn": "arn:aws:iam::846280826593:role/rca-copilot-task-role",
   "containerDefinitions": [
@@ -21,7 +21,15 @@
           "name": "INCIDENTS_TABLE",
           "value": "rca-copilot-incidents"
         },
-        { "name": "AWS_REGION", "value": "ap-south-1" }
+        { "name": "AWS_REGION", "value": "ap-south-1" },
+        {
+          "name": "OTEL_EXPORTER_OTLP_ENDPOINT",
+          "value": "http://localhost:4317"
+        },
+        {
+          "name": "OTEL_EXPORTER_OTLP_METRICS_ENDPOINT",
+          "value": "http://localhost:4318/v1/metrics"
+        }
       ],
 
       "secrets": [
@@ -38,7 +46,28 @@
           "awslogs-stream-prefix": "ecs"
         }
       },
+
       "essential": true
+    },
+    {
+      "name": "aws-otel-collector",
+      "image": "public.ecr.aws/aws-observability/aws-otel-collector:latest",
+      "essential": false,
+      "secrets": [
+        {
+          "name": "AOT_CONFIG_CONTENT",
+          "valueFrom": "arn:aws:ssm:ap-south-1:846280826593:parameter/rca-copilot/otel-collector-config"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/rca-copilot",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "otel"
+        }
+      }
     }
+    
   ]
 }
