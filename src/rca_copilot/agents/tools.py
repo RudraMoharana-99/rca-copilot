@@ -442,7 +442,7 @@ def execute_tool(
         span.set_attribute("result.summary", evidence.summary)
         span.set_attribute("evidence.id", evidence.evidence_id)
 
-        if evidence.status == StatusCode.ERROR:
+        if evidence.status == Status.ERROR:
             span.set_status(
                 SpanStatus(
                     StatusCode.ERROR,

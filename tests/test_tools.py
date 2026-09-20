@@ -12,6 +12,7 @@ from rca_copilot.sources.snapshot import (
     SnapshotMetricsSource,
     SnapshotTracesSource,
 )
+from rca_copilot.sources.base import Status
 
 scenario = Path("scenarios/C1-valkey-cart-down")
 
@@ -52,3 +53,23 @@ ev = execute_tool(
     window_end=WINDOW_END,
 )
 print("_truncated_for_model" in evidence_to_tool_result(ev))
+
+
+def test_failed_source_returns_error_status():
+    failed_sources = SourceBundle(
+        logs=SnapshotLogsSource(scenario),
+        metrics=SnapshotMetricsSource(scenario),
+        traces=SnapshotTracesSource(scenario),
+        changelog=SnapshotChangesSource("does-not-exist.json"),
+    )
+
+    evidence = execute_tool(
+        "get_recent_changes",
+        {},
+        failed_sources,
+        WINDOW_START,
+        WINDOW_END,
+    )
+
+    assert evidence.status == Status.ERROR
+    assert "unavailable" in evidence.summary.lower()
