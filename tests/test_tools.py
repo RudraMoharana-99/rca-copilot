@@ -6,13 +6,13 @@ from rca_copilot.agents.tools import (
     evidence_to_tool_result,
     execute_tool,
 )
+from rca_copilot.sources.base import Status
 from rca_copilot.sources.changelog import SnapshotChangesSource
 from rca_copilot.sources.snapshot import (
     SnapshotLogsSource,
     SnapshotMetricsSource,
     SnapshotTracesSource,
 )
-from rca_copilot.sources.base import Status
 
 scenario = Path("scenarios/C1-valkey-cart-down")
 
