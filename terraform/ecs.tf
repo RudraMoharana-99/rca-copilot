@@ -115,4 +115,11 @@ resource "aws_ecs_service" "app" {
   tags = {
     Project = var.project_name
   }
+
+  lifecycle {
+    ignore_changes = [
+      task_definition,
+      desired_count
+    ]
+  }
 }

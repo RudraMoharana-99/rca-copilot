@@ -86,3 +86,23 @@ resource "aws_iam_role_policy_attachment" "task_cloudwatch" {
   role       = aws_iam_role.task.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
+
+data "aws_iam_policy_document" "github_deploy_smoke_test" {
+  statement {
+    sid = "DiscoverRunningTask"
+
+    actions = [
+      "ecs:ListTasks",
+      "ecs:DescribeTasks",
+      "ec2:DescribeNetworkInterfaces",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "github_deploy_smoke_test" {
+  name   = "${var.project_name}-github-deploy-smoke-test"
+  role   = aws_iam_role.github_deploy.id
+  policy = data.aws_iam_policy_document.github_deploy_smoke_test.json
+}
