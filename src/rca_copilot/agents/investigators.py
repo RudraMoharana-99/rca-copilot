@@ -6,6 +6,11 @@ from pydantic import ValidationError
 
 from rca_copilot.models import Evidence, Hypothesis
 
+from .resilience import (
+    CostTracker,
+    ProviderUnavailableError,
+    with_retries,
+)
 from .tools import (
     SourceBundle,
     evidence_to_tool_result,
@@ -81,148 +86,170 @@ async def run_investigator(
         }
     ]
 
-    for _ in range(max_turns):
-        run_meta["turns"] += 1
+    tracker = CostTracker()
 
-        response = await client.messages.create(
-            model=MODEL,
-            max_tokens=2000,
-            cache_control={
-                "type": "ephemeral",
-            },
-            system=system_prompt,
-            tools=tools + [submit_hypothesis],
-            messages=messages,
-        )
+    try:
+        for _ in range(max_turns):
+            run_meta["turns"] += 1
 
-        run_meta["input_tokens"] += response.usage.input_tokens
-        run_meta["output_tokens"] += response.usage.output_tokens
-
-        run_meta["cache_creation_tokens"] += (
-            getattr(
-                response.usage,
-                "cache_creation_input_tokens",
-                0,
-            )
-            or 0
-        )
-
-        run_meta["cache_read_tokens"] += (
-            getattr(
-                response.usage,
-                "cache_read_input_tokens",
-                0,
-            )
-            or 0
-        )
-
-        messages.append(
-            {
-                "role": "assistant",
-                "content": response.content,
-            }
-        )
-
-        if response.stop_reason != "tool_use":
-            final_text = " ".join(b.text for b in response.content if b.type == "text")
-            run_meta["final_text"] = final_text
-            run_meta["stop_reason"] = response.stop_reason
-            break
-
-        tool_results = []
-
-        for block in response.content:
-            if block.type != "tool_use":
-                continue
-            if block.name == "submit_hypothesis":
-                cited_evidence_ids = block.input["evidence_ids"]
-
-                available_evidence_ids = {item.evidence_id for item in evidence}
-
-                unknown_ids = [
-                    evidence_id
-                    for evidence_id in cited_evidence_ids
-                    if evidence_id not in available_evidence_ids
-                ]
-
-                if unknown_ids:
-                    message = "Hypothesis rejected. Unknown evidence IDs: " + ", ".join(unknown_ids)
-
-                    run_meta.setdefault(
-                        "validation_errors",
-                        [],
-                    ).append(message)
-
-                    tool_results.append(
-                        {
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": message,
-                        }
-                    )
-
-                    continue
-
-                try:
-                    hypothesis = Hypothesis(
-                        agent=agent_name,
-                        cause=block.input["cause"],
-                        confidence=block.input["confidence"],
-                        evidence_ids=cited_evidence_ids,
-                    )
-
-                    hypotheses.append(hypothesis)
-
-                    tool_results.append(
-                        {
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": "Hypothesis recorded successfully.",
-                        }
-                    )
-
-                except ValidationError as exc:
-                    run_meta.setdefault(
-                        "validation_errors",
-                        [],
-                    ).append(str(exc))
-
-                    tool_results.append(
-                        {
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": f"Hypothesis rejected: {exc}",
-                        }
-                    )
-
-                continue
-
-            evidence_item = execute_tool(
-                name=block.name,
-                arguments=block.input,
-                sources=sources,
-                window_start=window_start,
-                window_end=window_end,
+            response = await with_retries(
+                lambda: client.messages.create(
+                    model=MODEL,
+                    max_tokens=2000,
+                    cache_control={
+                        "type": "ephemeral",
+                    },
+                    system=system_prompt,
+                    tools=tools + [submit_hypothesis],
+                    messages=messages,
+                ),
                 agent=agent_name,
             )
 
-            evidence.append(evidence_item)
+            run_meta["input_tokens"] += response.usage.input_tokens
+            run_meta["output_tokens"] += response.usage.output_tokens
 
-            tool_results.append(
-                {
-                    "type": "tool_result",
-                    "tool_use_id": block.id,
-                    "content": evidence_to_tool_result(evidence_item),
-                }
+            tracker.add(
+                response.usage.input_tokens,
+                response.usage.output_tokens,
             )
 
-        if tool_results:
+            run_meta["cache_creation_tokens"] += (
+                getattr(
+                    response.usage,
+                    "cache_creation_input_tokens",
+                    0,
+                )
+                or 0
+            )
+
+            run_meta["cache_read_tokens"] += (
+                getattr(
+                    response.usage,
+                    "cache_read_input_tokens",
+                    0,
+                )
+                or 0
+            )
+
+            if tracker.exceeded():
+                run_meta["cost_ceiling_hit"] = True
+                break
+
             messages.append(
                 {
-                    "role": "user",
-                    "content": tool_results,
+                    "role": "assistant",
+                    "content": response.content,
                 }
             )
+
+            if response.stop_reason != "tool_use":
+                final_text = " ".join
+                (b.text for b in response.content if b.type == "text")
+                run_meta["final_text"] = final_text
+                run_meta["stop_reason"] = response.stop_reason
+                break
+
+            tool_results = []
+
+            for block in response.content:
+                if block.type != "tool_use":
+                    continue
+                if block.name == "submit_hypothesis":
+                    cited_evidence_ids = block.input["evidence_ids"]
+
+                    available_evidence_ids = {item.evidence_id for item in evidence}
+
+                    unknown_ids = [
+                        evidence_id
+                        for evidence_id in cited_evidence_ids
+                        if evidence_id not in available_evidence_ids
+                    ]
+
+                    if unknown_ids:
+                        message = "Hypothesis rejected. Unknown evidence IDs: "
+                        +", ".join(unknown_ids)
+
+                        run_meta.setdefault(
+                            "validation_errors",
+                            [],
+                        ).append(message)
+
+                        tool_results.append(
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": block.id,
+                                "content": message,
+                            }
+                        )
+
+                        continue
+
+                    try:
+                        hypothesis = Hypothesis(
+                            agent=agent_name,
+                            cause=block.input["cause"],
+                            confidence=block.input["confidence"],
+                            evidence_ids=cited_evidence_ids,
+                        )
+
+                        hypotheses.append(hypothesis)
+
+                        tool_results.append(
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": block.id,
+                                "content": "Hypothesis recorded successfully.",
+                            }
+                        )
+
+                    except ValidationError as exc:
+                        run_meta.setdefault(
+                            "validation_errors",
+                            [],
+                        ).append(str(exc))
+
+                        tool_results.append(
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": block.id,
+                                "content": f"Hypothesis rejected: {exc}",
+                            }
+                        )
+
+                    continue
+
+                evidence_item = execute_tool(
+                    name=block.name,
+                    arguments=block.input,
+                    sources=sources,
+                    window_start=window_start,
+                    window_end=window_end,
+                    agent=agent_name,
+                )
+
+                evidence.append(evidence_item)
+
+                tool_results.append(
+                    {
+                        "type": "tool_result",
+                        "tool_use_id": block.id,
+                        "content": evidence_to_tool_result(evidence_item),
+                    }
+                )
+
+            if tool_results:
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": tool_results,
+                    }
+                )
+
+    except ProviderUnavailableError as exc:
+        run_meta["provider_unavailable"] = True
+        run_meta["provider_error"] = str(exc)
+
     return evidence, hypotheses, run_meta
 
 

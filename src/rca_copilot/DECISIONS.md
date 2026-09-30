@@ -335,7 +335,7 @@ However, it would also require another agent, another prompt, another execution 
 
 **Negative findings are required, not permitted**. Changing "report them" to "you must report them, and do not propose a resource cause" was what produced the honest ruling-out.
 
-## Component Matching in Evaluation
+18. ## Component Matching in Evaluation
 
 **Date:** 2026-09-07
 
@@ -348,3 +348,16 @@ treated as equivalent.
 The evaluator otherwise uses substring matching and does not perform
 semantic or fuzzy matching. This keeps scoring deterministic while
 avoiding failures caused only by formatting differences.
+
+19. ## Separate evaluation and API outcome metrics
+
+Evaluation and API execution use separate metrics.
+
+- **incidents_total** measures evaluation outcomes such as `correct`, `incorrect`, and `error`.
+- **api_requests_total** measures operational API outcomes such as `success`,
+  `provider_unavailable`, `cost_ceiling`, and `no_verdict`.
+
+A single metric with a `source` label was considered, but rejected because
+evaluation correctness and production execution status answer different
+questions. Keeping separate metric names makes dashboards and alarms clearer
+and avoids mixing incompatible `outcome` label vocabularies.

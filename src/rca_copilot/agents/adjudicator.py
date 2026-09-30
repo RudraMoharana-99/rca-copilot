@@ -20,6 +20,12 @@ from rca_copilot.models import (
     Verdict,
 )
 
+from .resilience import (
+    CostTracker,
+    ProviderUnavailableError,
+    with_retries,
+)
+
 MODEL = "claude-haiku-4-5-20251001"
 
 
@@ -124,196 +130,215 @@ async def run_adjudicator(
             "content": investigator_report,
         }
     ]
+    tracker = CostTracker()
 
-    for _ in range(max_turns):
-        run_meta["turns"] += 1
+    try:
+        for _ in range(max_turns):
+            run_meta["turns"] += 1
 
-        response = await client.messages.create(
-            model=MODEL,
-            max_tokens=8000,
-            cache_control={
-                "type": "ephemeral",
-            },
-            system=system_prompt,
-            tools=[
-                get_recent_changes,
-                submit_verdict,
-            ],
-            messages=messages,
-        )
-
-        run_meta["input_tokens"] += response.usage.input_tokens
-        run_meta["output_tokens"] += response.usage.output_tokens
-
-        run_meta["cache_creation_tokens"] += (
-            getattr(
-                response.usage,
-                "cache_creation_input_tokens",
-                0,
-            )
-            or 0
-        )
-
-        run_meta["cache_read_tokens"] += (
-            getattr(
-                response.usage,
-                "cache_read_input_tokens",
-                0,
-            )
-            or 0
-        )
-
-        messages.append(
-            {
-                "role": "assistant",
-                "content": response.content,
-            }
-        )
-
-        tool_results = []
-
-        if response.stop_reason != "tool_use":
-            final_text = " ".join(b.text for b in response.content if b.type == "text")
-            run_meta["final_text"] = final_text
-            run_meta["stop_reason"] = response.stop_reason
-            break
-
-        tool_results = []
-
-        for block in response.content:
-            if block.type != "tool_use":
-                continue
-
-            if block.name == "submit_verdict":
-                arguments = block.input
-
-                valid_evidence_ids = {item.evidence_id for item in investigator_evidence}
-                valid_evidence_ids.update(item.evidence_id for item in evidence)
-
-                invalid_ids = []
-                malformed = False
-
-                for cause in arguments["ranked_causes"]:
-                    if not isinstance(cause, dict):
-                        malformed = True
-                        break
-                    for evidence_id in cause.get("evidence_ids", []):
-                        if evidence_id not in valid_evidence_ids:
-                            invalid_ids.append(evidence_id)
-
-                if malformed:
-                    tool_results.append(
-                        {
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": (
-                                "Verdict rejected. Each item in "
-                                "ranked_causes must be an object with "
-                                "cause, confidence and evidence_ids "
-                                "fields, not a plain string. Resubmit "
-                                "using the correct structure."
-                            ),
-                        }
-                    )
-                    run_meta["malformed_verdict"] = True
-                    rejection_count += 1
-                    continue
-
-                if invalid_ids:
-                    run_meta["verdict_rejected"] = True
-                    run_meta["invalid_evidence_ids"] = invalid_ids
-
-                    tool_results.append(
-                        {
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": (
-                                "Verdict rejected. The following "
-                                "evidence IDs do not exist: "
-                                + ", ".join(invalid_ids)
-                                + ". Submit the verdict again "
-                                "using only valid evidence IDs."
-                            ),
-                        }
-                    )
-                    rejection_count += 1
-                    continue
-
-                try:
-                    ranked_causes = [
-                        RankedCause(
-                            cause=item["cause"],
-                            confidence=item["confidence"],
-                            evidence_ids=item["evidence_ids"],
-                        )
-                        for item in arguments["ranked_causes"]
-                    ]
-
-                    verdict = Verdict(
-                        ranked_causes=ranked_causes,
-                        overall_confidence=arguments["overall_confidence"],
-                        dissent=arguments.get("dissent"),
-                        escalate=arguments.get("escalate", False),
-                        escalation_reason=arguments.get("escalation_reason"),
-                    )
-
-                except (KeyError, ValidationError) as exc:
-                    tool_results.append(
-                        {
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": (
-                                f"Verdict rejected because it failed schema validation: {exc}"
-                            ),
-                        }
-                    )
-                    rejection_count += 1
-                    continue
-
-                run_meta["verdict_submitted"] = True
-
-                return evidence, verdict, run_meta
-
-            tool_evidence = execute_tool(
-                name=block.name,
-                arguments=block.input,
-                sources=sources,
-                window_start=window_start,
-                window_end=window_end,
+            response = await with_retries(
+                lambda: client.messages.create(
+                    model=MODEL,
+                    max_tokens=8000,
+                    cache_control={
+                        "type": "ephemeral",
+                    },
+                    system=system_prompt,
+                    tools=[
+                        get_recent_changes,
+                        submit_verdict,
+                    ],
+                    messages=messages,
+                ),
                 agent="adjudicator",
             )
 
-            evidence.append(tool_evidence)
+            run_meta["input_tokens"] += response.usage.input_tokens
+            run_meta["output_tokens"] += response.usage.output_tokens
 
-            tool_results.append(
-                {
-                    "type": "tool_result",
-                    "tool_use_id": block.id,
-                    "content": evidence_to_tool_result(tool_evidence),
-                }
+            tracker.add(
+                response.usage.input_tokens,
+                response.usage.output_tokens,
             )
 
-        if tool_results:
+            run_meta["cache_creation_tokens"] += (
+                getattr(
+                    response.usage,
+                    "cache_creation_input_tokens",
+                    0,
+                )
+                or 0
+            )
+
+            run_meta["cache_read_tokens"] += (
+                getattr(
+                    response.usage,
+                    "cache_read_input_tokens",
+                    0,
+                )
+                or 0
+            )
+
+            if tracker.exceeded():
+                run_meta["cost_ceiling_hit"] = True
+                break
+
             messages.append(
                 {
-                    "role": "user",
-                    "content": tool_results,
+                    "role": "assistant",
+                    "content": response.content,
                 }
             )
-            if rejection_count > 0 and not run_meta.get("verdict_submitted"):
+
+            tool_results = []
+
+            if response.stop_reason != "tool_use":
+                final_text = " ".join
+                (b.text for b in response.content if b.type == "text")
+                run_meta["final_text"] = final_text
+                run_meta["stop_reason"] = response.stop_reason
+                break
+
+            tool_results = []
+
+            for block in response.content:
+                if block.type != "tool_use":
+                    continue
+
+                if block.name == "submit_verdict":
+                    arguments = block.input
+
+                    valid_evidence_ids = {item.evidence_id for item in investigator_evidence}
+                    valid_evidence_ids.update(item.evidence_id for item in evidence)
+
+                    invalid_ids = []
+                    malformed = False
+
+                    for cause in arguments["ranked_causes"]:
+                        if not isinstance(cause, dict):
+                            malformed = True
+                            break
+                        for evidence_id in cause.get("evidence_ids", []):
+                            if evidence_id not in valid_evidence_ids:
+                                invalid_ids.append(evidence_id)
+
+                    if malformed:
+                        tool_results.append(
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": block.id,
+                                "content": (
+                                    "Verdict rejected. Each item in "
+                                    "ranked_causes must be an object with "
+                                    "cause, confidence and evidence_ids "
+                                    "fields, not a plain string. Resubmit "
+                                    "using the correct structure."
+                                ),
+                            }
+                        )
+                        run_meta["malformed_verdict"] = True
+                        rejection_count += 1
+                        continue
+
+                    if invalid_ids:
+                        run_meta["verdict_rejected"] = True
+                        run_meta["invalid_evidence_ids"] = invalid_ids
+
+                        tool_results.append(
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": block.id,
+                                "content": (
+                                    "Verdict rejected. The following "
+                                    "evidence IDs do not exist: "
+                                    + ", ".join(invalid_ids)
+                                    + ". Submit the verdict again "
+                                    "using only valid evidence IDs."
+                                ),
+                            }
+                        )
+                        rejection_count += 1
+                        continue
+
+                    try:
+                        ranked_causes = [
+                            RankedCause(
+                                cause=item["cause"],
+                                confidence=item["confidence"],
+                                evidence_ids=item["evidence_ids"],
+                            )
+                            for item in arguments["ranked_causes"]
+                        ]
+
+                        verdict = Verdict(
+                            ranked_causes=ranked_causes,
+                            overall_confidence=arguments["overall_confidence"],
+                            dissent=arguments.get("dissent"),
+                            escalate=arguments.get("escalate", False),
+                            escalation_reason=arguments.get("escalation_reason"),
+                        )
+
+                    except (KeyError, ValidationError) as exc:
+                        tool_results.append(
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": block.id,
+                                "content": (
+                                    f"Verdict rejected because it failed schema validation: {exc}"
+                                ),
+                            }
+                        )
+                        rejection_count += 1
+                        continue
+
+                    run_meta["verdict_submitted"] = True
+
+                    return evidence, verdict, run_meta
+
+                tool_evidence = execute_tool(
+                    name=block.name,
+                    arguments=block.input,
+                    sources=sources,
+                    window_start=window_start,
+                    window_end=window_end,
+                    agent="adjudicator",
+                )
+
+                evidence.append(tool_evidence)
+
+                tool_results.append(
+                    {
+                        "type": "tool_result",
+                        "tool_use_id": block.id,
+                        "content": evidence_to_tool_result(tool_evidence),
+                    }
+                )
+
+            if tool_results:
                 messages.append(
                     {
                         "role": "user",
-                        "content": (
-                            "Your verdict was NOT recorded. It was rejected "
-                            "for the reason given above. You must call "
-                            "submit_verdict again with the corrected input. "
-                            "Do not summarise your verdict in prose - only a "
-                            "successful submit_verdict call counts."
-                        ),
+                        "content": tool_results,
                     }
                 )
-                rejection_count = 0
+                if rejection_count > 0 and not run_meta.get("verdict_submitted"):
+                    messages.append(
+                        {
+                            "role": "user",
+                            "content": (
+                                "Your verdict was NOT recorded. It was rejected "
+                                "for the reason given above. You must call "
+                                "submit_verdict again with the corrected input. "
+                                "Do not summarise your verdict in prose - only a "
+                                "successful submit_verdict call counts."
+                            ),
+                        }
+                    )
+                    rejection_count = 0
+
+    except ProviderUnavailableError as exc:
+        run_meta["provider_unavailable"] = True
+        run_meta["provider_error"] = str(exc)
 
     return evidence, None, run_meta
 

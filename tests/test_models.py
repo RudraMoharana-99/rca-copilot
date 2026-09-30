@@ -4,6 +4,7 @@ from rca_copilot.models import (
     Evidence,
     Hypothesis,
     IncidentState,
+    Verdict,
 )
 
 
@@ -62,3 +63,30 @@ def test_valid_state_constructs():
     )
 
     assert state.hypotheses[0].evidence_ids == [evidence.evidence_id]
+
+
+def test_degraded_verdict_allows_no_ranked_causes():
+    verdict = Verdict(
+        ranked_causes=[],
+        overall_confidence=0.0,
+        dissent=None,
+        escalate=True,
+        escalation_reason="LLM provider unavailable",
+    )
+
+    assert verdict.ranked_causes == []
+    assert verdict.escalate is True
+
+
+def test_non_escalated_verdict_requires_ranked_cause():
+    with pytest.raises(
+        ValueError,
+        match="ranked_causes must contain at least one cause",
+    ):
+        Verdict(
+            ranked_causes=[],
+            overall_confidence=0.0,
+            dissent=None,
+            escalate=False,
+            escalation_reason=None,
+        )

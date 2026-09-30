@@ -12,6 +12,11 @@ from rca_copilot.models import Hypothesis, IncidentState
 from rca_copilot.telemetry.metrics import record_agent_duration, record_tokens
 from rca_copilot.telemetry.tracing import tracer
 
+from .resilience import (
+    CostTracker,
+    ProviderUnavailableError,
+    with_retries,
+)
 from .tools import ALL_TOOLS, SourceBundle, evidence_to_tool_result, execute_tool, submit_hypothesis
 
 # =================================================================
@@ -80,108 +85,130 @@ async def run_baseline(
             cache_creation_tokens = 0
             cache_read_tokens = 0
 
-            for turn in range(MAX_TURNS):
-                with tracer.start_as_current_span("llm.turn") as turn_span:
-                    turn_span.set_attribute("turn", turn + 1)
+            tracker = CostTracker()
 
-                    response = await client.messages.create(
-                        model=MODEL,
-                        max_tokens=4000,
-                        system=[
-                            {
-                                "type": "text",
-                                "text": system_prompt,
-                                "cache_control": {"type": "ephemeral"},
-                            }
-                        ],
-                        tools=ALL_TOOLS + [submit_hypothesis],
-                        messages=messages,
-                    )
+            try:
+                for turn in range(MAX_TURNS):
+                    with tracer.start_as_current_span("llm.turn") as turn_span:
+                        turn_span.set_attribute("turn", turn + 1)
 
-                    turns += 1
-                    input_tokens += response.usage.input_tokens
-                    output_tokens += response.usage.output_tokens
-
-                    turn_cache_creation = (
-                        getattr(response.usage, "cache_creation_input_tokens", 0) or 0
-                    )
-                    turn_cache_read = getattr(response.usage, "cache_read_input_tokens", 0) or 0
-
-                    cache_creation_tokens += turn_cache_creation
-                    cache_read_tokens += turn_cache_read
-
-                    turn_span.set_attribute("stop_reason", response.stop_reason)
-                    turn_span.set_attribute("input_tokens", response.usage.input_tokens)
-                    turn_span.set_attribute("output_tokens", response.usage.output_tokens)
-                    turn_span.set_attribute("cache_creation_tokens", turn_cache_creation)
-                    turn_span.set_attribute("cache_read_tokens", turn_cache_read)
-
-                    state.run_meta["turns"] = turns
-                    state.run_meta["input_tokens"] = input_tokens
-                    state.run_meta["output_tokens"] = output_tokens
-                    state.run_meta["cache_creation_tokens"] = cache_creation_tokens
-                    state.run_meta["cache_read_tokens"] = cache_read_tokens
-
-                    messages.append(
-                        {
-                            "role": "assistant",
-                            "content": response.content,
-                        }
-                    )
-
-                    if response.stop_reason != "tool_use":
-                        final_text = " ".join(b.text for b in response.content if b.type == "text")
-                        state.run_meta["final_text"] = final_text
-                        state.run_meta["stop_reason"] = response.stop_reason
-                        break
-
-                    tool_results = []
-
-                    tool_use_blocks = [b for b in response.content if b.type == "tool_use"]
-                    turn_span.set_attribute("tool_calls", len(tool_use_blocks))
-
-                    for block in tool_use_blocks:
-                        if block.name == "submit_hypothesis":
-                            try:
-                                hypothesis = Hypothesis(
-                                    agent="baseline",
-                                    cause=block.input["cause"],
-                                    confidence=block.input["confidence"],
-                                    evidence_ids=block.input["evidence_ids"],
-                                )
-
-                                state.hypotheses.append(hypothesis)
-                                return state
-
-                            except ValidationError as exc:
-                                state.run_meta.setdefault("validation_errors", []).append(str(exc))
-                                return state
-
-                        evidence = execute_tool(
-                            name=block.name,
-                            arguments=block.input,
-                            sources=sources,
-                            window_start=window_start,
-                            window_end=window_end,
+                        response = await with_retries(
+                            lambda: client.messages.create(
+                                model=MODEL,
+                                max_tokens=4000,
+                                system=[
+                                    {
+                                        "type": "text",
+                                        "text": system_prompt,
+                                        "cache_control": {"type": "ephemeral"},
+                                    }
+                                ],
+                                tools=ALL_TOOLS + [submit_hypothesis],
+                                messages=messages,
+                            ),
                             agent="baseline",
                         )
 
-                        state.evidence.append(evidence)
+                        turns += 1
+                        input_tokens += response.usage.input_tokens
+                        output_tokens += response.usage.output_tokens
 
-                        tool_results.append(
+                        tracker.add(
+                            response.usage.input_tokens,
+                            response.usage.output_tokens,
+                        )
+
+                        turn_cache_creation = (
+                            getattr(response.usage, "cache_creation_input_tokens", 0) or 0
+                        )
+                        turn_cache_read = getattr(response.usage, "cache_read_input_tokens", 0) or 0
+
+                        cache_creation_tokens += turn_cache_creation
+                        cache_read_tokens += turn_cache_read
+
+                        turn_span.set_attribute("stop_reason", response.stop_reason)
+                        turn_span.set_attribute("input_tokens", response.usage.input_tokens)
+                        turn_span.set_attribute("output_tokens", response.usage.output_tokens)
+                        turn_span.set_attribute("cache_creation_tokens", turn_cache_creation)
+                        turn_span.set_attribute("cache_read_tokens", turn_cache_read)
+
+                        state.run_meta["turns"] = turns
+                        state.run_meta["input_tokens"] = input_tokens
+                        state.run_meta["output_tokens"] = output_tokens
+                        state.run_meta["cache_creation_tokens"] = cache_creation_tokens
+                        state.run_meta["cache_read_tokens"] = cache_read_tokens
+
+                        if tracker.exceeded():
+                            state.run_meta["cost_ceiling_hit"] = True
+                            break
+
+                        messages.append(
                             {
-                                "type": "tool_result",
-                                "tool_use_id": block.id,
-                                "content": evidence_to_tool_result(evidence),
+                                "role": "assistant",
+                                "content": response.content,
                             }
                         )
 
-                    messages.append(
-                        {
-                            "role": "user",
-                            "content": tool_results,
-                        }
-                    )
+                        if response.stop_reason != "tool_use":
+                            final_text = " ".join
+                            (b.text for b in response.content if b.type == "text")
+                            state.run_meta["final_text"] = final_text
+                            state.run_meta["stop_reason"] = response.stop_reason
+                            break
+
+                        tool_results = []
+
+                        tool_use_blocks = [b for b in response.content if b.type == "tool_use"]
+                        turn_span.set_attribute("tool_calls", len(tool_use_blocks))
+
+                        for block in tool_use_blocks:
+                            if block.name == "submit_hypothesis":
+                                try:
+                                    hypothesis = Hypothesis(
+                                        agent="baseline",
+                                        cause=block.input["cause"],
+                                        confidence=block.input["confidence"],
+                                        evidence_ids=block.input["evidence_ids"],
+                                    )
+
+                                    state.hypotheses.append(hypothesis)
+                                    return state
+
+                                except ValidationError as exc:
+                                    state.run_meta.setdefault("validation_errors", []).append(
+                                        str(exc)
+                                    )
+                                    return state
+
+                            evidence = execute_tool(
+                                name=block.name,
+                                arguments=block.input,
+                                sources=sources,
+                                window_start=window_start,
+                                window_end=window_end,
+                                agent="baseline",
+                            )
+
+                            state.evidence.append(evidence)
+
+                            tool_results.append(
+                                {
+                                    "type": "tool_result",
+                                    "tool_use_id": block.id,
+                                    "content": evidence_to_tool_result(evidence),
+                                }
+                            )
+
+                        messages.append(
+                            {
+                                "role": "user",
+                                "content": tool_results,
+                            }
+                        )
+
+            except ProviderUnavailableError as exc:
+                state.run_meta["provider_unavailable"] = True
+                state.run_meta["provider_error"] = str(exc)
 
             return state
 

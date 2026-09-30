@@ -64,6 +64,11 @@ def _get_instruments() -> dict:
         description="Number of RCA evidence tool failures",
     )
 
+    _instruments["api_requests"] = meter.create_counter(
+        name="api_requests_total",
+        description="Number of RCA API diagnosis requests by operational outcome",
+    )
+
     return _instruments
 
 
@@ -89,3 +94,12 @@ def record_cost(config: str, usd: float) -> None:
 
 def record_tool_failure(source: str, tool: str) -> None:
     _get_instruments()["tool_failures"].add(1, {"source": source, "tool": tool})
+
+def record_api_request(outcome: str, config: str) -> None:
+    _get_instruments()["api_requests"].add(
+        1,
+        {
+            "outcome": outcome,
+            "config": config,
+        }
+    )

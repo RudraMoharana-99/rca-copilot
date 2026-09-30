@@ -9,6 +9,12 @@ from fastapi import FastAPI, HTTPException, Request
 
 from rca_copilot.agents.baseline import run_baseline
 from rca_copilot.agents.graph import run_graph
+from rca_copilot.agents.resilience import (
+    estimate_cost_usd,
+    hourly_cost_exceeded,
+    is_disabled,
+    record_hourly_cost,
+)
 from rca_copilot.agents.tools import SourceBundle
 from rca_copilot.models import DiagnoseRequest, IncidentResponse, RankedCause, Verdict
 from rca_copilot.sources.changelog import SnapshotChangesSource
@@ -21,7 +27,7 @@ from rca_copilot.store.aws import (
     get_incident,
     put_incident,
 )
-from rca_copilot.telemetry.metrics import record_incident, setup_metrics
+from rca_copilot.telemetry.metrics import record_api_request, setup_metrics
 from rca_copilot.telemetry.tracing import setup_tracing
 
 # =========================PATHS==============================
@@ -151,6 +157,17 @@ async def create_incident(
     body: DiagnoseRequest,
     request: Request,
 ) -> IncidentResponse:
+    if is_disabled():
+        raise HTTPException(
+            status_code=503,
+            detail="Diagnosis is temporarily disabled",
+        )
+
+    if hourly_cost_exceeded():
+        raise HTTPException(
+            status_code=429,
+            detail="Hourly cost limit reached",
+        )
     sources = build_snapshot_sources(body.scenario)
 
     client: AsyncAnthropic = request.app.state.anthropic_client
@@ -193,6 +210,64 @@ async def create_incident(
             detail=f"Diagnosis failed: {type(exc).__name__}",
         ) from exc
 
+    agent_metas = run_meta["agents"]
+
+    run_meta_flags = {
+        "provider_unavailable": any(
+            meta.get("provider_unavailable", False)
+            for meta in agent_metas
+        ),
+        "cost_ceiling_hit": any(
+            meta.get("cost_ceiling_hit", False)
+            for meta in agent_metas
+        ),
+    }
+
+    if verdict is None:
+        reason = None
+
+        if run_meta_flags.get("provider_unavailable"):
+            reason = "The model provider was unavailable after retries."
+        elif run_meta_flags.get("cost_ceiling_hit"):
+            reason = "The run exceeded its token ceiling."
+
+        if reason:
+            verdict = Verdict(
+                ranked_causes=[],
+                overall_confidence=0.0,
+                escalate=True,
+                escalation_reason=reason,
+                dissent=None,
+            )
+    if run_meta_flags["provider_unavailable"]:
+        outcome = "provider_unavailable"
+
+    elif run_meta_flags["cost_ceiling_hit"]:
+        outcome = "cost_ceiling"
+
+    elif verdict is None:
+        outcome = "no_verdict"
+
+    else:
+        outcome = "success"
+
+    total_input = sum(
+        meta.get("input_tokens", 0)
+        for meta in agent_metas
+    )
+
+    total_output = sum(
+        meta.get("output_tokens", 0)
+        for meta in agent_metas
+    )
+
+    run_cost_usd = estimate_cost_usd(
+        total_input,
+        total_output,
+    )
+
+    record_hourly_cost(run_cost_usd)
+
     elapsed = time.perf_counter() - started
 
     response = IncidentResponse(
@@ -206,8 +281,8 @@ async def create_incident(
 
     put_incident(response)
 
-    record_incident(
-        outcome="success",
+    record_api_request(
+        outcome=outcome,
         config=body.config,
     )
 

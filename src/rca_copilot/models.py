@@ -34,11 +34,24 @@ class RankedCause(BaseModel):
 
 
 class Verdict(BaseModel):
-    ranked_causes: list[RankedCause] = Field(min_length=1, max_length=3)
+    ranked_causes: list[RankedCause] = Field(
+        default_factory=list,
+        max_length=3,
+        )
     overall_confidence: float = Field(ge=0, le=1)
     dissent: str | None = None
     escalate: bool
     escalation_reason: str | None = None
+
+    @model_validator(mode="after")
+    def validate_ranked_causes(self) -> "Verdict":
+        if not self.escalate and not self.ranked_causes:
+            raise ValueError(
+                "ranked_causes must contain at least one cause ",
+                "when escalate is false"
+            )
+
+        return self
 
 
 class IncidentState(BaseModel):

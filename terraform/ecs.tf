@@ -44,6 +44,18 @@ resource "aws_ecs_task_definition" "app" {
         {
           name  = "OTEL_EXPORTER_OTLP_METRICS_ENDPOINT"
           value = "http://localhost:4318/v1/metrics"
+        },
+        {
+          name  = "RCA_DISABLED"
+          value = "false"
+        },
+        {
+          name  = "MAX_TOKENS_PER_RUN"
+          value = "400000"
+        },
+        {
+          name  = "MAX_COST_PER_HOUR_USD"
+          value = "2.0"
         }
       ]
 
