@@ -131,9 +131,7 @@ async def with_retries[T](
                         exc,
                     ) from exc
 
-                delay = BASE_DELAY * (2**attempt_index) * (
-                    0.5 + random.random()
-                )
+                delay = BASE_DELAY * (2**attempt_index) * (0.5 + random.random())
 
                 span.set_attribute("retry_delay_seconds", delay)
 
@@ -143,9 +141,7 @@ async def with_retries[T](
                 return result
 
         if delay is None:
-            raise RuntimeError(
-                "Retryable failure reached backoff without a delay"
-            )
+            raise RuntimeError("Retryable failure reached backoff without a delay")
 
         await asyncio.sleep(delay)
 
@@ -156,6 +152,7 @@ async def with_retries[T](
 # =================================================================
 # Per-run token ceiling
 # =================================================================
+
 
 class CostTracker:
     """
@@ -201,13 +198,9 @@ def estimate_cost_usd(
     already capture those token counts and can add them when the cost
     accounting is wired into the agent loops.
     """
-    input_cost = (
-        input_tokens / 1_000_000
-    ) * INPUT_COST_PER_MILLION_USD
+    input_cost = (input_tokens / 1_000_000) * INPUT_COST_PER_MILLION_USD
 
-    output_cost = (
-        output_tokens / 1_000_000
-    ) * OUTPUT_COST_PER_MILLION_USD
+    output_cost = (output_tokens / 1_000_000) * OUTPUT_COST_PER_MILLION_USD
 
     return input_cost + output_cost
 
@@ -216,14 +209,12 @@ def estimate_cost_usd(
 # Hourly cost ceiling
 # =================================================================
 
+
 def _prune_hourly_costs() -> None:
     """Remove cost entries older than the rolling one-hour window."""
     cutoff = time.time() - 3600
 
-    while (
-        _hourly_costs
-        and _hourly_costs[0][0] < cutoff
-    ):
+    while _hourly_costs and _hourly_costs[0][0] < cutoff:
         _hourly_costs.pop(0)
 
 
@@ -245,10 +236,7 @@ def hourly_cost_exceeded() -> bool:
     """Return whether the rolling hourly spend reached its ceiling."""
     _prune_hourly_costs()
 
-    total = sum(
-        cost
-        for _, cost in _hourly_costs
-    )
+    total = sum(cost for _, cost in _hourly_costs)
 
     return total >= MAX_COST_PER_HOUR_USD
 

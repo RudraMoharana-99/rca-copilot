@@ -214,13 +214,9 @@ async def create_incident(
 
     run_meta_flags = {
         "provider_unavailable": any(
-            meta.get("provider_unavailable", False)
-            for meta in agent_metas
+            meta.get("provider_unavailable", False) for meta in agent_metas
         ),
-        "cost_ceiling_hit": any(
-            meta.get("cost_ceiling_hit", False)
-            for meta in agent_metas
-        ),
+        "cost_ceiling_hit": any(meta.get("cost_ceiling_hit", False) for meta in agent_metas),
     }
 
     if verdict is None:
@@ -251,15 +247,9 @@ async def create_incident(
     else:
         outcome = "success"
 
-    total_input = sum(
-        meta.get("input_tokens", 0)
-        for meta in agent_metas
-    )
+    total_input = sum(meta.get("input_tokens", 0) for meta in agent_metas)
 
-    total_output = sum(
-        meta.get("output_tokens", 0)
-        for meta in agent_metas
-    )
+    total_output = sum(meta.get("output_tokens", 0) for meta in agent_metas)
 
     run_cost_usd = estimate_cost_usd(
         total_input,
