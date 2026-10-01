@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "github_deploy_trust" {
       variable = "token.actions.githubusercontent.com:sub"
 
       values = [
-        "repo:RudraMoharana-99/rca-copilot:environment:production"
+        "repo:RudraMoharana-99@183525212/rca-copilot@1350784366:environment:production"
       ]
     }
   }
