@@ -54,7 +54,11 @@ async def lifespan(app: FastAPI):
         raise RuntimeError(
             "ANTHROPIC_API_KEY is not configured",
         )
-    client = AsyncAnthropic(api_key=api_key)
+    client = AsyncAnthropic(
+        api_key=api_key,
+        timeout=60.0,
+        max_retries=0,
+    )
 
     app.state.anthropic_client = client
 

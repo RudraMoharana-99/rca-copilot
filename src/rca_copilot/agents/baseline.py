@@ -260,7 +260,11 @@ if __name__ == "__main__":
         changelog=SnapshotChangesSource("scenarios/_changelog_master.json"),
     )
 
-    client = AsyncAnthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    client = AsyncAnthropic(
+        api_key=os.environ["ANTHROPIC_API_KEY"],
+        timeout=60.0,
+        max_retries=0,
+    )
 
     state = run_baseline(
         alert={"service": "cart", "message": "elevated error rate on cart"},

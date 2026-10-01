@@ -189,10 +189,18 @@ async def main() -> None:
     api_key = os.environ["ANTHROPIC_API_KEY"]
 
     if args.config == "baseline":
-        client = AsyncAnthropic(api_key=api_key)
+        client = AsyncAnthropic(
+            api_key=api_key,
+            timeout=60.0,
+            max_retries=0,
+        )
         model = BASELINE_MODEL
     else:
-        client = AsyncAnthropic(api_key=api_key)
+        client = AsyncAnthropic(
+            api_key=api_key,
+            timeout=60.0,
+            max_retries=0,
+        )
         model = f"investigator={INVESTIGATOR_MODEL};adjudicator={ADJUDICATOR_MODEL}"
 
     output_path = Path("runs") / f"{args.scenario}_{args.config}.jsonl"

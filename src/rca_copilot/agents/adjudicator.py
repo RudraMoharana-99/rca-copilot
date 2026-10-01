@@ -387,7 +387,11 @@ if __name__ == "__main__":
             changelog=SnapshotChangesSource("scenarios/_changelog_master.json"),
         )
 
-        client = AsyncAnthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+        client = AsyncAnthropic(
+            api_key=os.environ["ANTHROPIC_API_KEY"],
+            timeout=60.0,
+            max_retries=0,
+        )
 
         alert = {"message": "elevated error rate detected"}
 
