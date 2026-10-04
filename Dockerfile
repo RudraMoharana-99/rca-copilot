@@ -24,6 +24,8 @@ COPY --from=builder /app/.venv /app/.venv
 
 COPY src/ ./src/
 
+COPY eval/ ./eval/
+
 COPY scenarios/ ./scenarios/
 
 ENV PATH="/app/.venv/bin:$PATH"

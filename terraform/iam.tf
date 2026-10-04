@@ -106,3 +106,74 @@ resource "aws_iam_role_policy" "github_deploy_smoke_test" {
   role   = aws_iam_role.github_deploy.id
   policy = data.aws_iam_policy_document.github_deploy_smoke_test.json
 }
+
+data "aws_iam_policy_document" "scheduler_assume" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["scheduler.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+  }
+}
+
+resource "aws_iam_role" "scheduler" {
+  name               = "${var.project_name}-scheduler-role"
+  assume_role_policy = data.aws_iam_policy_document.scheduler_assume.json
+
+  tags = {
+    Project = var.project_name
+  }
+}
+
+data "aws_iam_policy_document" "scheduler_run_task" {
+  statement {
+    sid = "RunRegressionTask"
+
+    actions = [
+      "ecs:RunTask"
+    ]
+
+    resources = [
+      "arn:aws:ecs:${var.region}:${data.aws_caller_identity.current.account_id}:task-definition/${var.project_name}:*"
+    ]
+
+    condition {
+      test     = "ArnEquals"
+      variable = "ecs:cluster"
+      values   = [aws_ecs_cluster.main.arn]
+    }
+  }
+
+  statement {
+    sid = "PassECSTaskRoles"
+
+    actions = [
+      "iam:PassRole"
+    ]
+
+    resources = [
+      aws_iam_role.execution.arn,
+      aws_iam_role.task.arn,
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "iam:PassedToService"
+      values   = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy" "scheduler_run_task" {
+  name   = "${var.project_name}-scheduler-run-task"
+  role   = aws_iam_role.scheduler.id
+  policy = data.aws_iam_policy_document.scheduler_run_task.json
+}

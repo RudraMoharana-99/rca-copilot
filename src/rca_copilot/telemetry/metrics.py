@@ -69,6 +69,21 @@ def _get_instruments() -> dict:
         description="Number of RCA API diagnosis requests by operational outcome",
     )
 
+    _instruments["regression_runs"] = meter.create_counter(
+        name="regression_runs_total",
+        description="Number of scheduled RCA regression runs by outcome",
+    )
+
+    _instruments["api_requests"] = meter.create_counter(
+        name="api_requests_total",
+        description="Number of RCA API diagnosis requests by operational outcome",
+    )
+
+    _instruments["regression_runs"] = meter.create_counter(
+        name="regression_runs_total",
+        description="Number of scheduled RCA regression runs by outcome",
+    )
+
     return _instruments
 
 
@@ -104,3 +119,7 @@ def record_api_request(outcome: str, config: str) -> None:
             "config": config,
         },
     )
+
+
+def record_regression_run(outcome: str) -> None:
+    _get_instruments()["regression_runs"].add(1, {"outcome": outcome})

@@ -63,7 +63,19 @@ def parse_args() -> argparse.Namespace:
         help="Number of repeated runs.",
     )
 
-    return parser.parse_args()
+    parser.add_argument(
+        "--min-accuracy",
+        type=float,
+        default=None,
+        help="Fail the evaluation if valid-run accuracy falls below this value.",
+    )
+
+    args = parser.parse_args()
+
+    if args.min_accuracy is not None and not 0 <= args.min_accuracy <= 1:
+        raise SystemExit("--min-accuracy must be between 0 and 1")
+
+    return args
 
 
 def load_scenario(name: str) -> tuple[Path, dict, datetime, datetime]:
@@ -302,6 +314,20 @@ async def main() -> None:
         metrics.get_meter_provider().force_flush()
 
     print_summary(records)
+
+    errors = [record for record in records if record["error"] is not None]
+    valid_records = [record for record in records if record["error"] is None]
+
+    correct = sum(1 for record in valid_records if record["correct"])
+    accuracy = correct / len(valid_records) if valid_records else 0.0
+
+    if errors:
+        raise SystemExit(f"Regression failed: {len(errors)} execution error(s)")
+
+    if args.min_accuracy is not None and accuracy < args.min_accuracy:
+        raise SystemExit(
+            f"Regression failed: accuracy {accuracy:.1%} is below minimum {args.min_accuracy:.1%}"
+        )
 
 
 def print_summary(records: list[dict]) -> None:

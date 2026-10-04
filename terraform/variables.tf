@@ -14,3 +14,8 @@ variable "image_tag" {
   description = "Docker image tag deployed to ECS"
   type        = string
 }
+
+variable "alert_email" {
+  description = "rudra.madhab31@gmail.com"
+  type        = string
+}
