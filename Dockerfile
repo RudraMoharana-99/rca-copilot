@@ -20,6 +20,9 @@ WORKDIR /app
 
 RUN useradd -m appuser
 
+# Required by eval/harness.py when it writes regression results.
+RUN mkdir -p /app/runs && chown appuser:appuser /app/runs
+
 COPY --from=builder /app/.venv /app/.venv
 
 COPY src/ ./src/
