@@ -46,8 +46,6 @@ def run_evaluation(
 def main() -> None:
     setup_metrics()
 
-    baseline_failures: list[str] = []
-
     # Production regression gate.
     for scenario, threshold in BASELINE_THRESHOLDS.items():
         return_code = run_evaluation(
@@ -57,21 +55,17 @@ def main() -> None:
         )
 
         if return_code != 0:
-            baseline_failures.append(scenario)
+            record_regression_run("fail")
+            metrics.get_meter_provider().force_flush()
 
-    # Experimental configuration: measure it independently,
-    # but do not block the production regression gate.
+            raise SystemExit(f"Baseline regression failed for: {scenario}")
+
+    # Experimental configuration runs only when baseline passes.
     for scenario in BASELINE_THRESHOLDS:
         run_evaluation(
             scenario=scenario,
             config="multi_agent",
         )
-
-    if baseline_failures:
-        record_regression_run("fail")
-        metrics.get_meter_provider().force_flush()
-
-        raise SystemExit("Baseline regression failed for: " + ", ".join(baseline_failures))
 
     record_regression_run("pass")
     metrics.get_meter_provider().force_flush()
