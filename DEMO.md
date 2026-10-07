@@ -85,11 +85,10 @@ with:
 {
   "scenario": "C2-cart-bad-config",
   "alert": {
-    "service": "recommendation",
-    "message": "Elevated request failures"
+    "message": "elevated error rate detected"
   },
-  "window_start": "<scenario start>",
-  "window_end": "<scenario end>",
+  "window_start": "2026-09-03T05:46:32Z",
+  "window_end": "2026-09-03T06:01:32Z",
   "config": "baseline"
 }
 ```
