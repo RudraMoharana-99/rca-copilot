@@ -133,6 +133,12 @@ Say:
 
 This trace also exposed a performance problem in the multi-agent architecture. The investigators execute concurrently, but the adjudicator alone took about 45.9 seconds in this example.”
 
+For the C2 demo trace:
+
+- `incident.diagnose` duration ≈ 18.52s
+- trace status = `OK`
+- open the trace detail and show the LLM and tool child spans
+
 ---
 
 ## 3:10–3:45 — Demonstrate the kill switch
