@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from typing import Any, Literal
 from uuid import uuid4
@@ -87,6 +88,8 @@ ConfigName = Literal[
     "multi_agent",
 ]
 
+MAX_ALERT_BYTES = 16 * 1024
+
 
 class DiagnoseRequest(BaseModel):
     scenario: str = Field(
@@ -104,6 +107,12 @@ class DiagnoseRequest(BaseModel):
     def validate_window(self) -> "DiagnoseRequest":
         if self.window_end <= self.window_start:
             raise ValueError("window_end must be after window_start")
+
+        alert_bytes = len(json.dumps(self.alert, ensure_ascii=False).encode("utf-8"))
+
+        if alert_bytes > MAX_ALERT_BYTES:
+            raise ValueError(f"alert must not exceed {MAX_ALERT_BYTES} bytes")
+
         return self
 
 

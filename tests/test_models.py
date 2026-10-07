@@ -1,6 +1,7 @@
 import pytest
 
 from rca_copilot.models import (
+    DiagnoseRequest,
     Evidence,
     Hypothesis,
     IncidentState,
@@ -89,4 +90,30 @@ def test_non_escalated_verdict_requires_ranked_cause():
             dissent=None,
             escalate=False,
             escalation_reason=None,
+        )
+
+
+def test_diagnose_request_accepts_normal_alert():
+    request = DiagnoseRequest(
+        scenario="C1-valkey-cart-down",
+        alert={"message": "elevated cart error rate detected"},
+        window_start="2026-09-03T06:59:19Z",
+        window_end="2026-09-03T07:14:19Z",
+        config="baseline",
+    )
+
+    assert request.alert["message"] == "elevated cart error rate detected"
+
+
+def test_diagnose_request_rejects_oversized_alert():
+    with pytest.raises(
+        ValueError,
+        match="alert must not exceed 16384 bytes",
+    ):
+        DiagnoseRequest(
+            scenario="C1-valkey-cart-down",
+            alert={"message": "X" * (1024 * 1024)},
+            window_start="2026-09-03T06:59:19Z",
+            window_end="2026-09-03T07:14:19Z",
+            config="baseline",
         )
