@@ -1,5 +1,799 @@
 # RCA Copilot — Operations and Chaos Drills
 
+## Operational Runbook
+
+RCA Copilot runs as an AWS ECS Fargate service in `ap-south-1`.
+
+The production configuration is the **baseline** RCA pipeline. The `multi_agent` configuration remains experimental and is evaluated separately.
+
+The service is normally scaled to:
+
+```text
+desiredCount = 0
+```
+
+to minimize demo infrastructure cost. CI/CD and manual operational testing temporarily scale it to one running task.
+
+### Core AWS resources
+
+| Resource | Name |
+|---|---|
+| ECS cluster | `rca-copilot` |
+| ECS service | `rca-copilot-service` |
+| ECS task family | `rca-copilot` |
+| ECR repository | `rca-copilot` |
+| DynamoDB table | `rca-copilot-incidents` |
+| Application log group | `/ecs/rca-copilot` |
+| Metrics log group | `/ecs/rca-copilot-metrics` |
+| CloudWatch namespace | `RCACopilot` |
+| Region | `ap-south-1` |
+
+The production Fargate task uses:
+
+```text
+CPU:    512 units
+Memory: 1024 MiB
+```
+
+and contains:
+
+```text
+rca-copilot
+aws-otel-collector
+```
+
+The application container is essential. The ADOT collector sidecar is non-essential so loss of telemetry export does not terminate the RCA API itself.
+
+---
+
+## Health Check
+
+The application exposes:
+
+```text
+GET /healthz
+```
+
+Expected response:
+
+```json
+{
+  "status": "ok"
+}
+```
+
+`/healthz` is intentionally a **liveness** endpoint.
+
+It does not call:
+
+- Anthropic
+- DynamoDB
+- telemetry evidence sources
+- X-Ray
+- CloudWatch
+
+This prevents a downstream dependency problem from making the application itself appear dead.
+
+A successful `/healthz` therefore means:
+
+> the API process is running and capable of serving HTTP requests.
+
+It does **not** prove that a diagnosis can complete successfully.
+
+---
+
+## Starting the Service
+
+Scale the ECS service to one task:
+
+```powershell
+aws ecs update-service `
+    --cluster rca-copilot `
+    --service rca-copilot-service `
+    --desired-count 1
+```
+
+Check deployment state:
+
+```powershell
+aws ecs describe-services `
+    --cluster rca-copilot `
+    --services rca-copilot-service `
+    --query "services[0].{desired:desiredCount,running:runningCount,pending:pendingCount}"
+```
+
+Healthy steady state for an active demo:
+
+```json
+{
+  "desired": 1,
+  "running": 1,
+  "pending": 0
+}
+```
+
+---
+
+## Stopping the Service
+
+Return the demo service to scale-to-zero:
+
+```powershell
+aws ecs update-service `
+    --cluster rca-copilot `
+    --service rca-copilot-service `
+    --desired-count 0
+```
+
+Verify:
+
+```powershell
+aws ecs describe-services `
+    --cluster rca-copilot `
+    --services rca-copilot-service `
+    --query "services[0].{desired:desiredCount,running:runningCount,pending:pendingCount}"
+```
+
+Expected final state:
+
+```json
+{
+  "desired": 0,
+  "running": 0,
+  "pending": 0
+}
+```
+
+---
+
+## Operational Kill Switch
+
+New RCA diagnoses can be disabled using:
+
+```text
+RCA_DISABLED=true
+```
+
+When enabled, `POST /incidents` returns:
+
+```text
+HTTP 503
+Diagnosis is temporarily disabled
+```
+
+The kill switch prevents new LLM-backed diagnoses without rebuilding the application image. Changing the ECS environment variable requires a new task-definition revision and task deployment.
+
+Use it when:
+
+- the model provider is returning unsafe or unstable results
+- unexpected model spend is occurring
+- a prompt or agent regression is suspected
+- evidence integrations are producing misleading results
+- incident diagnosis must be suspended during investigation
+
+The liveness endpoint remains available while RCA is disabled.
+
+---
+
+## Input Protection
+
+`POST /incidents` validates the serialized alert payload before the RCA pipeline runs.
+
+Maximum alert size:
+
+```text
+16 KiB
+```
+
+Requests above that limit are rejected by Pydantic with:
+
+```text
+HTTP 422
+```
+
+This validation happens before:
+
+- agent execution
+- evidence collection
+- Anthropic API calls
+- token consumption
+
+The limit exists because the per-run token ceiling only observes tokens **after** an LLM response. It is therefore not sufficient protection against an oversized initial prompt.
+
+Drill 5 validated this control with a 1 MiB request.
+
+---
+
+## Model Provider Resilience
+
+The Anthropic SDK's own automatic retries are disabled.
+
+RCA Copilot owns the retry policy explicitly.
+
+Retryable failures include:
+
+- rate limiting
+- connection failures
+- timeouts
+- provider HTTP 5xx responses
+
+The retry policy uses:
+
+```text
+maximum attempts: 3
+backoff: exponential
+jitter: enabled
+```
+
+Authentication and permission failures are **not retried** because repeating the same invalid credential cannot recover the request.
+
+If retryable provider failures remain after all attempts, the pipeline records:
+
+```text
+provider_unavailable = true
+```
+
+and can produce an escalated degraded response rather than continuing to guess.
+
+---
+
+## Cost Controls
+
+Two separate controls exist.
+
+### Per-run token ceiling
+
+Default:
+
+```text
+MAX_TOKENS_PER_RUN = 400000
+```
+
+Each agent tracks cumulative input and output tokens.
+
+If the limit is reached, the current run stops further model execution and records:
+
+```text
+cost_ceiling_hit = true
+```
+
+The API exposes this operationally through the `cost_ceiling` outcome.
+
+### Rolling hourly USD ceiling
+
+Default:
+
+```text
+MAX_COST_PER_HOUR_USD = 2.0
+```
+
+Completed diagnosis costs are tracked in a rolling one-hour in-process window.
+
+When the threshold is already exceeded, new incident requests are rejected with:
+
+```text
+HTTP 429
+Hourly cost limit reached
+```
+
+This is a process-local safeguard rather than a durable billing system.
+
+---
+
+## Monitoring and Alarms
+
+OpenTelemetry application metrics are exported through the ADOT sidecar into CloudWatch EMF under:
+
+```text
+RCACopilot
+```
+
+Operational alarms notify through SNS.
+
+Four application-level alarms currently exist.
+
+---
+
+### 1. Provider Unavailable Alarm
+
+Alarm:
+
+```text
+rca-copilot-provider-unavailable
+```
+
+Metric:
+
+```text
+api_requests_total
+```
+
+Dimension:
+
+```text
+outcome = provider_unavailable
+```
+
+Trigger:
+
+```text
+>= 1 event within a 5-minute period
+```
+
+### Why it exists
+
+Transient provider failures are already retried.
+
+Therefore a `provider_unavailable` event means all configured retry attempts were exhausted.
+
+At this point continuing silently would hide a dependency outage that directly prevents RCA execution.
+
+One event is sufficient to page because successful diagnosis depends on the model provider.
+
+---
+
+### 2. Cost Ceiling Alarm
+
+Alarm:
+
+```text
+rca-copilot-cost-ceiling
+```
+
+Metric:
+
+```text
+api_requests_total
+```
+
+Dimension:
+
+```text
+outcome = cost_ceiling
+```
+
+Trigger:
+
+```text
+>= 1 event within a 5-minute period
+```
+
+### Why it exists
+
+The per-run token ceiling is a runaway-agent safeguard.
+
+Reaching it is not normal usage. It may indicate:
+
+- an agent stuck in repeated tool/model turns
+- unusually large context
+- prompt regression
+- repeated failed reasoning
+- unexpected model behavior
+
+The alarm therefore treats a single ceiling hit as operationally significant.
+
+---
+
+### 3. Tool Failure Alarm
+
+Alarm:
+
+```text
+rca-copilot-tool-failures
+```
+
+Metric:
+
+```text
+tool_failures_total
+```
+
+Trigger:
+
+```text
+>= 1 tool failure within a 5-minute period
+```
+
+### Why it exists
+
+RCA quality depends on observability evidence.
+
+A broken telemetry source may not crash the application because sources explicitly return:
+
+```text
+ERROR
+```
+
+instead.
+
+That behavior is desirable for graceful degradation, but without an alarm it could make the service appear healthy while the model is diagnosing with incomplete evidence.
+
+Drill 2 confirmed that the alarm detects evidence-source failures even when RCA still returns a verdict.
+
+---
+
+### 4. Regression Failure Alarm
+
+Alarm:
+
+```text
+rca-copilot-regression-failed
+```
+
+Metric:
+
+```text
+regression_runs_total
+```
+
+Dimension:
+
+```text
+outcome = fail
+```
+
+Trigger:
+
+```text
+>= 1 failed regression execution within a 5-minute period
+```
+
+### Why it exists
+
+The RCA system is probabilistic.
+
+HTTP health and infrastructure health cannot detect a reasoning regression.
+
+A prompt edit can leave:
+
+```text
+/healthz = 200
+```
+
+while diagnostic accuracy collapses.
+
+The regression alarm therefore monitors model behavior rather than application availability.
+
+Drill 3 demonstrated this directly: a deliberately degraded prompt caused C3 baseline accuracy to fall to 0%, and the scheduled-regression telemetry detected the failure.
+
+---
+
+## Scheduled Regression Gate
+
+EventBridge Scheduler runs:
+
+```text
+python -m eval.regression
+```
+
+on ECS Fargate every:
+
+```text
+7 days
+```
+
+The baseline configuration is the production regression gate.
+
+Current thresholds are:
+
+| Scenario | Minimum baseline accuracy |
+|---|---:|
+| C1 — valkey-cart-down | 50% |
+| C2 — cart-bad-config | 80% |
+| C3 — product-catalog-oom | 60% |
+| C4 — astronomy-db-down | 80% |
+
+Each scenario normally runs five times.
+
+Regression execution is fail-fast:
+
+```text
+baseline scenario
+      ↓
+below threshold?
+      ├── yes → emit failure metric → exit
+      └── no  → next baseline scenario
+```
+
+Only after every baseline scenario passes does the job run the experimental multi-agent configuration.
+
+This prevents a known-bad production baseline from consuming additional model budget on experimental evaluations.
+
+---
+
+## Deployment Runbook
+
+Production deployment is performed through GitHub Actions after a push to `main`.
+
+The workflow performs:
+
+```text
+checkout
+   ↓
+uv dependency install
+   ↓
+ruff check
+   ↓
+ruff format --check
+   ↓
+pytest
+   ↓
+GitHub OIDC authentication to AWS
+   ↓
+Docker build
+   ↓
+push image to ECR
+   ↓
+render new ECS task definition
+   ↓
+deploy service with desiredCount = 1
+   ↓
+wait for ECS stability
+   ↓
+GET /healthz smoke test
+   ↓
+scale service back to 0
+```
+
+The Docker image is tagged with:
+
+```text
+github.sha
+```
+
+rather than `latest`.
+
+This creates a direct mapping:
+
+```text
+Git commit
+    ↕
+Docker image
+    ↕
+ECS task revision
+```
+
+ECR image tags are immutable.
+
+---
+
+## Configuration and Secrets
+
+Normal configuration is passed as ECS environment variables.
+
+Examples:
+
+```text
+AWS_REGION
+INCIDENTS_TABLE
+RCA_DISABLED
+MAX_TOKENS_PER_RUN
+MAX_COST_PER_HOUR_USD
+OTEL_EXPORTER_OTLP_ENDPOINT
+OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+```
+
+Sensitive configuration is not committed into the image.
+
+The Anthropic key is stored in AWS Systems Manager Parameter Store:
+
+```text
+/rca-copilot/anthropic-api-key
+```
+
+ECS injects it into the application container as:
+
+```text
+ANTHROPIC_API_KEY
+```
+
+The ADOT collector configuration is also stored in SSM and injected into the collector container.
+
+---
+
+## Rollback Runbook
+
+Because deployments are identified by immutable Git-SHA images and ECS task-definition revisions, rollback does not require rebuilding an older image.
+
+At 2am, the rollback process is:
+
+```text
+1. Identify the last known-good ECS task definition.
+2. Update rca-copilot-service to that task definition.
+3. Set desiredCount = 1.
+4. Wait for ECS service stability.
+5. Call /healthz.
+6. Run a known diagnosis if model behavior is in question.
+7. Inspect CloudWatch logs and X-Ray.
+8. Keep the known-good revision if healthy.
+```
+
+ECS also has the deployment circuit breaker enabled with automatic rollback for deployments that fail to stabilize.
+
+Application rollback and model-behavior rollback are not the same thing.
+
+A deployment can be technically healthy while producing poor RCA results. In that case the evaluation/regression evidence must determine the known-good revision.
+
+---
+
+## How to Know the System Is Working
+
+No single signal is sufficient.
+
+Use several layers.
+
+### Layer 1 — process
+
+```text
+GET /healthz → 200
+```
+
+Confirms the API process is alive.
+
+### Layer 2 — ECS
+
+Confirm:
+
+```text
+desiredCount
+runningCount
+pendingCount
+```
+
+match the expected operational state.
+
+### Layer 3 — logs
+
+Check `/ecs/rca-copilot` for:
+
+- application startup
+- request failures
+- Python exceptions
+- provider errors
+
+### Layer 4 — tracing
+
+Use AWS X-Ray to inspect:
+
+```text
+incident.diagnose
+agent.*
+llm.attempt
+tool.*
+```
+
+This exposes agent latency, retries, and failed evidence queries.
+
+### Layer 5 — metrics and alarms
+
+Inspect:
+
+- `api_requests_total`
+- `tool_failures_total`
+- `regression_runs_total`
+- token usage
+- agent duration
+
+### Layer 6 — RCA quality
+
+Run a known scenario and compare the returned root component with the expected component.
+
+This final layer matters because infrastructure health does not guarantee reasoning quality.
+
+---
+
+## Known Monitoring Gaps
+
+Chaos testing identified monitoring gaps that are intentionally documented rather than hidden.
+
+### Provider authentication failures
+
+Invalid Anthropic credentials produce a `ProviderAuthError`.
+
+Current behavior:
+
+```text
+POST /incidents → HTTP 500
+```
+
+The existing provider alarm watches:
+
+```text
+outcome = provider_unavailable
+```
+
+Authentication failure exits before `record_api_request()` records that outcome.
+
+Therefore:
+
+```text
+automatic detection: FAILED
+```
+
+during Drill 1.
+
+Required future improvement:
+
+```text
+explicit provider_auth_error metric/outcome + CloudWatch alarm
+```
+
+---
+
+### ECS OOM / abnormal task termination
+
+Drill 4 forced the RCA application container to:
+
+```text
+128 MiB memory
+```
+
+and produced:
+
+```text
+exit code 137
+OutOfMemoryError
+```
+
+ECS correctly recorded the failure.
+
+However, all existing application-level alarms remained healthy because the process died before application telemetry could report the fault.
+
+Current gaps:
+
+- no ECS abnormal-stop alarm
+- no OOM-specific alert
+- no ECS container health check
+- no automatic task-state-change notification
+
+Required future improvement:
+
+```text
+EventBridge ECS Task State Change
+      ↓
+detect abnormal stopped reason / exit code
+      ↓
+SNS / operational alarm
+```
+
+---
+
+### Confidence calibration
+
+Drill 2 deliberately removed the metrics source.
+
+Despite losing evidence, model confidence increased:
+
+```text
+healthy:   0.85
+degraded:  0.92
+```
+
+This demonstrates that model-reported confidence must not be interpreted as a calibrated reliability score.
+
+Future improvement should calculate an external confidence adjustment from deterministic signals such as:
+
+- evidence source availability
+- number of `ERROR` evidence results
+- cross-source agreement
+- missing expected evidence domains
+
+---
+
+## Chaos Test Summary
+
+| Drill | Failure injected | Expected protection | Result |
+|---|---|---|---|
+| 1 | Invalid Anthropic credential | Detect provider failure | **Detection gap found** |
+| 2 | Metrics source unavailable | Tool-failure detection + graceful degradation | **PASS; confidence issue found** |
+| 3 | Deliberately degraded prompt | Regression gate | **PASS** |
+| 4 | Container memory starvation | Infrastructure failure detection | **Detection gap found** |
+| 5 | 1 MiB alert payload | Reject before LLM execution | **PASS** |
+
+The detailed evidence for each experiment follows below.
+
+---
+
 ## Session 25–26 Chaos Testing
 
 ### Drill 1 — Invalid Anthropic API Credential
